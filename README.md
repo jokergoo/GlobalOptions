@@ -2,7 +2,8 @@
 
 The most simple way is to construct an option function (e.g. `foo.options()`) as:
 
-```r    
+```r
+library(GlobalOptions)
 foo.options = setGlobalOptions(
     "a" = 1,
     "b" = "text"
