@@ -38,4 +38,6 @@ foo.options = setGlobalOptions(
 )
 ```
 
-`.class` and `.validate` will be used to check users' input. Please note `.validate` function should only returns a logical value.
+`.class` and `.validate` will be used to check users' input.
+
+There are more customizations on the options, please see the vignette.
