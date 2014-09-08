@@ -22,52 +22,79 @@
 #     foo.options("a" = 2)
 #     foo.options("a" = 2, "b" = "new_text")
 #
-# And users can reset their default values by:
+# They can also reset to the default values by:
 #
 #     foo.options(RESET = TRUE)
 #
-# The value for each option can be set as a list which may contains more control of the options:
+# The value for each option can be set as a list which may contain more control of the options:
 #
 #     foo.options = setGlobalOptions(
 #         "a" = list(.value = 1,
+#                    .length = 1,
 #                    .class = "numeric",
 #                    .validate = function(x) x > 0),
-#         "b" = "text"
 #     )
 #
-# ``.class`` and ``.validate`` will be used to check users' input. Please note ``.validate`` function
+# ``.class``, ``.length`` and ``.validate`` will be used to check users' input. Please note ``.validate`` function
 # should only returns a logical value.
+#
+# For more detailed explanation, please go to the vignette.
 setGlobalOptions = function(...) {
 	args = list(...)
 	
-	if(any(is.null(names(args)))) {
+	if(any(is.null(names(args))) || any(names(args) == "")) {
 		stop("You should provide named arguments\n")
 	}
     
 	# format the options
 	options = vector("list", length = length(args))
+
+	if("RESET" %in% names(args)) {
+		stop("Don't use 'RESET' as the option name.\n")
+	}
+
 	names(options) = names(args)
 	for(i in seq_along(args)) {
 	
 		arg = args[[i]]
-		if(is.list(arg) && length(setdiff(names(arg), c(".value", ".class", ".validate"))) == 0) {
+		# if it is an advanced setting
+		if(is.list(arg) && length(setdiff(names(arg), c(".value", ".class", ".length", ".validate", ".filter", ".read.only"))) == 0) {
 			default_value = arg[[".value"]]
-			value = default_value
-			class = arg[[".class"]]
-			validate = arg[[".validate"]]
+			value         = default_value
+			length        = arg[[".length"]]
+			class         = arg[[".class"]]
+			if(is.null(arg[[".validate"]])) {
+				validate = function(x) TRUE
+			} else {
+				validate = arg[[".validate"]]
+			}
+			if(is.null(arg[[".filter"]])) {
+				filter = function(x) x
+			} else {
+				filter = arg[[".filter"]]
+			}
+			read.only     = ifelse(is.null(arg[[".read.only"]]), FALSE, arg[[".read.only"]])
 		} else {
+			if(is.list(arg) && length(intersect(names(arg), c(".value", ".class", ".length", ".validate", ".filter", ".read.only"))) > 0 &&
+				length(setdiff(names(arg), c(".value", ".class", ".length", ".validate", ".filter", ".read.only"))) > 0) {
+				warning(paste("Your defintion for '", names(args)[i], "' is mixed. It should only contain .value, .class, .length, .validate, .filter, .read.only.\nIgnore the setting and use the whole list as the default value.\n", sep = ""))
+			}
 			default_value = arg
 			value = arg
+			length = NULL
 			class = NULL
-			validate = NULL
+			validate = function(x) TRUE
+			filter = function(x) x
+			read.only = FALSE
 		}
 		options[[i]] = list(default_value = default_value,
-		                    value = value,
-							class = class,
-							validate = validate)
+		                    value         = value,
+		                    length        = length,
+							class         = class,
+							validate      = validate,
+							filter        = filter,
+							read.only     = read.only)
 	}
-	
-	
 	
 	sth.par = function(..., RESET = FALSE) {
 	
@@ -85,16 +112,21 @@ setGlobalOptions = function(...) {
 		}
 		
 		args = list(...)
+		
+		# if settings are stored in one object and send this object
 		if(length(args) == 1 && is.list(args[[1]]) && is.null(names(args))) {
 			args = args[[1]]
 		}
-		
+
+		OPT = getOPT(options)
+
+		# getting all options
 		if(length(args) == 0) {
-			return(lapply(options, function(x) x[["value"]]))
+			return(lapply(options, getOptionValue, OPT))
 		}
 		
-		# just get the options
-		if(all(is.null(names(args)))) {
+		# getting part of the options
+		if(is.null(names(args))) {
 			args = unlist(args)
 			
 			if(length(setdiff(args, names(options)))) {
@@ -102,9 +134,9 @@ setGlobalOptions = function(...) {
 			}
 			
 			if(length(args) == 1) {
-				return(options[[args]][["value"]])
+				return(getOptionValue(options[[args]], OPT))
 			} else {
-				return(lapply(options[args], function(x) x[["value"]]))
+				return(lapply(options[args], getOptionValue, OPT))
 			}
 		}
 		
@@ -122,25 +154,51 @@ setGlobalOptions = function(...) {
 				}
 				
 				# now we can do validating on the values
+				length = options[[ name[i] ]][["length"]]
 				class = options[[ name[i] ]][["class"]]
 				validate = options[[ name[i] ]][["validate"]]
-				value = args[[ name[i] ]]
+				filter = options[[ name[i] ]][["filter"]]
+				read.only = options[[ name[i] ]][["read.only"]]
 				
+				# test on read only
+				if(read.only) {
+					stop(paste(name[i], " is a read-only option.\n", sep = ""))
+				}
+
+				OPT = getOPT(options2)
+				assign("OPT", OPT, envir = environment(validate))
+				assign("OPT", OPT, envir = environment(filter))
+
+				# user's value
+				value = args[[ name[i] ]]
+
+				if(is.function(value) && length(intersect(class, "function")) == 0) {
+					assign("OPT", OPT, envir = environment(value))
+					value2 = value()
+					value = value
+				}
+				
+				# test on value length
+				if(!is.null(length)) {
+					if(!(length(value) %in% length)) {
+						stop(paste("Length of '", name[i], "' should be one of ", paste(length, collapse = ", "), "\n", sep = ""))
+					}
+				}
+
 				# test on classes of the values
 				if(!is.null(class)) {
-					for(k in class) {
-						if(!is(value, k)) {
-							stop(paste("Values of '", name[i], "' should be of class '", k, "'.\n", sep = ""))
-						}
+					if(length(intersect(class(value), class)) == 0) {
+						stop(paste("Class of '", name[i], "' should be one of '", paste(class, collapse = ", "), "'.\n", sep = ""))
 					}
 				}
 				
 				# test on validate function
-				if(!is.null(validate)) {
-					if(!validate(value)) {
-						stop("Your option is invalid.\n")
-					}
+				if(!validate(value)) {
+					stop("Your option is invalid.\n")
 				}
+
+				# filter on data
+				value = filter(value)
 				
 				# finally, all values are correct
 				options2[[ name[i] ]][["value"]] = value
@@ -152,4 +210,36 @@ setGlobalOptions = function(...) {
 	}
 	
 	return(sth.par)
+}
+
+# get the real option value based on settings
+getOptionValue = function(x, OPT) {
+	if(is.function(x$value)) {
+
+		# if the value is specified as 'function' class
+		if(length(intersect(x$class, "function"))) {
+			return(x$value)
+		} else {
+			assign("OPT", OPT, envir = environment(x$value))
+			return(x$value())
+		}
+	} else {
+		return(x$value)
+	}
+}
+
+getOPT = function(options) {
+	OPT = vector("list", length = length(options))
+	names(OPT) = names(options)
+
+	for(i in seq_along(options)) {
+		x = options[[i]]
+		if(is.function(x$value) && length(intersect(x$class, "function")) == 0) {
+			assign("OPT", OPT, envir = environment(x$value))
+			OPT[[i]] = x$value()
+		} else {
+			OPT[[i]] = x$value
+		}
+	}
+	return(OPT)
 }

@@ -1,0 +1,20 @@
+% \VignetteIndexEntry{Generate global option function}
+% \VignetteDepends{GlobalOptions}
+% \VignettePackage{GlobalOptions}
+
+\documentclass{article}
+
+\title{Generate global option function}
+
+\author{Zuguang Gu {\tt <z.gu@dkfz.de>}}
+\usepackage[margin=1in, a4paper]{geometry}
+
+\usepackage{Sweave}
+\usepackage{hyperref}
+\begin{document}
+
+\maketitle 
+
+Global option function such as {\tt options} and {\tt par} can provide a way to control global settings. {\tt GlobalOptions}
+
+\end{document}
