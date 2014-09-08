@@ -27,17 +27,18 @@ And users can reset their default values by:
 foo.options(RESET = TRUE)
 ```
 
-The value for each option can be set as a list which may contain more control on the options:
+The value for each option can be set as a list which may contain more control on the option:
 
 ```r
 foo.options = setGlobalOptions(
     "a" = list(.value = 1,
+               .length = 1,
                .class = "numeric",
                .validate = function(x) x > 0),
     "b" = "text"
 )
 ```
 
-`.class` and `.validate` will be used to check users' input.
+`.length`, `.class` and `.validate` will be used to check users' input.
 
 There are more customizations on the options, please see the vignette.
