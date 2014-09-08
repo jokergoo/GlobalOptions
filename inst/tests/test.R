@@ -72,12 +72,15 @@ test_that("tesing on .length and .class ", {
 # testing read.only
 foo.options = setGlobalOptions(
 	a = list(.value = 1,
-	         .read.only = TRUE)
+	         .read.only = TRUE),
+	b = 2
 )
 
 test_that("tesing on .read.only ", {
-	expect_that(foo.options(), is_identical_to(list(a = 1)))
+	expect_that(foo.options(), is_identical_to(list(a = 1, b = 2)))
 	expect_that(foo.options(a = 2), throws_error("is a read-only option"))
+	expect_that(foo.options(READ.ONLY = TRUE), is_identical_to(list(a = 1)))
+	expect_that(foo.options(READ.ONLY = FALSE), is_identical_to(list(b = 2)))
 })
 
 # testing .validate and .filter
@@ -143,4 +146,13 @@ test_that("tesing if '.value' is a function and using 'OPT'", {
 	expect_that(foo.options("b"), is_identical_to(3))
 	expect_that(foo.options(a = 1, b = -1), throws_error("Your option is invalid"))
 	expect_that(foo.options(a = -1, b = 1), throws_error("Your option is invalid"))
+})
+
+# test in input value is NULL
+foo.options = setGlobalOptions(
+	a = 1
+)
+
+test_that("tesing if input value is NULL", {
+	expect_that(foo.options(NULL), is_identical_to(NULL))
 })

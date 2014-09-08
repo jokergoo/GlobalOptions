@@ -14,7 +14,7 @@
 setGlobalOptions(...)
 }
 \arguments{
-  \item{...}{see 'details' section}
+  \item{...}{specification of options, see 'details' section}
 
 }
 \details{
@@ -36,22 +36,24 @@ setGlobalOptions(...)
   foo.options("a" = 2)
   foo.options("a" = 2, "b" = "new_text")
   }
-  And users can reset their default values by:  
+  Options can be reset to their default values by:  
 
   \preformatted{
   foo.options(RESET = TRUE)
   }
-  The value for each option can be set as a list which may contains more control of the options:  
+  The value for each option can be set as a list which may contain more control of the option:  
 
   \preformatted{
   foo.options = setGlobalOptions(
       "a" = list(.value = 1,
+                 .length = 1,
                  .class = "numeric",
                  .validate = function(x) x > 0),
-      "b" = "text"
   )
   }
-  \code{.class} and \code{.validate} will be used to check users' input. Please note \code{.validate} function should only returns a logical value. 
+  \code{.length}, \code{.class} and \code{.validate} will be used to check users' input. Please note \code{.validate} function should only returns a logical value.  
+
+  For more detailed explanation, please go to the vignette.  
 
 
 }

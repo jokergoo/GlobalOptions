@@ -3,7 +3,7 @@
 # Produce a function which can get or set global options
 #
 # == param
-# -... see 'details' section
+# -... specification of options, see 'details' section
 #
 # == detail
 # The most simple way is to construct an option function (e.g. ``foo.options()``) as:
@@ -22,11 +22,11 @@
 #     foo.options("a" = 2)
 #     foo.options("a" = 2, "b" = "new_text")
 #
-# They can also reset to the default values by:
+# Options can be reset to their default values by:
 #
 #     foo.options(RESET = TRUE)
 #
-# The value for each option can be set as a list which may contain more control of the options:
+# The value for each option can be set as a list which may contain more control of the option:
 #
 #     foo.options = setGlobalOptions(
 #         "a" = list(.value = 1,
@@ -35,10 +35,11 @@
 #                    .validate = function(x) x > 0),
 #     )
 #
-# ``.class``, ``.length`` and ``.validate`` will be used to check users' input. Please note ``.validate`` function
+# ``.length``, ``.class`` and ``.validate`` will be used to check users' input. Please note ``.validate`` function
 # should only returns a logical value.
 #
 # For more detailed explanation, please go to the vignette.
+#
 setGlobalOptions = function(...) {
 	args = list(...)
 	
@@ -52,7 +53,11 @@ setGlobalOptions = function(...) {
 	if("RESET" %in% names(args)) {
 		stop("Don't use 'RESET' as the option name.\n")
 	}
-
+	
+	if("READ.ONLY" %in% names(args)) {
+		stop("Don't use 'READ.ONLY' as the option name.\n")
+	}
+	
 	names(options) = names(args)
 	for(i in seq_along(args)) {
 	
@@ -96,7 +101,7 @@ setGlobalOptions = function(...) {
 							read.only     = read.only)
 	}
 	
-	sth.par = function(..., RESET = FALSE) {
+	sth.par = function(..., RESET = FALSE, READ.ONLY = NULL) {
 	
 		# first we need a copy of `options`
 		options2 = options
@@ -113,6 +118,10 @@ setGlobalOptions = function(...) {
 		
 		args = list(...)
 		
+		if(length(args) == 1 && is.null(args[[1]])) {
+			return(NULL)
+		}
+		
 		# if settings are stored in one object and send this object
 		if(length(args) == 1 && is.list(args[[1]]) && is.null(names(args))) {
 			args = args[[1]]
@@ -122,7 +131,17 @@ setGlobalOptions = function(...) {
 
 		# getting all options
 		if(length(args) == 0) {
-			return(lapply(options, getOptionValue, OPT))
+			val = lapply(options, getOptionValue, OPT)
+			if(is.null(READ.ONLY)) {
+				return(val)
+			} else {
+				l = sapply(options, function(x) x$read.only)
+				if(READ.ONLY) {
+					return(val[l])
+				} else {
+					return(val[!l])
+				}
+			}
 		}
 		
 		# getting part of the options
@@ -134,9 +153,29 @@ setGlobalOptions = function(...) {
 			}
 			
 			if(length(args) == 1) {
-				return(getOptionValue(options[[args]], OPT))
+				val = getOptionValue(options[[args]], OPT)
+				if(is.null(READ.ONLY)) {
+					return(val)
+				} else {
+					l = options[[args]]$read.only
+					if(READ.ONLY) {
+						return(val[l])
+					} else {
+						return(val[!l])
+					}
+				}
 			} else {
-				return(lapply(options[args], getOptionValue, OPT))
+				val = lapply(options[args], getOptionValue, OPT)
+				if(is.null(READ.ONLY)) {
+					return(val)
+				} else {
+					l = sapply(options[args], function(x) x$read.only)
+					if(READ.ONLY) {
+						return(val[l])
+					} else {
+						return(val[!l])
+					}
+				}
 			}
 		}
 		
