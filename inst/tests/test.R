@@ -155,4 +155,6 @@ foo.options = setGlobalOptions(
 
 test_that("tesing if input value is NULL", {
 	expect_that(foo.options(NULL), is_identical_to(NULL))
+	foo.options(a = NULL)
+	expect_that(foo.options("a"), is_identical_to(NULL))
 })

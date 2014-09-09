@@ -72,7 +72,7 @@ fit the criterion, there will be an error.
 > foo.options(a = 1:2)
 \end{Sinput}
 \begin{Soutput}
-Error in foo.options(a = 1:2) : Length of 'a' should be one of 1
+Error in foo.options(a = 1:2) : Length of 'a' should be one of 1, 3
 \end{Soutput}
 \begin{Sinput}
 > foo.options(a = "text")
@@ -94,11 +94,11 @@ User can set the value as read-only and modifying such option will cause an erro
 > foo.options(a = 2)
 \end{Sinput}
 \begin{Soutput}
-Error in foo.options(a = 2) : a is a read-only option.
+Error in foo.options(a = 2) : 'a' is a read-only option.
 \end{Soutput}
 \end{Schunk}
 
-There is also a pre-defined argument {\tt READ.ONLY} shipped with {\tt foo.options} which controls to return only the read-only options or not.
+There is also a pre-defined argument {\tt READ.ONLY} exported with {\tt foo.options} which controls whether to return only the read-only options or not.
 
 <<eval = TRUE, echo = TRUE, include = TRUE>>==
 foo.options = setGlobalOptions(
@@ -129,25 +129,30 @@ Error in foo.options(a = 20) : Your option is invalid.
 \end{Schunk}
 
 Filtering on the option values can be set by {\tt .filter}. This is useful when the input 
-option value is not valid but users only want to change the value without throw errors. 
-For example, there is an option which controls the width of four margins in the plot, after
-something has been applied on the plot, only the first and the third margin can be changed
-while the second and the fourth margins keep a fixed value. In this case, filter function can 
-be applied here to enforce the second and the fourth elements unchangeable. Similar
-as {\tt .validate}, the input value for filter function is the input option value, and it 
+option value is not valid but users only want to change the value without throwing errors. 
+For example, there is an option to control whether to print messages or not and it should be set
+to {\tt TRUE} or {\tt FALSE}. Anyway, users may set some other type of values such as {\tt NULL}
+or {\tt NA}. In this case, non-{\tt TRUE} values can be converted to logical values inside {\tt .filter}.
+Similar as {\tt .validate}, the input value for filter function is the input option value, and it 
 should return a filtered option value.
 
-<<eval = FALSE, echo = TRUE, include = TRUE>>==
+<<eval = TRUE, echo = TRUE, include = TRUE>>==
 foo.options = setGlobalOptions(
-    margin = list(.value = c(2, 1, 2, 1),
-                  .filter = function(x) {
-                      if(something_happens()) {
-                          return(c(x[1], 1, x[3], 1))
-                      } else {
-                          return(x)
-                      }
-                  })
+    verbose = 
+        list(.value = TRUE,
+             .filter = function(x) {
+                 if(is.null(x)) {
+                     return(FALSE)
+                 } else if(is.na(x)) {
+                     return(FALSE)
+                 } else {
+                     return(x)
+                 }
+              })
 )
+foo.options(verbose = FALSE); foo.options("verbose")
+foo.options(verbose = NA); foo.options("verbose")
+foo.options(verbose = NULL); foo.options("verbose")
 @
 
 The input option value can be set as dynamic by setting it as a function. When the option
@@ -189,6 +194,7 @@ foo.options = setGlobalOptions(
 foo.options("b")
 @
 
+And in the second example, sign of {\tt b} should be as same as sign of {\tt a}.
 \begin{Schunk}
 \begin{Sinput}
 > foo.options = setGlobalOptions(

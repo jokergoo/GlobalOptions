@@ -92,6 +92,15 @@ setGlobalOptions = function(...) {
 			filter = function(x) x
 			read.only = FALSE
 		}
+
+		# create an OPT object inside functions
+		assign("OPT", NULL, envir = environment(validate))
+		assign("OPT", NULL, envir = environment(filter))
+		if(is.function(default_value) && length(intersect(class, "function")) == 0) {
+			assign("OPT", NULL, envir = environment(default_value))
+			assign("OPT", NULL, envir = environment(value))		
+		}
+
 		options[[i]] = list(default_value = default_value,
 		                    value         = value,
 		                    length        = length,
@@ -118,7 +127,7 @@ setGlobalOptions = function(...) {
 		
 		args = list(...)
 		
-		if(length(args) == 1 && is.null(args[[1]])) {
+		if(length(args) == 1 && is.null(names(args)) && is.null(args[[1]])) {
 			return(NULL)
 		}
 		
@@ -201,20 +210,25 @@ setGlobalOptions = function(...) {
 				
 				# test on read only
 				if(read.only) {
-					stop(paste(name[i], " is a read-only option.\n", sep = ""))
+					stop(paste("'", name[i], "' is a read-only option.\n", sep = ""))
 				}
 
 				OPT = getOPT(options2)
-				assign("OPT", OPT, envir = environment(validate))
-				assign("OPT", OPT, envir = environment(filter))
+				e = environment(validate)
+				unlockBinding("OPT", e)
+				assign("OPT", OPT, envir = e)
+				e = environment(filter)
+				unlockBinding("OPT", e)
+				assign("OPT", OPT, envir = e)
 
 				# user's value
 				value = args[[ name[i] ]]
 
 				if(is.function(value) && length(intersect(class, "function")) == 0) {
-					assign("OPT", OPT, envir = environment(value))
-					value2 = value()
-					value = value
+					e = environment(value)
+					#unlockBinding("OPT", e)
+					assign("OPT", OPT, envir = e)
+					value = value()
 				}
 				
 				# test on value length
@@ -259,7 +273,9 @@ getOptionValue = function(x, OPT) {
 		if(length(intersect(x$class, "function"))) {
 			return(x$value)
 		} else {
-			assign("OPT", OPT, envir = environment(x$value))
+			e = environment(x$value)
+			unlockBinding("OPT", e)
+			assign("OPT", OPT, envir = e)
 			return(x$value())
 		}
 	} else {
@@ -274,7 +290,9 @@ getOPT = function(options) {
 	for(i in seq_along(options)) {
 		x = options[[i]]
 		if(is.function(x$value) && length(intersect(x$class, "function")) == 0) {
-			assign("OPT", OPT, envir = environment(x$value))
+			e = environment(x$value)
+			unlockBinding("OPT", e)
+			assign("OPT", OPT, envir = e)
 			OPT[[i]] = x$value()
 		} else {
 			OPT[[i]] = x$value
