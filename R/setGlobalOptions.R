@@ -65,9 +65,9 @@ setGlobalOptions = function(...) {
 		# if it is an advanced setting
 		if(is.list(arg) && length(setdiff(names(arg), c(".value", ".class", ".length", ".validate", ".filter", ".read.only"))) == 0) {
 			default_value = arg[[".value"]]
-			value         = default_value
-			length        = arg[[".length"]]
-			class         = arg[[".class"]]
+			value = default_value
+			length = arg[[".length"]]
+			class = arg[[".class"]]
 			if(is.null(arg[[".validate"]])) {
 				validate = function(x) TRUE
 			} else {
@@ -78,7 +78,7 @@ setGlobalOptions = function(...) {
 			} else {
 				filter = arg[[".filter"]]
 			}
-			read.only     = ifelse(is.null(arg[[".read.only"]]), FALSE, arg[[".read.only"]])
+			read.only = ifelse(is.null(arg[[".read.only"]]), FALSE, arg[[".read.only"]])
 		} else {
 			if(is.list(arg) && length(intersect(names(arg), c(".value", ".class", ".length", ".validate", ".filter", ".read.only"))) > 0 &&
 				length(setdiff(names(arg), c(".value", ".class", ".length", ".validate", ".filter", ".read.only"))) > 0) {
@@ -212,22 +212,22 @@ setGlobalOptions = function(...) {
 				if(read.only) {
 					stop(paste("'", name[i], "' is a read-only option.\n", sep = ""))
 				}
-
+				
 				OPT = getOPT(options2)
-				e = environment(validate)
-				unlockBinding("OPT", e)
-				assign("OPT", OPT, envir = e)
-				e = environment(filter)
-				unlockBinding("OPT", e)
-				assign("OPT", OPT, envir = e)
+				e1 = environment(validate)
+				unlockBinding("OPT", e1)
+				assign("OPT", OPT, envir = e1)
+				e2 = environment(filter)
+				unlockBinding("OPT", e2)
+				assign("OPT", OPT, envir = e2)
 
 				# user's value
 				value = args[[ name[i] ]]
 
 				if(is.function(value) && length(intersect(class, "function")) == 0) {
-					e = environment(value)
+					e3 = environment(value)
 					#unlockBinding("OPT", e)
-					assign("OPT", OPT, envir = e)
+					assign("OPT", OPT, envir = e3)
 					value = value()
 				}
 				
@@ -240,7 +240,7 @@ setGlobalOptions = function(...) {
 
 				# test on classes of the values
 				if(!is.null(class)) {
-					if(length(intersect(class(value), class)) == 0) {
+					if(!any(sapply(class, function(cl) is(value, cl)))) {
 						stop(paste("Class of '", name[i], "' should be one of '", paste(class, collapse = ", "), "'.\n", sep = ""))
 					}
 				}
