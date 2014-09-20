@@ -158,3 +158,20 @@ test_that("tesing if input value is NULL", {
 	foo.options(a = NULL)
 	expect_that(foo.options("a"), is_identical_to(NULL))
 })
+
+## test if .value is invisible
+foo.options = setGlobalOptions(
+	a = list(.value = 1,
+	         .visible = FALSE),
+	b = 1
+)
+
+test_that("testing if '.value' is visible", {
+	expect_that(foo.options(), is_identical_to(list(b = 1)))
+	expect_that(foo.options("a"), is_identical_to(1))
+	foo.options(a = 2)
+	expect_that(foo.options("a"), is_identical_to(2))
+})
+
+### how can I test the private field?
+

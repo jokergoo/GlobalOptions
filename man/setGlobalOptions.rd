@@ -51,7 +51,7 @@ setGlobalOptions(...)
                  .validate = function(x) x > 0),
   )
   }
-  \code{.length}, \code{.class} and \code{.validate} will be used to check users' input. Please note \code{.validate} function should only returns a logical value.  
+  \code{.length}, \code{.class} and \code{.validate} will be used to check users' input. Please note \code{.validate} function should only return a logical value.  
 
   For more detailed explanation, please go to the vignette.  
 
