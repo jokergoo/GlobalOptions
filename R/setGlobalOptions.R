@@ -1,4 +1,4 @@
-
+J
 # == title
 # Produce a function which can get or set global options
 #
@@ -53,7 +53,7 @@ setGlobalOptions = function(...) {
 	if(any(is.null(names(args))) || any(names(args) == "")) {
 		stop("You should provide named arguments\n")
 	}
-	
+	te = topenv(.envoking_env)
 	args[["__envokingNamespace__"]] = list(.value = topenv(.envoking_env),
 	                                       .read.only = TRUE,
 										   .visible = FALSE)
@@ -116,9 +116,11 @@ setGlobalOptions = function(...) {
 			private = FALSE
 			visible = TRUE
 		}
-
+    
+                be = new.env(parent = te)
 		# create an OPT object inside functions
-		e = environment(validate)
+                
+		parent.env(environment(validate)) = be
 		#if(exists("OPT", envir = e)) {
 		#	lockBinding("OPT", e)
 		#	unlockBinding("OPT", e)
@@ -127,7 +129,7 @@ setGlobalOptions = function(...) {
 		#lockBinding("OPT", e)
 		
 		
-		e = environment(filter)
+		parent.env(environment(filter)) = be
 		#if(exists("OPT", envir = e)) {
 		#	lockBinding("OPT", e)
 		#	unlockBinding("OPT", e)
@@ -137,7 +139,7 @@ setGlobalOptions = function(...) {
 		
 		
 		if(is.function(default_value) && length(intersect(class, "function")) == 0) {
-			e = environment(default_value)
+			parent.env(environment(default_value)) = be
 			#if(exists("OPT", envir = e)) {
 			#	lockBinding("OPT", e)
 			#	unlockBinding("OPT", e)
