@@ -334,6 +334,7 @@ setGlobalOptions = function(...) {
 				value = args[[ name[i] ]]
 
 				if(is.function(value) && length(intersect(class, "function")) == 0) {
+					value_fun = value
 					e3 = environment(value)
 					#if(bindingIsLocked("OPT", e3)) 
 					#unlockBinding("OPT", e3)
@@ -365,7 +366,12 @@ setGlobalOptions = function(...) {
 				value = filter(value)
 				
 				# finally, all values are correct
-				options2[[ name[i] ]][["value"]] = value
+				if(exists("value_fun")) {
+					options2[[ name[i] ]][["value"]] = value_fun
+				} else {
+					options2[[ name[i] ]][["value"]] = value
+				}
+				
 			}
 		}
 		# assign to original environment
