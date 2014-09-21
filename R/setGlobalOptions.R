@@ -1,4 +1,4 @@
-J
+
 # == title
 # Produce a function which can get or set global options
 #
@@ -53,7 +53,7 @@ setGlobalOptions = function(...) {
 	if(any(is.null(names(args))) || any(names(args) == "")) {
 		stop("You should provide named arguments\n")
 	}
-	te = topenv(.envoking_env)
+	
 	args[["__envokingNamespace__"]] = list(.value = topenv(.envoking_env),
 	                                       .read.only = TRUE,
 										   .visible = FALSE)
@@ -117,10 +117,8 @@ setGlobalOptions = function(...) {
 			visible = TRUE
 		}
     
-                be = new.env(parent = te)
-		# create an OPT object inside functions
-                
-		parent.env(environment(validate)) = be
+        # create an OPT object inside functions  
+		e = environment(validate)
 		#if(exists("OPT", envir = e)) {
 		#	lockBinding("OPT", e)
 		#	unlockBinding("OPT", e)
@@ -129,7 +127,7 @@ setGlobalOptions = function(...) {
 		#lockBinding("OPT", e)
 		
 		
-		parent.env(environment(filter)) = be
+		e = environment(filter)
 		#if(exists("OPT", envir = e)) {
 		#	lockBinding("OPT", e)
 		#	unlockBinding("OPT", e)
@@ -139,7 +137,7 @@ setGlobalOptions = function(...) {
 		
 		
 		if(is.function(default_value) && length(intersect(class, "function")) == 0) {
-			parent.env(environment(default_value)) = be
+			e = environment(default_value)
 			#if(exists("OPT", envir = e)) {
 			#	lockBinding("OPT", e)
 			#	unlockBinding("OPT", e)
@@ -387,7 +385,7 @@ getOptionValue = function(x, OPT) {
 			return(x$value)
 		} else {
 			e = environment(x$value)
-			#unlockBinding("OPT", e)
+			if(is.function(x$default_value)) unlockBinding("OPT", e)
 			assign("OPT", OPT, envir = e)
 			return(x$value())
 		}
@@ -404,7 +402,7 @@ getOPT = function(options) {
 		x = options[[i]]
 		if(is.function(x$value) && length(intersect(x$class, "function")) == 0) {
 			e = environment(x$value)
-			#unlockBinding("OPT", e)
+			if(is.function(x$default_value)) unlockBinding("OPT", e)
 			assign("OPT", OPT, envir = e)
 			OPT[[i]] = x$value()
 		} else {
