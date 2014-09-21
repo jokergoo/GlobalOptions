@@ -51,7 +51,7 @@ setGlobalOptions = function(...) {
 	args = list(...)
 	
 	if(any(is.null(names(args))) || any(names(args) == "")) {
-		stop("You should provide named arguments\n")
+		stop("You should provide named arguments.\n")
 	}
 	
 	args[["__envokingNamespace__"]] = list(.value = topenv(.envoking_env),

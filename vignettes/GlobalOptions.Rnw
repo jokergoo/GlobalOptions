@@ -52,8 +52,8 @@ foo.options(RESET = TRUE)
 foo.options()
 @
 
-If values for options are set as lists, more close controls can be customized. There are two
-basic conditions that are used to check the input option values:
+If option values are set as lists, more close controls can be customized. There are two
+basic fields that are used to check the input option values:
 
 <<eval = TRUE, echo = TRUE, include = TRUE>>==
 foo.options = setGlobalOptions(
@@ -112,7 +112,7 @@ foo.options(READ.ONLY = TRUE)
 foo.options(READ.ONLY = FALSE)
 @
 
-Validation of the option values can be set by {\tt .validate}. The value should be a function.
+Validation of the option values can be set by {\tt .validate}. The value of {\tt .validate} should be a function.
 The input of the validation function is the input option value and the function should only return
 a logical value.
 
@@ -171,7 +171,7 @@ foo.options("prefix")
 @
 
 If the value of the option is really a function and users don't want to execute it,
-just set {\tt .class} to {\tt function}, then the function will be treated as a simple value.
+just set {\tt .class} to contain {\tt function}, then the function will be treated as a simple value.
 
 <<eval = TRUE, echo = TRUE, include = TRUE>>==
 foo.options = setGlobalOptions(
@@ -247,6 +247,8 @@ where the option function is generated. E.g, if you are writing a package named 
 an option function {\tt foo.options}. If you set some option with {\tt .private} to {\tt TRUE}, the value for
 the option can only be modified inside {\tt foo} package while it is not permitted outside {\tt foo}. At the same time,
 the private option becomes a read-only option if querying outside {\tt foo} package.
+
+The order of checking when setting an option value is {\tt .read.only}, {\tt .private}, {\tt .length}, {\tt .class}, {\tt .validate} and {\tt .filter}.
 
 Global options are stored in a private environment. Each time when generating a option function,
 there will be a new environment created. Thus global options will not conflict if they come from
