@@ -1,10 +1,10 @@
 Changes in version 0.0.2
 ------------------------------------------------------------------------------
 
-* add .private and .visible fields when making options specification. private options
+* add .private and .visible fields when making options specification. Private options
   can only be modified if the namespace in which the options function is generated and the
   namespace where the options function is called is the same namespace. Invisible options
-  will not be returned if getting the option values.
+  will not be returned when getting the option values.
 
 Changes in version 0.0.1
 ------------------------------------------------------------------------------
