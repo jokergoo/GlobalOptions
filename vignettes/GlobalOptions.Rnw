@@ -52,8 +52,8 @@ foo.options(RESET = TRUE)
 foo.options()
 @
 
-If values for options are set as lists, more close controls can be customized. There are two
-basic conditions that are used to check the input option values:
+If option values are set as lists, more close controls can be customized. There are two
+basic fields that are used to check the input option values:
 
 <<eval = TRUE, echo = TRUE, include = TRUE>>==
 foo.options = setGlobalOptions(
@@ -65,7 +65,7 @@ foo.options = setGlobalOptions(
 
 In above code, {\tt .value} is the default value for the option {\tt a}, the length of the value
 is controlled by {\tt .length} and the length should be either 1 or 3, and the class of the value should be {\tt numeric}. If the input value does not 
-fit the criterion, there will be an error. The value of {\tt .length} or {\tt. class} is a 
+fit the criterion, there will be an error. The value of {\tt .length} or {\tt .class} is a 
 vector and the checking will be passed if one of the value fits user's input value.
 
 \begin{Schunk}
@@ -112,7 +112,7 @@ foo.options(READ.ONLY = TRUE)
 foo.options(READ.ONLY = FALSE)
 @
 
-Validation of the option values can be set by {\tt .validate}. The value should be a function.
+Validation of the option values can be set by {\tt .validate}. The value of {\tt .validate} should be a function.
 The input of the validation function is the input option value and the function should only return
 a logical value.
 
@@ -171,7 +171,7 @@ foo.options("prefix")
 @
 
 If the value of the option is really a function and users don't want to execute it,
-just set {\tt .class} to {\tt function}, then the function will be treated as a simple value.
+just set {\tt .class} to contain {\tt function}, then the function will be treated as a simple value.
 
 <<eval = TRUE, echo = TRUE, include = TRUE>>==
 foo.options = setGlobalOptions(
@@ -221,6 +221,34 @@ And in the second example, sign of {\tt b} should be as same as sign of {\tt a}.
 Error in foo.options(a = 1, b = -1) : Your option is invalid.
 \end{Soutput}
 \end{Schunk}
+
+Two additional fields may be helpful when developing packages. {\tt .visible} controls whether
+options are visible to users. If options names are specified as empty or a vector with length more than one,
+the invisible options will be hidden. The invisible option can only be queried by specifying its single
+option name. This would be helpful if users want to put some secret options while do not want others to access.
+Is this case, they can assign names like {\tt .\_\_MY\_PRIVATE\_KEY\_\_.} as their secret options and afterwards
+they can access it with this special key.
+
+<<eval = TRUE, echo = TRUE, include = TRUE>>==
+foo.options = setGlobalOptions(
+	a = list(.value = 1,
+	         .visible = FALSE),
+	b = 2
+)
+foo.options()
+foo.options("a")
+foo.options(a = 2)
+foo.options("a")
+@
+
+
+Another field {\tt .private} controls whether the option is only private to the package. If it is set to {\tt TRUE}, the option can only be modified in the same namespace (or top environment)
+where the option function is generated. E.g, if you are writing a package named {\tt foo} and generate
+an option function {\tt foo.options}. If you set some option with {\tt .private} to {\tt TRUE}, the value for
+the option can only be modified inside {\tt foo} package while it is not permitted outside {\tt foo}. At the same time,
+the private option becomes a read-only option if querying outside {\tt foo} package.
+
+The order of checking when setting an option value is {\tt .read.only}, {\tt .private}, {\tt .length}, {\tt .class}, {\tt .validate} and {\tt .filter}.
 
 Global options are stored in a private environment. Each time when generating a option function,
 there will be a new environment created. Thus global options will not conflict if they come from

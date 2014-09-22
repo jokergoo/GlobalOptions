@@ -35,18 +35,37 @@
 #                    .validate = function(x) x > 0),
 #     )
 #
-# ``.length``, ``.class`` and ``.validate`` will be used to check users' input. Please note ``.validate`` function
-# should only returns a logical value.
+# The different fields in the list can be used to filter or validate the option values.
+#
+# -.value The default value.
+# -.length The valid length of the option value. It can be a vector, the check will be passed if one of the length fits.
+# -.class The valid class of the option value. It can be a vector, the check will be passed if one of the class fits.
+# -.validate Validation function. The input parameter is the option value and should return a single logical value.
+# -.filter Filtering function. The input parameter is the option value and it should return a filtered option value.
+# -.read.only Logical. The option value will not be modified if it is set to ``TRUE``.
+# -.visible Logical.
+# -.private Logical. The option value can only be modified in the same namespace where the option function is created.
 #
 # For more detailed explanation, please go to the vignette.
 #
 setGlobalOptions = function(...) {
+
+	.envoking_env = parent.frame()
+	
+	envokedInTheSameNamespace = function(ns) {	
+		identical(ns, options[["__envokingNamespace__"]][["value"]])
+	}
+	
 	args = list(...)
 	
 	if(any(is.null(names(args))) || any(names(args) == "")) {
-		stop("You should provide named arguments\n")
+		stop("You should provide named arguments.\n")
 	}
-    
+	
+	args[["__envokingNamespace__"]] = list(.value = topenv(.envoking_env),
+	                                       .read.only = TRUE,
+										   .visible = FALSE)
+
 	# format the options
 	options = vector("list", length = length(args))
 
@@ -59,11 +78,12 @@ setGlobalOptions = function(...) {
 	}
 	
 	names(options) = names(args)
+	
 	for(i in seq_along(args)) {
 	
 		arg = args[[i]]
 		# if it is an advanced setting
-		if(is.list(arg) && length(setdiff(names(arg), c(".value", ".class", ".length", ".validate", ".filter", ".read.only"))) == 0) {
+		if(is.list(arg) && length(setdiff(names(arg), c(".value", ".class", ".length", ".validate", ".filter", ".read.only", ".private", ".visible"))) == 0) {
 			default_value = arg[[".value"]]
 			value = default_value
 			length = arg[[".length"]]
@@ -71,18 +91,28 @@ setGlobalOptions = function(...) {
 			if(is.null(arg[[".validate"]])) {
 				validate = function(x) TRUE
 			} else {
-				validate = arg[[".validate"]]
+				if(is.function(arg[[".validate"]])) {
+					validate = arg[[".validate"]]
+				} else {
+					stop(paste("'.validate' field in", names(args)[i], "should be a function.\n"))
+				}
 			}
 			if(is.null(arg[[".filter"]])) {
 				filter = function(x) x
 			} else {
-				filter = arg[[".filter"]]
+				if(is.function(arg[[".filter"]])) {
+					filter = arg[[".filter"]]
+				} else {
+					stop(paste("'.filter' field in", names(args)[i], "should be a function.\n"))
+				}
 			}
 			read.only = ifelse(is.null(arg[[".read.only"]]), FALSE, arg[[".read.only"]])
+			private = ifelse(is.null(arg[[".private"]]), FALSE, arg[[".private"]])
+			visible = ifelse(is.null(arg[[".visible"]]), TRUE, arg[[".visible"]])
 		} else {
-			if(is.list(arg) && length(intersect(names(arg), c(".value", ".class", ".length", ".validate", ".filter", ".read.only"))) > 0 &&
-				length(setdiff(names(arg), c(".value", ".class", ".length", ".validate", ".filter", ".read.only"))) > 0) {
-				warning(paste("Your defintion for '", names(args)[i], "' is mixed. It should only contain .value, .class, .length, .validate, .filter, .read.only.\nIgnore the setting and use the whole list as the default value.\n", sep = ""))
+			if(is.list(arg) && length(intersect(names(arg), c(".value", ".class", ".length", ".validate", ".filter", ".read.only", ".private", ".visible"))) > 0 &&
+				length(setdiff(names(arg), c(".value", ".class", ".length", ".validate", ".filter", ".read.only", ".private", ".visible"))) > 0) {
+				warning(paste("Your definition for '", names(args)[i], "' is mixed. It should only contain\n.value, .class, .length, .validate, .filter, .read.only, .private, .visible.\nIgnore the setting and use the whole list as the default value.\n", sep = ""))
 			}
 			default_value = arg
 			value = arg
@@ -91,14 +121,39 @@ setGlobalOptions = function(...) {
 			validate = function(x) TRUE
 			filter = function(x) x
 			read.only = FALSE
+			private = FALSE
+			visible = TRUE
 		}
-
-		# create an OPT object inside functions
-		assign("OPT", NULL, envir = environment(validate))
-		assign("OPT", NULL, envir = environment(filter))
+    
+        # create an OPT object inside functions  
+		e = environment(validate)
+		#if(exists("OPT", envir = e)) {
+		#	lockBinding("OPT", e)
+		#	unlockBinding("OPT", e)
+		#}
+		assign("OPT", NULL, envir = e)
+		#lockBinding("OPT", e)
+		
+		
+		e = environment(filter)
+		#if(exists("OPT", envir = e)) {
+		#	lockBinding("OPT", e)
+		#	unlockBinding("OPT", e)
+		#}
+		assign("OPT", NULL, envir = e)
+		#lockBinding("OPT", e)
+		
+		
 		if(is.function(default_value) && length(intersect(class, "function")) == 0) {
-			assign("OPT", NULL, envir = environment(default_value))
-			assign("OPT", NULL, envir = environment(value))		
+			e = environment(default_value)
+			#if(exists("OPT", envir = e)) {
+			#	lockBinding("OPT", e)
+			#	unlockBinding("OPT", e)
+			#}
+			assign("OPT", NULL, envir = e)
+			#lockBinding("OPT", e)
+			
+			# same for environment of default_value and value 		
 		}
 
 		options[[i]] = list(default_value = default_value,
@@ -107,18 +162,32 @@ setGlobalOptions = function(...) {
 							class         = class,
 							validate      = validate,
 							filter        = filter,
-							read.only     = read.only)
+							read.only     = read.only,
+							private       = private,
+							visible       = visible)
 	}
 	
 	sth.par = function(..., RESET = FALSE, READ.ONLY = NULL) {
-	
+		.envoking_env = parent.frame()
+		ns = topenv(.envoking_env)
+		
 		# first we need a copy of `options`
 		options2 = options
 		
 		# reset the options
 		if(RESET) {
 			for(i in seq_along(options2)) {
-				options2[[i]][["value"]] = options[[i]][["default_value"]]
+				if(envokedInTheSameNamespace(ns)) {
+					# read-only options cannot be reset
+					if(! options2[[i]][["read.only"]]) {
+						options2[[i]][["value"]] = options[[i]][["default_value"]]
+					}
+				} else {
+					# read-only and private options can not be reset
+					if(! (options2[[i]][["read.only"]] && options2[[i]][["private"]]) ) {
+						options2[[i]][["value"]] = options[[i]][["default_value"]]
+					}
+				}
 			}
 			# assign to original environment
 			options <<- options2
@@ -141,14 +210,27 @@ setGlobalOptions = function(...) {
 		# getting all options
 		if(length(args) == 0) {
 			val = lapply(options, getOptionValue, OPT)
+			# only returns visible options
+			l_visible = sapply(options, function(x) x[["visible"]])
 			if(is.null(READ.ONLY)) {
-				return(val)
+				return(val[l_visible])
 			} else {
-				l = sapply(options, function(x) x$read.only)
-				if(READ.ONLY) {
-					return(val[l])
+				l1 = sapply(options, function(x) x[["read.only"]])
+				l2 = sapply(options, function(x) x[["private"]])
+				
+				# in the same namespace, then private is not read only
+				if(envokedInTheSameNamespace(ns)) {
+					if(READ.ONLY) {
+						return(val[l_visible & l1])
+					} else {
+						return(val[l_visible & (!l1)])
+					}
 				} else {
-					return(val[!l])
+					if(READ.ONLY) {
+						return(val[l_visible & (l1 | l2)])
+					} else {
+						return(val[l_visible & (!(l1 | l2))])
+					}
 				}
 			}
 		}
@@ -163,26 +245,51 @@ setGlobalOptions = function(...) {
 			
 			if(length(args) == 1) {
 				val = getOptionValue(options[[args]], OPT)
+				
 				if(is.null(READ.ONLY)) {
 					return(val)
 				} else {
-					l = options[[args]]$read.only
-					if(READ.ONLY) {
-						return(val[l])
+					l1 = options[[args]][["read.only"]]
+					l2 = options[[args]][["private"]]
+					
+					# in the same namespace, then private is not read only
+					if(envokedInTheSameNamespace(ns)) {
+						if(READ.ONLY) {
+							return(val[l_visible & l1])
+						} else {
+							return(val[l_visible & (!l1)])
+						}
 					} else {
-						return(val[!l])
+						if(READ.ONLY) {
+							return(val[l_visible & (l1 | l2)])
+						} else {
+							return(val[l_visible & (!(l1 | l2))])
+						}
 					}
 				}
 			} else {
 				val = lapply(options[args], getOptionValue, OPT)
+				l_visible = sapply(options[args], function(x) x[["visible"]])
+				
 				if(is.null(READ.ONLY)) {
-					return(val)
+					return(val[l_visible])
 				} else {
-					l = sapply(options[args], function(x) x$read.only)
-					if(READ.ONLY) {
-						return(val[l])
+					l1 = sapply(options[args], function(x) x[["read.only"]])
+					l2 = sapply(options[args], function(x) x[["private"]])
+					
+					# in the same namespace, then private is not read only
+					if(envokedInTheSameNamespace(ns)) {
+						if(READ.ONLY) {
+							return(val[l_visible & l1])
+						} else {
+							return(val[l_visible & (!l1)])
+						}
 					} else {
-						return(val[!l])
+						if(READ.ONLY) {
+							return(val[l_visible & (l1 | l2)])
+						} else {
+							return(val[l_visible & (!(l1 | l2))])
+						}
 					}
 				}
 			}
@@ -207,17 +314,27 @@ setGlobalOptions = function(...) {
 				validate = options[[ name[i] ]][["validate"]]
 				filter = options[[ name[i] ]][["filter"]]
 				read.only = options[[ name[i] ]][["read.only"]]
+				private = options[[ name[i] ]][["private"]]
 				
 				# test on read only
 				if(read.only) {
 					stop(paste("'", name[i], "' is a read-only option.\n", sep = ""))
 				}
 				
+				# test on private
+				# in option function generation and calling are in the same namespace, then private options can be modified
+				if( (!envokedInTheSameNamespace(ns)) && private) {
+					stop(paste("'", name[i], "' is a private option and it can be modified inside '", env2txt(options[["__envokingNamespace__"]][["value"]]), "' namespace.\n", sep = ""))
+				}
+				
 				OPT = getOPT(options2)
 				e1 = environment(validate)
+				#if(bindingIsLocked("OPT", e1)) 
 				unlockBinding("OPT", e1)
 				assign("OPT", OPT, envir = e1)
+
 				e2 = environment(filter)
+				#if(bindingIsLocked("OPT", e2)) 
 				unlockBinding("OPT", e2)
 				assign("OPT", OPT, envir = e2)
 
@@ -225,8 +342,10 @@ setGlobalOptions = function(...) {
 				value = args[[ name[i] ]]
 
 				if(is.function(value) && length(intersect(class, "function")) == 0) {
+					value_fun = value
 					e3 = environment(value)
 					assign("OPT", OPT, envir = e3)
+					#lockBinding("OPT", e3)
 					value = value()
 				}
 				
@@ -253,7 +372,12 @@ setGlobalOptions = function(...) {
 				value = filter(value)
 				
 				# finally, all values are correct
-				options2[[ name[i] ]][["value"]] = value
+				if(exists("value_fun")) {
+					options2[[ name[i] ]][["value"]] = value_fun
+				} else {
+					options2[[ name[i] ]][["value"]] = value
+				}
+				
 			}
 		}
 		# assign to original environment
@@ -273,7 +397,7 @@ getOptionValue = function(x, OPT) {
 			return(x$value)
 		} else {
 			e = environment(x$value)
-			unlockBinding("OPT", e)
+			if(is.function(x$default_value)) unlockBinding("OPT", e)
 			assign("OPT", OPT, envir = e)
 			return(x$value())
 		}
@@ -290,7 +414,7 @@ getOPT = function(options) {
 		x = options[[i]]
 		if(is.function(x$value) && length(intersect(x$class, "function")) == 0) {
 			e = environment(x$value)
-			unlockBinding("OPT", e)
+			if(is.function(x$default_value)) unlockBinding("OPT", e)
 			assign("OPT", OPT, envir = e)
 			OPT[[i]] = x$value()
 		} else {
@@ -298,4 +422,16 @@ getOPT = function(options) {
 		}
 	}
 	return(OPT)
+}
+
+env2txt = function(env) {
+	if(identical(env, emptyenv())) {
+		return("R_EmptyEnv")
+	} else if(identical(env, .GlobalEnv)){
+		return("R_GlobalEnv")
+	} else if(isNamespace(env)) {
+		return(getNamespaceName(env))
+	} else {
+		return("CallStack")
+	}
 }

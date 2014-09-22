@@ -42,7 +42,7 @@ test_that("set option values", {
 
 
 # testing if advanced setting is not mixed
-test_that("tesing on mixed setting", {
+test_that("testing on mixed setting", {
 	expect_that(foo.options <- setGlobalOptions(
 	a = list(.value = 1,
 	         length = 1,
@@ -110,6 +110,9 @@ test_that("testing if '.value' is set as a function", {
 	expect_that(foo.options(), is_identical_to(list(a = 1, b = 2, c = 3)))
 	foo.options(a = function(x) 1)
 	expect_that(foo.options("a"), is_identical_to(1))
+	v = get("options", envir = environment(foo.options))$a$value
+	expect_that(class(v), is_identical_to("function"))
+	expect_that(v(), is_identical_to(1))
 	foo.options(b = function(x) 2)
 	expect_that(body(foo.options("b")), is_identical_to(2))
 	expect_that(foo.options(c = function(x) "text"), throws_error("Class of .* should be one of"))
@@ -158,3 +161,20 @@ test_that("tesing if input value is NULL", {
 	foo.options(a = NULL)
 	expect_that(foo.options("a"), is_identical_to(NULL))
 })
+
+## test if .value is invisible
+foo.options = setGlobalOptions(
+	a = list(.value = 1,
+	         .visible = FALSE),
+	b = 1
+)
+
+test_that("testing if '.value' is visible", {
+	expect_that(foo.options(), is_identical_to(list(b = 1)))
+	expect_that(foo.options("a"), is_identical_to(1))
+	foo.options(a = 2)
+	expect_that(foo.options("a"), is_identical_to(2))
+})
+
+### how can I test the private field?
+

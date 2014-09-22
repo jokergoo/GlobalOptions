@@ -51,8 +51,18 @@ setGlobalOptions(...)
                  .validate = function(x) x > 0),
   )
   }
-  \code{.length}, \code{.class} and \code{.validate} will be used to check users' input. Please note \code{.validate} function should only returns a logical value.  
+  The different fields in the list can be used to filter or validate the option values.  
 
+\describe{
+  \item{.value}{The default value.}
+  \item{.length}{The valid length of the option value. It can be a vector, the check will be passed if one of the length fits.}
+  \item{.class}{The valid class of the option value. It can be a vector, the check will be passed if one of the class fits.}
+  \item{.validate}{Validation function. The input parameter is the option value and should return a single logical value.}
+  \item{.filter}{Filtering function. The input parameter is the option value and it should return a filtered option value.}
+  \item{.read.only}{Logical. The option value will not be modified if it is set to \code{TRUE}.}
+  \item{.visible}{Logical.}
+  \item{.private}{Logical. The option value can only be modified in the same namespace where the option function is created.}
+}
   For more detailed explanation, please go to the vignette.  
 
 

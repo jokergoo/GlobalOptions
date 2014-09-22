@@ -34,11 +34,12 @@ foo.options = setGlobalOptions(
     "a" = list(.value = 1,
                .length = 1,
                .class = "numeric",
-               .validate = function(x) x > 0),
+               .validate = function(x) x > 0,
+               .filter = function(x) ifelse(x > 10, 10, x),
+               .visible = TRUE,
+               .private = FALSE)
     "b" = "text"
 )
 ```
-
-`.length`, `.class` and `.validate` will be used to check users' input.
 
 There are more customizations on the options, please see the vignette.
