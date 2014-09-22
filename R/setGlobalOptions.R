@@ -217,18 +217,15 @@ setGlobalOptions = function(...) {
 				e1 = environment(validate)
 				unlockBinding("OPT", e1)
 				assign("OPT", OPT, envir = e1)
-				lockBinding("OPT", e1)
 				e2 = environment(filter)
 				unlockBinding("OPT", e2)
 				assign("OPT", OPT, envir = e2)
-				lockBinding("OPT", e2)
 
 				# user's value
 				value = args[[ name[i] ]]
 
 				if(is.function(value) && length(intersect(class, "function")) == 0) {
 					e3 = environment(value)
-					#unlockBinding("OPT", e)
 					assign("OPT", OPT, envir = e3)
 					value = value()
 				}
@@ -278,7 +275,6 @@ getOptionValue = function(x, OPT) {
 			e = environment(x$value)
 			unlockBinding("OPT", e)
 			assign("OPT", OPT, envir = e)
-			lockBinding("OPT", e)
 			return(x$value())
 		}
 	} else {
@@ -296,7 +292,6 @@ getOPT = function(options) {
 			e = environment(x$value)
 			unlockBinding("OPT", e)
 			assign("OPT", OPT, envir = e)
-			lockBinding("OPT", e)
 			OPT[[i]] = x$value()
 		} else {
 			OPT[[i]] = x$value
