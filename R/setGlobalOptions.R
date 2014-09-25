@@ -324,7 +324,7 @@ setGlobalOptions = function(...) {
 				# test on private
 				# in option function generation and calling are in the same namespace, then private options can be modified
 				if( (!envokedInTheSameNamespace(ns)) && private) {
-					stop(paste("'", name[i], "' is a private option and it can be modified inside '", env2txt(options[["__envokingNamespace__"]][["value"]]), "' namespace.\n", sep = ""))
+					stop(paste("'", name[i], "' is a private option and it can only be modified inside '", env2txt(options[["__envokingNamespace__"]][["value"]]), "' namespace.\n", sep = ""))
 				}
 				
 				OPT = getOPT(options2)
@@ -344,8 +344,6 @@ setGlobalOptions = function(...) {
 				if(is.function(value) && length(intersect(class, "function")) == 0) {
 					value_fun = value
 					e3 = environment(value)
-					#if(bindingIsLocked("OPT", e3)) 
-					#unlockBinding("OPT", e3)
 					assign("OPT", OPT, envir = e3)
 					#lockBinding("OPT", e3)
 					value = value()
