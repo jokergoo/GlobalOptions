@@ -53,7 +53,7 @@ setGlobalOptions = function(...) {
 	.envoking_env = parent.frame()
 	
 	envokedInTheSameNamespace = function(ns) {	
-		identical(ns, options[["__envokingNamespace__"]][["value"]])
+		identical(ns, options[["__generatedNamespace__"]][["value"]])
 	}
 	
 	args = list(...)
@@ -62,7 +62,7 @@ setGlobalOptions = function(...) {
 		stop("You should provide named arguments.\n")
 	}
 	
-	args[["__envokingNamespace__"]] = list(.value = topenv(.envoking_env),
+	args[["__generatedNamespace__"]] = list(.value = topenv(.envoking_env),
 	                                       .read.only = TRUE,
 										   .visible = FALSE)
 
@@ -167,12 +167,62 @@ setGlobalOptions = function(...) {
 							visible       = visible)
 	}
 	
-	sth.par = function(..., RESET = FALSE, READ.ONLY = NULL) {
+	local_options_db = list(.tmp = NULL)
+	
+	sth.par = function(..., RESET = FALSE, READ.ONLY = NULL, LOCAL = NULL) {
 		.envoking_env = parent.frame()
-		ns = topenv(.envoking_env)
+		ns = topenv(.envoking_env)  # package the option function is used
+		
+		local_options_name = env2txt(ns);
+		local_options_name = gsub(":", "_", local_options_name)  # to make a valid variable name
+		env = as.environment(local_options_db)
+		options_env = parent.env(environment())
+		
+		is_in_local_mode = function() {
+			if(is.null(LOCAL)) {
+				# local_options_name exists means it is already in local mode
+				if(exists(local_options_name, envir = env)) {
+					return(TRUE)
+				} else {
+					return(FALSE)
+				}
+			} else if(LOCAL) {  # set to local mode
+				assign(local_options_name, options, envir = env)  # or set to default values ???
+				return(TRUE)
+			} else {  # cancel local mode
+				if(exists(local_options_name, envir = env)) {  # just in case it is called in non-local mode
+					# delete the local option
+					rm(local_options_name, envir = env)
+					return(FALSE)
+				}
+				return(FALSE)
+			}
+		}
+		
+		# re-define get_options and set_options
+		if(is_in_local_mode()) {
+
+			get_options = function() {
+				get(local_options_name, envir = env)
+			}
+			
+			set_options = function(options) {
+				assign(local_options_name, options, envir = env)
+			}
+			
+		} else {
+		
+			get_options = function() {
+				get("options", envir = options_env)
+			}
+			
+			set_options = function(options) {
+				assign("options", options, envir = options_env)
+			}
+		}
 		
 		# first we need a copy of `options`
-		options2 = options
+		options2 = get_options()
 		
 		# reset the options
 		if(RESET) {
@@ -180,17 +230,17 @@ setGlobalOptions = function(...) {
 				if(envokedInTheSameNamespace(ns)) {
 					# read-only options cannot be reset
 					if(! options2[[i]][["read.only"]]) {
-						options2[[i]][["value"]] = options[[i]][["default_value"]]
+						options2[[i]][["value"]] = options2[[i]][["default_value"]]
 					}
 				} else {
 					# read-only and private options can not be reset
 					if(! (options2[[i]][["read.only"]] && options2[[i]][["private"]]) ) {
-						options2[[i]][["value"]] = options[[i]][["default_value"]]
+						options2[[i]][["value"]] = options2[[i]][["default_value"]]
 					}
 				}
 			}
 			# assign to original environment
-			options <<- options2
+			set_options(options2)
 			return(invisible(NULL))
 		}
 		
@@ -205,18 +255,18 @@ setGlobalOptions = function(...) {
 			args = args[[1]]
 		}
 
-		OPT = getOPT(options)
+		OPT = getOPT(options2)
 
 		# getting all options
 		if(length(args) == 0) {
-			val = lapply(options, getOptionValue, OPT)
+			val = lapply(options2, getOptionValue, OPT)
 			# only returns visible options
-			l_visible = sapply(options, function(x) x[["visible"]])
+			l_visible = sapply(options2, function(x) x[["visible"]])
 			if(is.null(READ.ONLY)) {
 				return(val[l_visible])
 			} else {
-				l1 = sapply(options, function(x) x[["read.only"]])
-				l2 = sapply(options, function(x) x[["private"]])
+				l1 = sapply(options2, function(x) x[["read.only"]])
+				l2 = sapply(options2, function(x) x[["private"]])
 				
 				# in the same namespace, then private is not read only
 				if(envokedInTheSameNamespace(ns)) {
@@ -239,18 +289,18 @@ setGlobalOptions = function(...) {
 		if(is.null(names(args))) {
 			args = unlist(args)
 			
-			if(length(setdiff(args, names(options)))) {
-				stop(paste("No such option(s):", paste(setdiff(args, names(options)), collapse = ""), "\n"))
+			if(length(setdiff(args, names(options2)))) {
+				stop(paste("No such option(s):", paste(setdiff(args, names(options2)), collapse = ""), "\n"))
 			}
 			
 			if(length(args) == 1) {
-				val = getOptionValue(options[[args]], OPT)
+				val = getOptionValue(options2[[args]], OPT)
 				
 				if(is.null(READ.ONLY)) {
 					return(val)
 				} else {
-					l1 = options[[args]][["read.only"]]
-					l2 = options[[args]][["private"]]
+					l1 = options2[[args]][["read.only"]]
+					l2 = options2[[args]][["private"]]
 					
 					# in the same namespace, then private is not read only
 					if(envokedInTheSameNamespace(ns)) {
@@ -381,7 +431,7 @@ setGlobalOptions = function(...) {
 			}
 		}
 		# assign to original environment
-		options <<- options2
+		set_options(options2)
 		return(invisible(NULL))
 	}
 	
