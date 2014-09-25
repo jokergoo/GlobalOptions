@@ -62,6 +62,10 @@ setGlobalOptions = function(...) {
 		stop("You should provide named arguments.\n")
 	}
 	
+	if("__generatedNamespace__" %in% names(args)) {
+		stop("Don't use '__generatedNamespace__' as the option name.\n")
+	}
+	
 	args[["__generatedNamespace__"]] = list(.value = topenv(.envoking_env),
 	                                       .read.only = TRUE,
 										   .visible = FALSE)
@@ -75,6 +79,10 @@ setGlobalOptions = function(...) {
 	
 	if("READ.ONLY" %in% names(args)) {
 		stop("Don't use 'READ.ONLY' as the option name.\n")
+	}
+	
+	if("LOCAL" %in% names(args)) {
+		stop("Don't use 'LOCAL' as the option name.\n")
 	}
 	
 	names(options) = names(args)
@@ -167,32 +175,33 @@ setGlobalOptions = function(...) {
 							visible       = visible)
 	}
 	
+	# create a pool to store copies of local options
 	local_options_db = list(.tmp = NULL)
 	
 	sth.par = function(..., RESET = FALSE, READ.ONLY = NULL, LOCAL = NULL) {
 		.envoking_env = parent.frame()
-		ns = topenv(.envoking_env)  # package the option function is used
+		ns = topenv(.envoking_env)  # top package the option function is used
 		
 		local_options_name = env2txt(ns);
-		local_options_name = gsub(":", "_", local_options_name)  # to make a valid variable name
-		env = as.environment(local_options_db)
-		options_env = parent.env(environment())
+		local_options_name = gsub(":", "_", local_options_name)  # to make it a valid variable name
+		local_env = as.environment(local_options_db)  # environment where local options is stored
+		options_env = parent.env(environment()) # environment where global options is stored
 		
-		is_in_local_mode = function() {
+		is_in_local_mode = function(LOCAL) {
 			if(is.null(LOCAL)) {
 				# local_options_name exists means it is already in local mode
-				if(exists(local_options_name, envir = env)) {
+				if(exists(local_options_name, envir = local_env)) {
 					return(TRUE)
 				} else {
 					return(FALSE)
 				}
 			} else if(LOCAL) {  # set to local mode
-				assign(local_options_name, options, envir = env)  # or set to default values ???
+				assign(local_options_name, options, envir = local_env)  # or set to default values ???
 				return(TRUE)
 			} else {  # cancel local mode
-				if(exists(local_options_name, envir = env)) {  # just in case it is called in non-local mode
+				if(exists(local_options_name, envir = local_env)) {  # just in case it is called in non-local mode
 					# delete the local option
-					rm(local_options_name, envir = env)
+					rm(local_options_name, envir = local_env)
 					return(FALSE)
 				}
 				return(FALSE)
@@ -200,14 +209,14 @@ setGlobalOptions = function(...) {
 		}
 		
 		# re-define get_options and set_options
-		if(is_in_local_mode()) {
+		if(is_in_local_mode(LOCAL)) {
 
 			get_options = function() {
-				get(local_options_name, envir = env)
+				get(local_options_name, envir = local_env)
 			}
 			
 			set_options = function(options) {
-				assign(local_options_name, options, envir = env)
+				assign(local_options_name, options, envir = local_env)
 			}
 			
 		} else {
