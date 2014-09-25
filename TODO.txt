@@ -1,1 +1,1 @@
-add a local feature which means options only be effective in envoking namespace
+set options locally effective in specified namespace
