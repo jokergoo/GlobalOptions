@@ -176,50 +176,54 @@ setGlobalOptions = function(...) {
 	}
 	
 	# create a pool to store copies of local options
-	local_options_db = list(.tmp = NULL)
+	#local_options_db = list(.tmp = NULL)
+	#local_env = as.environment(local_options_db)  # environment where local options is stored
 	
-	sth.par = function(..., RESET = FALSE, READ.ONLY = NULL, LOCAL = NULL) {
+	sth.par = function(..., RESET = FALSE, READ.ONLY = NULL) {
 		.envoking_env = parent.frame()
 		ns = topenv(.envoking_env)  # top package the option function is used
 		
-		local_options_name = env2txt(ns);
-		local_options_name = gsub(":", "_", local_options_name)  # to make it a valid variable name
-		local_env = as.environment(local_options_db)  # environment where local options is stored
+		#local_options_name = env2txt(ns);
+		#local_options_name = gsub(":", "_", local_options_name)  # to make it a valid variable name
+		
 		options_env = parent.env(environment()) # environment where global options is stored
 		
-		is_in_local_mode = function(LOCAL) {
-			if(is.null(LOCAL)) {
-				# local_options_name exists means it is already in local mode
-				if(exists(local_options_name, envir = local_env)) {
-					return(TRUE)
-				} else {
-					return(FALSE)
-				}
-			} else if(LOCAL) {  # set to local mode
-				assign(local_options_name, options, envir = local_env)  # or set to default values ???
-				return(TRUE)
-			} else {  # cancel local mode
-				if(exists(local_options_name, envir = local_env)) {  # just in case it is called in non-local mode
-					# delete the local option
-					rm(local_options_name, envir = local_env)
-					return(FALSE)
-				}
-				return(FALSE)
-			}
-		}
+		############# no supported yet ######################
+		#LOCAL = NULL
+		#is_in_local_mode = function(LOCAL) {
+		#	if(is.null(LOCAL)) {
+		#		# local_options_name exists means it is already in local mode
+		#		if(exists(local_options_name, envir = local_env)) {
+		#			return(TRUE)
+		#		} else {
+		#			return(FALSE)
+		#		}
+		#	} else if(LOCAL) {  # set to local mode
+		#		assign(local_options_name, options, envir = local_env)  # or set to default values ???
+		#		return(TRUE)
+		#	} else {  # cancel local mode
+		#		if(exists(local_options_name, envir = local_env)) {  # just in case it is called in non-local mode
+		#			# delete the local option
+		#			rm(local_options_name, envir = local_env)
+		#			return(FALSE)
+		#		}
+		#		return(FALSE)
+		#	}
+		#}
+		#######################################
 		
 		# re-define get_options and set_options
-		if(is_in_local_mode(LOCAL)) {
-
-			get_options = function() {
-				get(local_options_name, envir = local_env)
-			}
-			
-			set_options = function(options) {
-				assign(local_options_name, options, envir = local_env)
-			}
-			
-		} else {
+		#if(is_in_local_mode(LOCAL)) {
+		#	
+		#	get_options = function() {
+		#		get(local_options_name, envir = local_env)
+		#	}
+		#	
+		#	set_options = function(options) {
+		#		assign(local_options_name, options, envir = local_env)
+		#	}
+		#	
+		#} else {
 		
 			get_options = function() {
 				get("options", envir = options_env)
@@ -228,7 +232,7 @@ setGlobalOptions = function(...) {
 			set_options = function(options) {
 				assign("options", options, envir = options_env)
 			}
-		}
+		#}
 		
 		# first we need a copy of `options`
 		options2 = get_options()
@@ -252,6 +256,11 @@ setGlobalOptions = function(...) {
 			set_options(options2)
 			return(invisible(NULL))
 		}
+		
+		#if(is.logical(LOCAL)) {
+		#	return(invisible(NULL))
+		#}
+		
 		
 		args = list(...)
 		
@@ -430,6 +439,21 @@ setGlobalOptions = function(...) {
 				# filter on data
 				value = filter(value)
 				
+				# check filtered value again
+				# test on value length
+				if(!is.null(length)) {
+					if(!(length(value) %in% length)) {
+						stop(paste("Length of filtered '", name[i], "' should be one of ", paste(length, collapse = ", "), "\n", sep = ""))
+					}
+				}
+
+				# test on classes of the values
+				if(!is.null(class)) {
+					if(!any(sapply(class, function(cl) is(value, cl)))) {
+						stop(paste("Class of filtered '", name[i], "' should be one of '", paste(class, collapse = ", "), "'.\n", sep = ""))
+					}
+				}
+				
 				# finally, all values are correct
 				if(exists("value_fun")) {
 					options2[[ name[i] ]][["value"]] = value_fun
@@ -490,6 +514,8 @@ env2txt = function(env) {
 		return("R_GlobalEnv")
 	} else if(isNamespace(env)) {
 		return(getNamespaceName(env))
+	} else if(!is.null(attr(env, "name"))) {
+		return(attr(env, "name"))
 	} else {
 		return("CallStack")
 	}

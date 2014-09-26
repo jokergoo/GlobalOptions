@@ -97,6 +97,16 @@ test_that("tesing on .validate and .filter ", {
 	expect_that(foo.options(a = 20), throws_error("Your option is invalid"))
 })
 
+# test value after filter
+foo.options = setGlobalOptions(
+	a = list(.value = 1,
+	         .length = 1,
+	         .filter = function(x) c(x, x))
+)
+test_that("testing on validation of filtered value", {
+	expect_that(foo.options(a = 2), throws_error("Length of filtered"))
+})
+
 # testing if .value is a function
 foo.options = setGlobalOptions(
 	a = list(.value = 1),
@@ -177,4 +187,21 @@ test_that("testing if '.value' is visible", {
 })
 
 ### how can I test the private field?
+
+### test private field
+env1 = attach(NULL, name = "package1")
+env2 = attach(NULL, name = "package2")
+
+test_that("testing '.private' field", {
+	expect_that(sys.source(system.file("tests/package1", package = "GlobalOptions"), envir = env1), shows_message("12"))
+	expect_that(opt1("a"), is_identical_to(2))
+	expect_that(opt1(a = 3), throws_error("is a private option and it can only be modified"))
+})
+
+
+### test local mode
+#test_that("testing LOCAL mode", {
+#	expect_that(sys.source(system.file("tests/package2", package = "GlobalOptions"), envir = env2), shows_message("3"))
+#	expect_that(opt1("b"), is_identical_to(2))
+#})
 
