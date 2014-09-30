@@ -32,7 +32,7 @@
 #         "a" = list(.value = 1,
 #                    .length = 1,
 #                    .class = "numeric",
-#                    .validate = function(x) x > 0),
+#                    .validate = function(x) x > 0)
 #     )
 #
 # The different fields in the list can be used to filter or validate the option values.
@@ -42,8 +42,8 @@
 # -.class The valid class of the option value. It can be a vector, the check will be passed if one of the class fits.
 # -.validate Validation function. The input parameter is the option value and should return a single logical value.
 # -.filter Filtering function. The input parameter is the option value and it should return a filtered option value.
-# -.read.only Logical. The option value will not be modified if it is set to ``TRUE``.
-# -.visible Logical.
+# -.read.only Logical. The option value can not be modified if it is set to ``TRUE``.
+# -.visible Logical. Whether the option is visible to users.
 # -.private Logical. The option value can only be modified in the same namespace where the option function is created.
 #
 # For more detailed explanation, please go to the vignette.

@@ -21,13 +21,13 @@ foo.options("a" = 2)
 foo.options("a" = 2, "b" = "new_text")
 ```
 
-And users can reset their default values by:
+Users can reset their default values by:
 
 ```r
 foo.options(RESET = TRUE)
 ```
 
-The value for each option can be set as a list which may contain more control on the option:
+The value for each option can be set as a list which may contain more controls on the option:
 
 ```r
 foo.options = setGlobalOptions(
@@ -37,9 +37,9 @@ foo.options = setGlobalOptions(
                .validate = function(x) x > 0,
                .filter = function(x) ifelse(x > 10, 10, x),
                .visible = TRUE,
-               .private = FALSE)
+               .private = FALSE),
     "b" = "text"
 )
 ```
 
-There are more customizations on the options, please see the vignette.
+Please see the vignette to get more detailed explanation.
