@@ -26,7 +26,7 @@
 #
 #     foo.options(RESET = TRUE)
 #
-# The value for each option can be set as a list which may contain more control of the option:
+# The value for each option can be set as a list which contains more controls of the option:
 #
 #     foo.options = setGlobalOptions(
 #         "a" = list(.value = 1,
@@ -39,7 +39,7 @@
 #
 # -.value The default value.
 # -.length The valid length of the option value. It can be a vector, the check will be passed if one of the length fits.
-# -.class The valid class of the option value. It can be a vector, the check will be passed if one of the class fits.
+# -.class The valid class of the option value. It can be a vector, the check will be passed if one of the classes fits.
 # -.validate Validation function. The input parameter is the option value and should return a single logical value.
 # -.filter Filtering function. The input parameter is the option value and it should return a filtered option value.
 # -.read.only Logical. The option value can not be modified if it is set to ``TRUE``.
@@ -50,8 +50,11 @@
 #
 setGlobalOptions = function(...) {
 
+	# the environment where the function is called
 	.envoking_env = parent.frame()
 	
+	# whether the environment where foo.options() is called is the same as the 
+	# environment where foo.options() is generated.
 	envokedInTheSameNamespace = function(ns) {	
 		identical(ns, options[["__generatedNamespace__"]][["value"]])
 	}
@@ -86,6 +89,7 @@ setGlobalOptions = function(...) {
 	}
 	
 	names(options) = names(args)
+	
 	
 	for(i in seq_along(args)) {
 	
@@ -132,37 +136,6 @@ setGlobalOptions = function(...) {
 			private = FALSE
 			visible = TRUE
 		}
-    
-        # create an OPT object inside functions  
-		e = environment(validate)
-		#if(exists("OPT", envir = e)) {
-		#	lockBinding("OPT", e)
-		#	unlockBinding("OPT", e)
-		#}
-		assign("OPT", NULL, envir = e)
-		#lockBinding("OPT", e)
-		
-		
-		e = environment(filter)
-		#if(exists("OPT", envir = e)) {
-		#	lockBinding("OPT", e)
-		#	unlockBinding("OPT", e)
-		#}
-		assign("OPT", NULL, envir = e)
-		#lockBinding("OPT", e)
-		
-		
-		if(is.function(default_value) && length(intersect(class, "function")) == 0) {
-			e = environment(default_value)
-			#if(exists("OPT", envir = e)) {
-			#	lockBinding("OPT", e)
-			#	unlockBinding("OPT", e)
-			#}
-			assign("OPT", NULL, envir = e)
-			#lockBinding("OPT", e)
-			
-			# same for environment of default_value and value 		
-		}
 
 		options[[i]] = list(default_value = default_value,
 		                    value         = value,
@@ -175,67 +148,60 @@ setGlobalOptions = function(...) {
 							visible       = visible)
 	}
 	
+	# place to store `options` and `OPT`
+	options_env = new.env()
+	assign("options", options, envir = options_env)
+	
+	OPT_env = new.env()
+	OPT = vector("list", length = length(options))
+	names(OPT) = names(options)
+	assign("OPT", OPT, envir = OPT_env)
+	
 	# create a pool to store copies of local options
 	#local_options_db = list(.tmp = NULL)
 	#local_env = as.environment(local_options_db)  # environment where local options is stored
 	
 	sth.par = function(..., RESET = FALSE, READ.ONLY = NULL) {
+		# the environment where foo.options() is called
 		.envoking_env = parent.frame()
-		ns = topenv(.envoking_env)  # top package the option function is used
+		ns = topenv(.envoking_env)  # top package where foo.options() is called
 		
-		#local_options_name = env2txt(ns);
-		#local_options_name = gsub(":", "_", local_options_name)  # to make it a valid variable name
-		
-		options_env = parent.env(environment()) # environment where global options is stored
-		
-		############# no supported yet ######################
-		#LOCAL = NULL
-		#is_in_local_mode = function(LOCAL) {
-		#	if(is.null(LOCAL)) {
-		#		# local_options_name exists means it is already in local mode
-		#		if(exists(local_options_name, envir = local_env)) {
-		#			return(TRUE)
-		#		} else {
-		#			return(FALSE)
-		#		}
-		#	} else if(LOCAL) {  # set to local mode
-		#		assign(local_options_name, options, envir = local_env)  # or set to default values ???
-		#		return(TRUE)
-		#	} else {  # cancel local mode
-		#		if(exists(local_options_name, envir = local_env)) {  # just in case it is called in non-local mode
-		#			# delete the local option
-		#			rm(local_options_name, envir = local_env)
-		#			return(FALSE)
-		#		}
-		#		return(FALSE)
-		#	}
-		#}
-		#######################################
-		
-		# re-define get_options and set_options
-		#if(is_in_local_mode(LOCAL)) {
-		#	
-		#	get_options = function() {
-		#		get(local_options_name, envir = local_env)
-		#	}
-		#	
-		#	set_options = function(options) {
-		#		assign(local_options_name, options, envir = local_env)
-		#	}
-		#	
-		#} else {
-		
-			get_options = function() {
-				get("options", envir = options_env)
-			}
+		get_options = function() {
+			get("options", envir = options_env)
+		}
 			
-			set_options = function(options) {
-				assign("options", options, envir = options_env)
-			}
-		#}
+		set_options = function(options) {
+			assign("options", options, envir = options_env)
+		}
+			
+		get_OPT = function() {
+			get("OPT", envir = OPT_env)
+		}
 		
+		# each time execute foo.options(), fixed value should be refreshed, which means
+		# if value is a dynamic function, each time the current fixed value is generated
+		refresh_fixed_option_values = function() {
+			options = get_options()
+			OPT = get_OPT()
+			for(i in names(options)) {
+				x = options[[i]]
+				if(is.null(x$value)) {
+					OPT[i] = list(NULL)
+				} else if(is.function(x$value) && length(intersect(x$class, "function")) == 0) {
+					value_fun = x$value
+					value_fun = insertEnvBefore(value_fun, OPT_env)
+					tryCatch({ OPT[[i]] = value_fun() },
+						finally = deleteEnvBefore(value_fun))
+				} else {
+					OPT[[i]] = x$value
+				}
+				assign("OPT", OPT, OPT_env)
+			}
+		}
+				
 		# first we need a copy of `options`
 		options2 = get_options()
+		refresh_fixed_option_values()
 		
 		# reset the options
 		if(RESET) {
@@ -273,11 +239,9 @@ setGlobalOptions = function(...) {
 			args = args[[1]]
 		}
 
-		OPT = getOPT(options2)
-
 		# getting all options
 		if(length(args) == 0) {
-			val = lapply(options2, getOptionValue, OPT)
+			val = get_OPT()
 			# only returns visible options
 			l_visible = sapply(options2, function(x) x[["visible"]])
 			if(is.null(READ.ONLY)) {
@@ -312,7 +276,7 @@ setGlobalOptions = function(...) {
 			}
 			
 			if(length(args) == 1) {
-				val = getOptionValue(options2[[args]], OPT)
+				val = get_OPT()[[args]]
 				
 				if(is.null(READ.ONLY)) {
 					return(val)
@@ -336,7 +300,7 @@ setGlobalOptions = function(...) {
 					}
 				}
 			} else {
-				val = lapply(options[args], getOptionValue, OPT)
+				val = get_OPT()[args]
 				l_visible = sapply(options[args], function(x) x[["visible"]])
 				
 				if(is.null(READ.ONLY)) {
@@ -395,32 +359,20 @@ setGlobalOptions = function(...) {
 					stop(paste("'", name[i], "' is a private option and it can only be modified inside '", env2txt(options[["__envokingNamespace__"]][["value"]]), "' namespace.\n", sep = ""))
 				}
 				
-				OPT = getOPT(options2)
-				e1 = environment(validate)
-				#if(bindingIsLocked("OPT", e1)) 
-				unlockBinding("OPT", e1)
-				assign("OPT", OPT, envir = e1)
-
-				e2 = environment(filter)
-				#if(bindingIsLocked("OPT", e2)) 
-				unlockBinding("OPT", e2)
-				assign("OPT", OPT, envir = e2)
-
 				# user's value
 				value = args[[ name[i] ]]
 
 				if(is.function(value) && length(intersect(class, "function")) == 0) {
 					value_fun = value
-					e3 = environment(value)
-					assign("OPT", OPT, envir = e3)
-					#lockBinding("OPT", e3)
-					value = value()
+					value_fun = insertEnvBefore(value_fun, OPT_env)
+					tryCatch({ value = value_fun() },
+						finally = deleteEnvBefore(value_fun))
 				}
 				
 				# test on value length
 				if(!is.null(length)) {
 					if(!(length(value) %in% length)) {
-						stop(paste("Length of '", name[i], "' should be one of ", paste(length, collapse = ", "), "\n", sep = ""))
+						stop(paste("Length of '", name[i], "' should be one of ", paste(length, collapse = ", "), ".\n", sep = ""))
 					}
 				}
 
@@ -432,12 +384,16 @@ setGlobalOptions = function(...) {
 				}
 				
 				# test on validate function
-				if(!validate(value)) {
-					stop("Your option is invalid.\n")
-				}
+				validate = insertEnvBefore(validate, OPT_env)
+				tryCatch({ if(!validate(value)) stop("Your option is invalid.\n") },
+						finally = deleteEnvBefore(validate))
+				
 
 				# filter on data
-				value = filter(value)
+				filter = insertEnvBefore(filter, OPT_env)
+				tryCatch({ value = filter(value) },
+						finally = deleteEnvBefore(filter))
+				
 				
 				# check filtered value again
 				# test on value length
@@ -461,50 +417,17 @@ setGlobalOptions = function(...) {
 					options2[[ name[i] ]][["value"]] = value
 				}
 				
+				set_options(options2)
+				refresh_fixed_option_values()
+		
 			}
 		}
 		# assign to original environment
-		set_options(options2)
+		
 		return(invisible(NULL))
 	}
 	
 	return(sth.par)
-}
-
-# get the real option value based on settings
-getOptionValue = function(x, OPT) {
-	if(is.function(x$value)) {
-
-		# if the value is specified as 'function' class
-		if(length(intersect(x$class, "function"))) {
-			return(x$value)
-		} else {
-			e = environment(x$value)
-			if(is.function(x$default_value)) unlockBinding("OPT", e)
-			assign("OPT", OPT, envir = e)
-			return(x$value())
-		}
-	} else {
-		return(x$value)
-	}
-}
-
-getOPT = function(options) {
-	OPT = vector("list", length = length(options))
-	names(OPT) = names(options)
-
-	for(i in seq_along(options)) {
-		x = options[[i]]
-		if(is.function(x$value) && length(intersect(x$class, "function")) == 0) {
-			e = environment(x$value)
-			if(is.function(x$default_value)) unlockBinding("OPT", e)
-			assign("OPT", OPT, envir = e)
-			OPT[[i]] = x$value()
-		} else {
-			OPT[[i]] = x$value
-		}
-	}
-	return(OPT)
 }
 
 env2txt = function(env) {
@@ -517,6 +440,51 @@ env2txt = function(env) {
 	} else if(!is.null(attr(env, "name"))) {
 		return(attr(env, "name"))
 	} else {
-		return("CallStack")
+		return(get_env_str(env))
 	}
 }
+
+insertEnvBefore = function(fun, e) {
+	oe = environment(fun)
+	ope = parent.env(oe)
+	parent.env(oe) = e
+	parent.env(e) = ope
+	return(fun)
+}
+
+deleteEnvBefore = function(fun) {
+	oe = environment(fun)
+	parent.env(oe) = parent.env(parent.env(oe))
+	return(fun)
+}
+
+print_env_stack = function(e, depth = Inf) {
+	if(is.function(e)) {
+		env = environment(e)
+	} else {
+		env = e
+	}
+	i_depth = 0
+	while(!identical(env, emptyenv()) && i_depth < depth) {
+		cat(env2txt(env), "\n")
+		env = parent.env(env)
+		i_depth = i_depth + 1
+	}
+}
+
+# with_sink is copied from testthat package
+with_sink = function (connection, code, ...) 
+{
+    sink(connection, ...)
+    on.exit(sink())
+    code
+}
+
+get_env_str = function(env) {
+	temp = file()
+	with_sink(temp, print(env))
+	output <- paste0(readLines(temp, warn = FALSE), collapse = "\n")
+	close(temp)
+	return(output)
+}
+
