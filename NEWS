@@ -1,6 +1,7 @@
 Changes in version 0.0.2
 ------------------------------------------------------------------------------
 
+* use knitr to build the vignette.
 * add .private and .visible fields for making options specification. Private options
   can only be modified if the namespace in which the options function is generated and the
   namespace where the options function is called is the same namespace. Invisible options

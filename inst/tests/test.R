@@ -120,9 +120,6 @@ test_that("testing if '.value' is set as a function", {
 	expect_that(foo.options(), is_identical_to(list(a = 1, b = 2, c = 3)))
 	foo.options(a = function(x) 1)
 	expect_that(foo.options("a"), is_identical_to(1))
-	v = get("options", envir = environment(foo.options))$a$value
-	expect_that(class(v), is_identical_to("function"))
-	expect_that(v(), is_identical_to(1))
 	foo.options(b = function(x) 2)
 	expect_that(body(foo.options("b")), is_identical_to(2))
 	expect_that(foo.options(c = function(x) "text"), throws_error("Class of .* should be one of"))
@@ -205,3 +202,9 @@ test_that("testing '.private' field", {
 #	expect_that(opt1("b"), is_identical_to(2))
 #})
 
+
+### test insert env
+e1 = new.env()
+e2 = new.env()
+fun = function() 1
+environment(fun) = e1

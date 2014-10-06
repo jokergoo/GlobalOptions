@@ -2,5 +2,5 @@ export(
 	setGlobalOptions
 )
 
-import("methods")
+importFrom("methods", is)
 
