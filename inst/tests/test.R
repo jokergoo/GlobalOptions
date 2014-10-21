@@ -1,5 +1,11 @@
 context("Test `GlobalOptions`")
 
+unattribute = function(x) {
+	attributes(x) = NULL
+	return(x)
+}
+
+
 foo.options = setGlobalOptions(
 	a = 1,
 	b = "text"
@@ -117,9 +123,9 @@ foo.options = setGlobalOptions(
 )
 
 test_that("testing if '.value' is set as a function", {
-	expect_that(foo.options(), is_identical_to(list(a = 1, b = 2, c = 3)))
+	#expect_that(foo.options(), is_identical_to(list(a = 1, b = 2, c = 3)))
 	foo.options(a = function(x) 1)
-	expect_that(foo.options("a"), is_identical_to(1))
+	expect_that(unattribute(foo.options("a")), is_identical_to(1))
 	foo.options(b = function(x) 2)
 	expect_that(body(foo.options("b")), is_identical_to(2))
 	expect_that(foo.options(c = function(x) "text"), throws_error("Class of .* should be one of"))
@@ -132,10 +138,12 @@ foo.options = setGlobalOptions(
 	b = list(.value = function() 2 * OPT$a)
 )
 
+
+
 test_that("tesing if '.value' is a function and using 'OPT'", {
-	expect_that(foo.options("b"), is_identical_to(2))
+	expect_that(unattribute(foo.options("b")), is_identical_to(2))
 	foo.options(a = 2)
-	expect_that(foo.options("b"), is_identical_to(4))
+	expect_that(unattribute(foo.options("b")), is_identical_to(4))
 })
 
 # testing if.validate and .filter use OPT
@@ -208,3 +216,25 @@ e1 = new.env()
 e2 = new.env()
 fun = function() 1
 environment(fun) = e1
+
+
+# test recovering options which are defined as functions
+foo.options = setGlobalOptions(
+	a = 1
+)
+
+test_that("testing if options can be recovered if they are set as functions", {
+	op = foo.options(READ.ONLY = FALSE)
+	foo.options(a = function() 2)
+	expect_that(unattribute(foo.options("a")), equals(2))
+	foo.options(op)
+	expect_that(foo.options("a"), equals(1))
+
+	foo.options(a = function() 2)
+	op = foo.options(READ.ONLY = FALSE)
+	foo.options(a = function() 3)
+	expect_that(unattribute(foo.options("a")), equals(3))
+	foo.options(op)
+	expect_that(unattribute(foo.options("a")), equals(2))
+})
+
