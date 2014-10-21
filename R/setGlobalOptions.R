@@ -190,7 +190,8 @@ setGlobalOptions = function(...) {
 				} else if(is.function(x$value) && length(intersect(x$class, "function")) == 0) {
 					value_fun = x$value
 					value_fun = insertEnvBefore(value_fun, OPT_env)
-					tryCatch({ OPT[[i]] = value_fun() },
+					tryCatch({ OPT[[i]] = value_fun();
+					           attr(OPT[[i]], "FUN") = value_fun},
 						finally = deleteEnvBefore(value_fun))
 				} else {
 					OPT[[i]] = x$value
@@ -361,7 +362,10 @@ setGlobalOptions = function(...) {
 				
 				# user's value
 				value = args[[ name[i] ]]
-
+				
+				if(!is.null(attr(value, "FUN"))) {
+					value = attr(value, "FUN")
+				}
 				if(is.function(value) && length(intersect(class, "function")) == 0) {
 					value_fun = value
 					value_fun = insertEnvBefore(value_fun, OPT_env)
