@@ -143,7 +143,9 @@ foo.options(verbose = NULL); foo.options("verbose")
 
 The input option value can be set as dynamic by setting it as a function. When the option
 value is set as a function, it will be executed when querying the option. In the following
-example, the {\tt prefix} option corresponds to the prefix of log messages.
+example, the {\tt prefix} option corresponds to the prefix of log messages. The returned option
+value is the string after the execution of the input function and the function itself is attached
+as an attribute of the returned option value.
 
 <<>>==
 foo.options = setGlobalOptions(
