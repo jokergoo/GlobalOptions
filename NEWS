@@ -1,3 +1,10 @@
+Changes in version 0.0.3
+------------------------------------------------------------------------------
+
+* function is attached to the value if option values is set as a dynamic function
+  so that opt(opt(READ.ONLY = FALSE)) will be correct if there is option values 
+  set as dynamic functions.
+
 Changes in version 0.0.2
 ------------------------------------------------------------------------------
 
