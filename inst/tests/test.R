@@ -220,13 +220,15 @@ environment(fun) = e1
 
 # test recovering options which are defined as functions
 foo.options = setGlobalOptions(
-	a = 1
+	a = 1,
+	b = 2
 )
 
 test_that("testing if options can be recovered if they are set as functions", {
 	op = foo.options(READ.ONLY = FALSE)
 	foo.options(a = function() 2)
 	expect_that(unattribute(foo.options("a")), equals(2))
+	expect_that(foo.options("b"), equals(2))
 	foo.options(op)
 	expect_that(foo.options("a"), equals(1))
 
