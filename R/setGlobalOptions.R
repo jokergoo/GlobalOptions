@@ -417,6 +417,7 @@ setGlobalOptions = function(...) {
 				# finally, all values are correct
 				if(exists("value_fun")) {
 					options2[[ name[i] ]][["value"]] = value_fun
+					rm(value_fun)
 				} else {
 					options2[[ name[i] ]][["value"]] = value
 				}

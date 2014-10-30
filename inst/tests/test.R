@@ -230,9 +230,10 @@ test_that("testing if options can be recovered if they are set as functions", {
 	foo.options(a = function() 2)
 	expect_that(is.function(attr(foo.options("a"), "FUN")), is_identical_to(TRUE))
 	expect_that(unattribute(foo.options("a")), equals(2))
+	expect_that(unattribute(foo.options("b")), equals(2))
 	foo.options(op)
 	expect_that(foo.options("a"), equals(1))
-	expect_that(unattribute(foo.options("b")), equals(2))
+	expect_that(is.function(attr(foo.options("b"), "FUN")), is_identical_to(TRUE))
 
 	foo.options(a = function() 2)
 	op = foo.options(READ.ONLY = FALSE)
