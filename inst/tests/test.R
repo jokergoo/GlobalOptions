@@ -128,6 +128,7 @@ test_that("testing if '.value' is set as a function", {
 	expect_that(unattribute(foo.options("a")), is_identical_to(1))
 	foo.options(b = function(x) 2)
 	expect_that(body(foo.options("b")), is_identical_to(2))
+	expect_that(is.null(attr(foo.options("b"), "FUN")), is_identical_to(TRUE))
 	expect_that(foo.options(c = function(x) "text"), throws_error("Class of .* should be one of"))
 
 })
@@ -220,15 +221,18 @@ environment(fun) = e1
 
 # test recovering options which are defined as functions
 foo.options = setGlobalOptions(
-	a = 1
+	a = 1,
+	b = list(.value = function() 2)
 )
 
 test_that("testing if options can be recovered if they are set as functions", {
 	op = foo.options(READ.ONLY = FALSE)
 	foo.options(a = function() 2)
+	expect_that(is.function(attr(foo.options("a"), "FUN")), is_identical_to(TRUE))
 	expect_that(unattribute(foo.options("a")), equals(2))
 	foo.options(op)
 	expect_that(foo.options("a"), equals(1))
+	expect_that(unattribute(foo.options("b")), equals(2))
 
 	foo.options(a = function() 2)
 	op = foo.options(READ.ONLY = FALSE)
@@ -237,4 +241,5 @@ test_that("testing if options can be recovered if they are set as functions", {
 	foo.options(op)
 	expect_that(unattribute(foo.options("a")), equals(2))
 })
+
 
