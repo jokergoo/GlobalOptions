@@ -1,6 +1,7 @@
 Changes in version 0.0.3
 ------------------------------------------------------------------------------
 
+* remove dependency of `methods` package
 * `value_fun` is deleted after setting every option
 * function is attached to the value if option values is set as a dynamic function
   so that opt(opt(READ.ONLY = FALSE)) will be correct if there are option values 

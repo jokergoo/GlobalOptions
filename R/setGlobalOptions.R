@@ -382,7 +382,7 @@ setGlobalOptions = function(...) {
 
 				# test on classes of the values
 				if(!is.null(class)) {
-					if(!any(sapply(class, function(cl) is(value, cl)))) {
+					if(!any(sapply(class, function(cl) inherits(value, cl)))) {
 						stop(paste("Class of '", name[i], "' should be one of '", paste(class, collapse = ", "), "'.\n", sep = ""))
 					}
 				}
