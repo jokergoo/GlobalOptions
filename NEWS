@@ -1,6 +1,11 @@
 Changes in version 0.0.4
 ------------------------------------------------------------------------------
 
+* change interval options to `__generatedNamespace__`
+
+Changes in version 0.0.4
+------------------------------------------------------------------------------
+
 * completely replace `is` with `inherits`
 
 Changes in version 0.0.3

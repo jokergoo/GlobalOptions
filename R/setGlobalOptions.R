@@ -357,7 +357,7 @@ setGlobalOptions = function(...) {
 				# test on private
 				# in option function generation and calling are in the same namespace, then private options can be modified
 				if( (!envokedInTheSameNamespace(ns)) && private) {
-					stop(paste("'", name[i], "' is a private option and it can only be modified inside '", env2txt(options[["__envokingNamespace__"]][["value"]]), "' namespace.\n", sep = ""))
+					stop(paste("'", name[i], "' is a private option and it can only be modified inside '", env2txt(options[["__generatedNamespace__"]][["value"]]), "' namespace.\n", sep = ""))
 				}
 				
 				# user's value
