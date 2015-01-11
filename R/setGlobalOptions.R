@@ -214,7 +214,7 @@ setGlobalOptions = function(...) {
 					}
 				} else {
 					# read-only and private options can not be reset
-					if(! (options2[[i]][["read.only"]] && options2[[i]][["private"]]) ) {
+					if(! (options2[[i]][["read.only"]] || options2[[i]][["private"]]) ) {
 						options2[[i]][["value"]] = options2[[i]][["default_value"]]
 					}
 				}
