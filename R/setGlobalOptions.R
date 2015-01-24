@@ -101,7 +101,7 @@ setGlobalOptions = function(...) {
 			length = arg[[".length"]]
 			class = arg[[".class"]]
 			if(is.null(arg[[".validate"]])) {
-				validate = function(x) TRUE
+				validate = NULL
 			} else {
 				if(is.function(arg[[".validate"]])) {
 					validate = arg[[".validate"]]
@@ -110,7 +110,7 @@ setGlobalOptions = function(...) {
 				}
 			}
 			if(is.null(arg[[".filter"]])) {
-				filter = function(x) x
+				filter = NULL
 			} else {
 				if(is.function(arg[[".filter"]])) {
 					filter = arg[[".filter"]]
@@ -130,8 +130,8 @@ setGlobalOptions = function(...) {
 			value = arg
 			length = NULL
 			class = NULL
-			validate = function(x) TRUE
-			filter = function(x) x
+			validate = NULL
+			filter = NULL
 			read.only = FALSE
 			private = FALSE
 			visible = TRUE
@@ -214,7 +214,7 @@ setGlobalOptions = function(...) {
 					}
 				} else {
 					# read-only and private options can not be reset
-					if(! (options2[[i]][["read.only"]] && options2[[i]][["private"]]) ) {
+					if(! (options2[[i]][["read.only"]] || options2[[i]][["private"]]) ) {
 						options2[[i]][["value"]] = options2[[i]][["default_value"]]
 					}
 				}
@@ -388,16 +388,18 @@ setGlobalOptions = function(...) {
 				}
 				
 				# test on validate function
-				validate = insertEnvBefore(validate, OPT_env)
-				tryCatch({ if(!validate(value)) stop("Your option is invalid.\n") },
-						finally = deleteEnvBefore(validate))
-				
+				if(!is.null(validate)) {
+					validate = insertEnvBefore(validate, OPT_env)
+					tryCatch({ if(!validate(value)) stop("Your option is invalid.\n") },
+							finally = deleteEnvBefore(validate))
+				}
 
 				# filter on data
-				filter = insertEnvBefore(filter, OPT_env)
-				tryCatch({ value = filter(value) },
-						finally = deleteEnvBefore(filter))
-				
+				if(!is.null(filter)) {
+					filter = insertEnvBefore(filter, OPT_env)
+					tryCatch({ value = filter(value) },
+							finally = deleteEnvBefore(filter))
+				}
 				
 				# check filtered value again
 				# test on value length
@@ -492,4 +494,3 @@ get_env_str = function(env) {
 	close(temp)
 	return(output)
 }
-
