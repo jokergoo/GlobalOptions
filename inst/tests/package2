@@ -1,8 +1,0 @@
-
-# call opt1 in package1, package2 is downsteaming to package1
-
-# set opt1 as local mode
-opt1(LOCAL = TRUE, RESET = TRUE)
-opt1(b = 3)
-
-message(opt1("b"), appendLF = FALSE)

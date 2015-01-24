@@ -11,10 +11,11 @@
 
 }
 \usage{
-setGlobalOptions(...)
+setGlobalOptions(..., get_opt_value_fun = FALSE)
 }
 \arguments{
   \item{...}{specification of options, see 'details' section}
+  \item{get_opt_value_fun}{whether return a get-opt-value function as well}
 
 }
 \details{

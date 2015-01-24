@@ -1,10 +1,5 @@
 context("Test `GlobalOptions`")
 
-unattribute = function(x) {
-	attributes(x) = NULL
-	return(x)
-}
-
 
 foo.options = setGlobalOptions(
 	a = 1,
@@ -125,7 +120,7 @@ foo.options = setGlobalOptions(
 test_that("testing if '.value' is set as a function", {
 	#expect_that(foo.options(), is_identical_to(list(a = 1, b = 2, c = 3)))
 	foo.options(a = function(x) 1)
-	expect_that(unattribute(foo.options("a")), is_identical_to(1))
+	expect_that(foo.options("a"), is_identical_to(1))
 	foo.options(b = function(x) 2)
 	expect_that(body(foo.options("b")), is_identical_to(2))
 	expect_that(is.null(attr(foo.options("b"), "FUN")), is_identical_to(TRUE))
@@ -134,33 +129,37 @@ test_that("testing if '.value' is set as a function", {
 })
 
 # testing if.value is a function and uses OPT
-foo.options = setGlobalOptions(
+lt = setGlobalOptions(
 	a = list(.value = 1),
-	b = list(.value = function() 2 * OPT$a)
-)
+	b = list(.value = function() 2 * get_opt_value('a'))
+, get_opt_value_fun = TRUE)
+foo.options = lt$opt_fun
+get_opt_value = lt$get_opt_value
 
 
-
-test_that("tesing if '.value' is a function and using 'OPT'", {
-	expect_that(unattribute(foo.options("b")), is_identical_to(2))
+test_that("tesing if '.value' is a function and using other option values", {
+	expect_that(foo.options("b"), is_identical_to(2))
 	foo.options(a = 2)
-	expect_that(unattribute(foo.options("b")), is_identical_to(4))
+	expect_that(foo.options("b"), is_identical_to(4))
 })
 
 # testing if.validate and .filter use OPT
-foo.options = setGlobalOptions(
+lt = setGlobalOptions(
 	a = list(.value = 1),
 	b = list(.value = 2,
 		     .validate = function(x) {
-		     	if(OPT$a > 0) x > 0
+		     	if(get_opt_value('a') > 0) x > 0
 		     	else x < 0
 		     },
 		     .filter = function(x) {
-		     	x + OPT$a
+		     	x + get_opt_value('a')
 		     })
-)
+, get_opt_value_fun = TRUE)
+foo.options = lt$opt_fun
+get_opt_value = lt$get_opt_value
 
-test_that("tesing if '.value' is a function and using 'OPT'", {
+
+test_that("tesing '.validate' and '.filter' using other option values", {
 	foo.options(a = 1, b = 2)
 	expect_that(foo.options("b"), is_identical_to(3))
 	expect_that(foo.options(a = 1, b = -1), throws_error("Your option is invalid"))
@@ -191,56 +190,4 @@ test_that("testing if '.value' is visible", {
 	foo.options(a = 2)
 	expect_that(foo.options("a"), is_identical_to(2))
 })
-
-### how can I test the private field?
-
-### test private field
-env1 = attach(NULL, name = "package1")
-env2 = attach(NULL, name = "package2")
-
-test_that("testing '.private' field", {
-	expect_that(sys.source(system.file("tests/package1", package = "GlobalOptions"), envir = env1), shows_message("12"))
-	expect_that(opt1("a"), is_identical_to(2))
-	expect_that(opt1(a = 3), throws_error("is a private option and it can only be modified"))
-})
-
-
-### test local mode
-#test_that("testing LOCAL mode", {
-#	expect_that(sys.source(system.file("tests/package2", package = "GlobalOptions"), envir = env2), shows_message("3"))
-#	expect_that(opt1("b"), is_identical_to(2))
-#})
-
-
-### test insert env
-e1 = new.env()
-e2 = new.env()
-fun = function() 1
-environment(fun) = e1
-
-
-# test recovering options which are defined as functions
-foo.options = setGlobalOptions(
-	a = 1,
-	b = list(.value = function() 2)
-)
-
-test_that("testing if options can be recovered if they are set as functions", {
-	op = foo.options(READ.ONLY = FALSE)
-	foo.options(a = function() 2)
-	expect_that(is.function(attr(foo.options("a"), "FUN")), is_identical_to(TRUE))
-	expect_that(unattribute(foo.options("a")), equals(2))
-	expect_that(unattribute(foo.options("b")), equals(2))
-	foo.options(op)
-	expect_that(foo.options("a"), equals(1))
-	expect_that(is.function(attr(foo.options("b"), "FUN")), is_identical_to(TRUE))
-
-	foo.options(a = function() 2)
-	op = foo.options(READ.ONLY = FALSE)
-	foo.options(a = function() 3)
-	expect_that(unattribute(foo.options("a")), equals(3))
-	foo.options(op)
-	expect_that(unattribute(foo.options("a")), equals(2))
-})
-
 
