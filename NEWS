@@ -1,3 +1,9 @@
+Changes in version 0.0.6
+------------------------------------------------------------------------------
+
+* private value will not be reset if calling environment is not same as generating
+  environment
+
 Changes in version 0.0.5
 ------------------------------------------------------------------------------
 
