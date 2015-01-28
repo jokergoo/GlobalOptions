@@ -170,7 +170,7 @@ foo.options("test")
 
 The self-defined function ({\it i.e.} value function, validation function or filter function) 
 is applied per-option. But sometimes we want to set one option based on values of other options.
-In this case, we need a function which can get other option values. If {\tt get_opt_value_fun}
+In this case, we need a function which can get other option values. If {\tt get\_opt\_value\_fun}
 argument is set to {\tt TRUE}, {\tt setGlobalOptions} will return a list of two functions in which
 the first one is the option function and the second one is used to extract other option values. 
 In following example, default value of option {\tt b} is two times of the value of option {\tt a}.
@@ -182,7 +182,7 @@ lt = setGlobalOptions(
     get_opt_value_fun = TRUE
 )
 foo.options = lt$opt_fun
-get_opt_value = lt$get_opt_value
+get_opt_value = lt$get_opt_value # function name should be same as in above
 
 foo.options("b")
 foo.options(a = 2)

@@ -1,6 +1,7 @@
 Changes in version 0.0.6
 ------------------------------------------------------------------------------
 
+* re-construct by reference class
 * default value for `.filter` and `.validate` are set to `NULL`
 * private value will not be reset if calling environment is not same as generating
   environment

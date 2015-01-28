@@ -41,6 +41,11 @@ test_that("set option values", {
 	expect_that(foo.options("a" = 1, "c" = 1), throws_error("No such option"))
 })
 
+test_that("testing valus are also list", {
+	foo.options("a" = list(a = 1, b = 2))
+	expect_that(foo.options("a"), is_identical_to(list(a = 1, b = 2)))
+
+})
 
 # testing if advanced setting is not mixed
 test_that("testing on mixed setting", {
@@ -123,7 +128,6 @@ test_that("testing if '.value' is set as a function", {
 	expect_that(foo.options("a"), is_identical_to(1))
 	foo.options(b = function(x) 2)
 	expect_that(body(foo.options("b")), is_identical_to(2))
-	expect_that(is.null(attr(foo.options("b"), "FUN")), is_identical_to(TRUE))
 	expect_that(foo.options(c = function(x) "text"), throws_error("Class of .* should be one of"))
 
 })
@@ -141,6 +145,8 @@ test_that("tesing if '.value' is a function and using other option values", {
 	expect_that(foo.options("b"), is_identical_to(2))
 	foo.options(a = 2)
 	expect_that(foo.options("b"), is_identical_to(4))
+	foo.options(RESET = TRUE)
+	expect_that(foo.options("b"), is_identical_to(2))
 })
 
 # testing if.validate and .filter use OPT
