@@ -169,15 +169,21 @@ foo.options("test")
 @
 
 The self-defined function ({\it i.e.} value function, validation function or filter function) 
-is applied per-option. But if it relies on other option values, there is pre-defined 
-variable {\tt OPT} which is a list containing values for all options. In following example,
-default value of option {\tt b} is two times of the value of option {\tt a}.
+is applied per-option. But sometimes we want to set one option based on values of other options.
+In this case, we need a function which can get other option values. If {\tt get\_opt\_value\_fun}
+argument is set to {\tt TRUE}, {\tt setGlobalOptions} will return a list of two functions in which
+the first one is the option function and the second one is used to extract other option values. 
+In following example, default value of option {\tt b} is two times of the value of option {\tt a}.
 
 <<>>==
-foo.options = setGlobalOptions(
+lt = setGlobalOptions(
     a = list(.value = 1),
-    b = list(.value = function() 2 * OPT$a)
+    b = list(.value = function() 2 * get_opt_value('a')),
+    get_opt_value_fun = TRUE
 )
+foo.options = lt$opt_fun
+get_opt_value = lt$get_opt_value # function name should be same as in above
+
 foo.options("b")
 foo.options(a = 2)
 foo.options("b")
@@ -186,17 +192,21 @@ foo.options("b")
 And in the second example, sign of {\tt b} should be as same as sign of {\tt a}.
 
 <<error = TRUE, purl = FALSE>>==
-foo.options = setGlobalOptions(
+lt = setGlobalOptions(
     a = list(.value = 1),
     b = list(.value = 0,
              .validate = function(x) {
-                 if(OPT$a > 0) x > 0
+                 if(get_opt_value('a') > 0) x > 0
                  else x < 0
              },
              .filter = function(x) {
-                 x + OPT$a
-             })
+                 x + get_opt_value('a')
+             }),
+    get_opt_value_fun = TRUE
 )
+foo.options = lt$opt_fun
+get_opt_value = lt$get_opt_value
+
 foo.options(b = 1)
 foo.options("b")
 foo.options(a = 1, b = -1)
