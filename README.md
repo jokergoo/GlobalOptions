@@ -1,3 +1,5 @@
+![](https://travis-ci.org/jokergoo/GlobalOptions.svg?branch=master)
+
 ### Produce a function which can get or set global options
 
 The most simple way is to construct an option function (e.g. `foo.options()`) as:
