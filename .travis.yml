@@ -1,3 +1,5 @@
 language: r
 
 sudo: required
+
+r_check_args: --no-build-vignettes --no-vignettes
