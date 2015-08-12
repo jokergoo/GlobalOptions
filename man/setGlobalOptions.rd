@@ -1,60 +1,55 @@
 \name{setGlobalOptions}
 \alias{setGlobalOptions}
 \title{
-  Produce a function which can get or set global options  
-
-
+Produce a function which can get or set global options
 }
 \description{
-  Produce a function which can get or set global options  
-
-
+Produce a function which can get or set global options
 }
 \usage{
 setGlobalOptions(..., get_opt_value_fun = FALSE)
 }
 \arguments{
-  \item{...}{specification of options, see 'details' section
-}
-  \item{get_opt_value_fun}{whether return a get-opt-value function as well
-}
+
+  \item{...}{specification of options, see 'details' section}
+  \item{get_opt_value_fun}{whether return a get-opt-value function as well}
 
 }
 \details{
-  The most simple way is to construct an option function (e.g. \code{foo.options()}) as:  
+The most simple way is to construct an option function (e.g. \code{foo.options()}) as:
 
   \preformatted{
-  foo.options = setGlobalOptions(
-      "a" = 1,
-      "b" = "text"
-  )
-  }
-  Then users can get or set the options by   
+foo.options = setGlobalOptions(
+        "a" = 1,
+        "b" = "text"
+    )  }
+
+Then users can get or set the options by
 
   \preformatted{
-  foo.options()
-  foo.options("a")
-  foo.options(c("a", "b"))
-  foo.options("a", "b")
-  foo.options("a" = 2)
-  foo.options("a" = 2, "b" = "new_text")
-  }
-  Options can be reset to their default values by:  
+foo.options()
+    foo.options("a")
+    foo.options(c("a", "b"))
+    foo.options("a", "b")
+    foo.options("a" = 2)
+    foo.options("a" = 2, "b" = "new_text")  }
+
+Options can be reset to their default values by:
 
   \preformatted{
-  foo.options(RESET = TRUE)
-  }
-  The value for each option can be set as a list which contains more controls of the option:  
+foo.options(RESET = TRUE)  }
+
+The value for each option can be set as a list which contains more controls of the option:
 
   \preformatted{
-  foo.options = setGlobalOptions(
-      "a" = list(.value = 1,
-                 .length = 1,
-                 .class = "numeric",
-                 .validate = function(x) x > 0)
-  )
-  }
-  The different fields in the list can be used to filter or validate the option values.  
+foo.options = setGlobalOptions(
+        "a" = list(.value = 1,
+                   .length = 1,
+                   .class = "numeric",
+                   .validate = function(x) x > 0)
+    )  }
+
+The different fields in the list can be used to filter or validate the option values.
 
 \describe{
   \item{.value}{The default value.}
@@ -66,7 +61,6 @@ setGlobalOptions(..., get_opt_value_fun = FALSE)
   \item{.visible}{Logical. Whether the option is visible to users.}
   \item{.private}{Logical. The option value can only be modified in the same namespace where the option function is created.}
 }
-  For more detailed explanation, please go to the vignette.  
 
-
+For more detailed explanation, please go to the vignette.
 }

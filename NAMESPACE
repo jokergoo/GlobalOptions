@@ -1,6 +1,4 @@
-export(
-	setGlobalOptions
-)
+export(setGlobalOptions)
 
 import("methods")
 
