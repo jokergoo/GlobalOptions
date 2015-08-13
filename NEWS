@@ -1,3 +1,9 @@
+Changes in version 0.0.8
+-----------------------------------------------------------------------------
+
+* assign a class for the generated functions
+* add '$.class' for this new class
+
 Changes in version 0.0.6
 ------------------------------------------------------------------------------
 

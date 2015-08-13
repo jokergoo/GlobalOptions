@@ -18,9 +18,11 @@ Then users can get or set the options by
 ```r
 foo.options()
 foo.options("a")
+foo.options$a
 foo.options(c("a", "b"))
 foo.options("a", "b")
 foo.options("a" = 2)
+foo.options$a = 2
 foo.options("a" = 2, "b" = "new_text")
 ```
 

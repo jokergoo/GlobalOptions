@@ -18,9 +18,11 @@
 #
 #     foo.options()
 #     foo.options("a")
+#     foo.options$a
 #     foo.options(c("a", "b"))
 #     foo.options("a", "b")
 #     foo.options("a" = 2)
+#     foo.options$a = 2
 #     foo.options("a" = 2, "b" = "new_text")
 #
 # Options can be reset to their default values by:
@@ -219,6 +221,8 @@ setGlobalOptions = function(..., get_opt_value_fun = FALSE) {
 
 		options[[name]]$real_value
 	}
+
+	class(opt_fun) = "GlobalOptionsFun"
 	
 	if(get_opt_value_fun) {
 		return(list(opt_fun = opt_fun, get_opt_value = get_opt_value))
@@ -288,3 +292,30 @@ stop = function(msg) {
 	e = simpleError(msg)
 	base::stop(e)
 }
+
+# == title
+# Get option value by dollar symbol
+#
+# == param
+# -x the function returned by `setGlobalOptions`
+# -nm a single option name
+#
+"$.GlobalOptionsFun" = function(x, nm) {
+	x(nm)
+}
+
+# == title
+# Set option value by dollar symbol
+#
+# == param
+# -x the function returned by `setGlobalOptions`
+# -nm a single option name
+# -value the value which is assigned to the option
+#
+"$<-.GlobalOptionsFun" = function(x, nm, value) {
+	lt = list()
+	lt[[nm]] = value
+	do.call("x", lt)
+	x
+}
+

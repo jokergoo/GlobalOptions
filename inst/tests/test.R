@@ -9,6 +9,7 @@ foo.options = setGlobalOptions(
 test_that("get option values", {
 	expect_that(foo.options(), is_identical_to(list(a = 1, b = "text")))
 	expect_that(foo.options("a"), is_identical_to(1))
+	expect_that(foo.options$a, is_identical_to(1))
 	expect_that(foo.options("b"), is_identical_to("text"))
 	expect_that(foo.options("c"), throws_error("No such option"))
 	expect_that(foo.options(c("a", "b")), is_identical_to(list(a = 1, b = "text")))
@@ -20,6 +21,9 @@ test_that("get option values", {
 test_that("set option values", {
 	foo.options("a" = 2)
 	expect_that(foo.options("a"), is_identical_to(2))
+
+	foo.options$a = 4
+	expect_that(foo.options$a, is_identical_to(4))
 	
 	foo.options(RESET = TRUE)
 	expect_that(foo.options("a"), is_identical_to(1))
