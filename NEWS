@@ -2,7 +2,7 @@ Changes in version 0.0.8
 -----------------------------------------------------------------------------
 
 * assign a class for the generated functions
-* add '$.class' for this new class
+* option value can be assigned by '$' symbol
 
 Changes in version 0.0.6
 ------------------------------------------------------------------------------
