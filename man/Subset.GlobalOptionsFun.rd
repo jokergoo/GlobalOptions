@@ -15,3 +15,14 @@ Get option value by dollar symbol
   \item{nm}{a single option name}
 
 }
+\details{
+\code{opt$a} is same as \code{opt("a")}
+}
+\author{
+Zuguang Gu <z.gu@dkfz.de>
+}
+\examples{
+# There is no example
+NULL
+
+}

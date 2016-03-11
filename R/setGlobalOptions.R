@@ -4,7 +4,7 @@
 #
 # == param
 # -... specification of options, see 'details' section
-# -get_opt_value_fun whether return a get-opt-value function as well
+# -get_opt_value_fun whether return a ``get_opt_value`` function as well
 #
 # == detail
 # The most simple way is to construct an option function (e.g. ``foo.options()``) as:
@@ -44,6 +44,7 @@
 # -.length The valid length of the option value. It can be a vector, the check will be passed if one of the length fits.
 # -.class The valid class of the option value. It can be a vector, the check will be passed if one of the classes fits.
 # -.validate Validation function. The input parameter is the option value and should return a single logical value.
+# -.failed_msg Once validation failed, the error message that is printed.
 # -.filter Filtering function. The input parameter is the option value and it should return a filtered option value.
 # -.read.only Logical. The option value can not be modified if it is set to ``TRUE``.
 # -.visible Logical. Whether the option is visible to users.
@@ -51,6 +52,11 @@
 #
 # For more detailed explanation, please go to the vignette.
 #
+# == author
+# Zuguang Gu <z.gu@dkfz.de>
+#
+# == example
+# # please go to the vignette
 setGlobalOptions = function(..., get_opt_value_fun = FALSE) {
 
 	# the environment where the function is called
@@ -355,8 +361,7 @@ is.parent.frame = function(p, e) {
 }
 
 # with_sink is copied from testthat package
-with_sink = function (connection, code, ...) 
-{
+with_sink = function (connection, code, ...) {
     sink(connection, ...)
     on.exit(sink())
     code
@@ -382,6 +387,12 @@ stop = function(msg) {
 # -x the function returned by `setGlobalOptions`
 # -nm a single option name
 #
+# == details
+# ``opt$a`` is same as ``opt("a")``
+#
+# == author
+# Zuguang Gu <z.gu@dkfz.de>
+#
 "$.GlobalOptionsFun" = function(x, nm) {
 	x(nm)
 }
@@ -393,6 +404,12 @@ stop = function(msg) {
 # -x the function returned by `setGlobalOptions`
 # -nm a single option name
 # -value the value which is assigned to the option
+#
+# == details
+# ``opt$a = 1`` is same as ``opt("a" = 1)``
+#
+# == author
+# Zuguang Gu <z.gu@dkfz.de>
 #
 "$<-.GlobalOptionsFun" = function(x, nm, value) {
 	lt = list()

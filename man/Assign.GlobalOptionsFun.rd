@@ -7,12 +7,23 @@ Set option value by dollar symbol
 Set option value by dollar symbol
 }
 \usage{
-\method{$}{GlobalOptionsFun}(x, nm) <- value
+\method{$<-}{GlobalOptionsFun}(x, nm, value)
 }
 \arguments{
 
   \item{x}{the function returned by \code{\link{setGlobalOptions}}}
   \item{nm}{a single option name}
   \item{value}{the value which is assigned to the option}
+
+}
+\details{
+\code{opt$a = 1} is same as \code{opt("a" = 1)}
+}
+\author{
+Zuguang Gu <z.gu@dkfz.de>
+}
+\examples{
+# There is no example
+NULL
 
 }
