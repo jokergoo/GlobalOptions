@@ -267,3 +267,25 @@ test_that("testing local mode 2", {
 	expect_that(f1(), is_identical_to(2))
 	expect_that(opt("a"), is_identical_to(1))
 })
+
+opt = setGlobalOptions(
+	a = 1
+)
+
+opt(LOCAL = TRUE)
+opt(a = 2)
+
+f1 = function() {
+	return(opt("a"))
+}
+
+f1()
+
+test_that("testing local mode 3", {
+	expect_that(f1(), is_identical_to(2))
+})
+
+
+
+
+

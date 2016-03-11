@@ -350,7 +350,7 @@ is.parent.frame = function(p, e) {
 	}
 
 	i = 1 + 1
-	while(!identical(e, .GlobalEnv)) {
+	while(!is_top_env(e)) {
 		e = parent.frame(n = i)
 		if(identical(p, e)) {
 			return(TRUE)
@@ -358,6 +358,16 @@ is.parent.frame = function(p, e) {
 		i = i + 1
 	}
 	return(FALSE)
+}
+
+is_top_env = function(e) {
+	if(identical(e, .GlobalEnv)) {
+		return(TRUE)
+	} else if(isNamespace(e)) {
+		return(TRUE)
+	} else {
+		return(FALSE)
+	}
 }
 
 # with_sink is copied from testthat package
