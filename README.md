@@ -1,4 +1,4 @@
-[![ Status](https://travis-ci.org/jokergoo/GlobalOptions.svg)](https://travis-ci.org/jokergoo/GlobalOptions) [![CRAN](http://www.r-pkg.org/badges/version/GlobalOptions)](https://cran.r-project.org/web/packages/GlobalOptions/index.html)
+[![ Status](https://travis-ci.org/jokergoo/GlobalOptions.svg)](https://travis-ci.org/jokergoo/GlobalOptions) [![CRAN](http://www.r-pkg.org/badges/version/GlobalOptions)](https://cran.r-project.org/web/packages/GlobalOptions/index.html) [![codecov](https://img.shields.io/codecov/c/github/jokergoo/GlobalOptions.svg)](https://codecov.io/github/jokergoo/GlobalOptions) 
 
 ## GlobalOptions
 
@@ -8,6 +8,7 @@ This package aims to provide a simple way to handle global configurations. It ca
 2. set read-only options;
 3. set invisible options;
 4. set private options which are only accessable in a certain namespace.
+5. support local options and global options
 
 ### Usage
 
@@ -50,6 +51,7 @@ foo_opt = setGlobalOptions(
                .length = 1,
                .class = "numeric",
                .validate = function(x) x > 0,
+               .failed_msg = "'a' should be a positive number.",
                .filter = function(x) ifelse(x > 10, 10, x),
                .read.only = FALSE,
                .visible = TRUE,

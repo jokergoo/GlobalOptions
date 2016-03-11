@@ -71,6 +71,10 @@ setGlobalOptions = function(..., get_opt_value_fun = FALSE) {
 		stop("Don't use 'READ.ONLY' as the option name.\n")
 	}
 
+	if("LOCAL" %in% names(args)) {
+		stop("Don't use 'LOCAL' as the option name.\n")
+	}
+
 	# format the options
 	options = vector("list", length = length(args))
 
@@ -81,7 +85,7 @@ setGlobalOptions = function(..., get_opt_value_fun = FALSE) {
 	
 		arg = args[[i]]
 		# if it is an advanced setting
-		if(is.list(arg) && length(setdiff(names(arg), c(".value", ".class", ".length", ".validate", ".filter", ".read.only", ".private", ".visible"))) == 0) {
+		if(is.list(arg) && length(setdiff(names(arg), c(".value", ".class", ".length", ".validate", ".failed_msg", ".filter", ".read.only", ".private", ".visible"))) == 0) {
 			default_value = arg[[".value"]]
 			length = if(is.null(arg[[".length"]])) numeric(0) else arg[[".length"]]
 			class = if(is.null(arg[[".class"]])) character(0) else arg[[".class"]]
@@ -94,6 +98,7 @@ setGlobalOptions = function(..., get_opt_value_fun = FALSE) {
 					stop(paste("'.validate' field in", names(args)[i], "should be a function.\n"))
 				}
 			}
+			failed_msg = ifelse(is.null(arg[[".failed_msg"]]), "Your option is invalid.", arg[[".failed_msg"]][1])
 			if(is.null(arg[[".filter"]])) {
 				filter = function(x) x
 			} else {
@@ -107,14 +112,15 @@ setGlobalOptions = function(..., get_opt_value_fun = FALSE) {
 			private = ifelse(is.null(arg[[".private"]]), FALSE, arg[[".private"]])
 			visible = ifelse(is.null(arg[[".visible"]]), TRUE, arg[[".visible"]])
 		} else {
-			if(is.list(arg) && length(intersect(names(arg), c(".value", ".class", ".length", ".validate", ".filter", ".read.only", ".private", ".visible"))) > 0 &&
-				length(setdiff(names(arg), c(".value", ".class", ".length", ".validate", ".filter", ".read.only", ".private", ".visible"))) > 0) {
-				warning(paste("Your definition for '", names(args)[i], "' is mixed. It should only contain\n.value, .class, .length, .validate, .filter, .read.only, .private, .visible.\nIgnore the setting and use the whole list as the default value.\n", sep = ""))
+			if(is.list(arg) && length(intersect(names(arg), c(".value", ".class", ".length", ".validate", "failed_msg", ".filter", ".read.only", ".private", ".visible"))) > 0 &&
+				length(setdiff(names(arg), c(".value", ".class", ".length", ".validate", "failed_msg", ".filter", ".read.only", ".private", ".visible"))) > 0) {
+				warning(paste("Your definition for '", names(args)[i], "' is mixed. It should only contain\n.value, .class, .length, .validate, .failed_msg, .filter, .read.only, .private, .visible.\nIgnore the setting and use the whole list as the default value.\n", sep = ""))
 			}
 			default_value = arg
 			length = numeric(0)
 			class = character(0)
 			validate = function(x) TRUE
+			failed_msg = "Your option is invalid."
 			filter = function(x) x
 			read.only = FALSE
 			private = FALSE
@@ -128,6 +134,7 @@ setGlobalOptions = function(..., get_opt_value_fun = FALSE) {
 		    length        = length,
 			class         = class,
 			validate      = validate,
+			failed_msg    = failed_msg,
 			filter        = filter,
 			read.only     = read.only,
 			private       = private,
@@ -135,11 +142,57 @@ setGlobalOptions = function(..., get_opt_value_fun = FALSE) {
 			"__generated_namespace__" = topenv(envoking_env))
 
 	}
+
+	local_options = NULL
+	local_options_start_env = NULL
 	
-	opt_fun = function(..., RESET = FALSE, READ.ONLY = NULL) {
+	opt_fun = function(..., RESET = FALSE, READ.ONLY = NULL, LOCAL = FALSE) {
 		# the environment where foo.options() is called
 		calling_ns = topenv(parent.frame())  # top package where foo.options() is called
 		
+		e = environment()
+		if(!missing(LOCAL) && !LOCAL) {
+			local_options_start_env <<- NULL
+			local_options <<- NULL
+			options = options
+			# cat("enforce to be global mode.\n")
+			return(invisible(NULL))
+		} else if(LOCAL) {
+			# check whether there is already local_options initialized
+			if(is.null(parent.env(e)$local_options_start_env)) {
+				local_options_start_env <<- parent.frame() # parent envir is where opt_fun is called
+				local_options <<- lapply(options, function(opt) opt$copy())
+			} else if(!is.parent.frame(parent.env(e)$local_options_start_env, parent.frame())) {
+				local_options_start_env <<- parent.frame() # parent envir is where opt_fun is called
+				local_options <<- lapply(options, function(opt) opt$copy())
+			}
+			options = local_options
+			# cat("under local mode: ", get_env_str(local_options_start_env), "\n")
+			return(invisible(NULL))
+		} else {
+
+			# if local_options_start_env exists, it probably in local mode
+			if(!is.null(parent.env(e)$local_options_start_env)) {
+				 # if calling frame is offspring environment of local_options_start_env
+				if(identical(parent.env(e)$local_options_start_env, parent.frame())) {
+					options = local_options
+					# cat("in a same environment, still under local mode.\n")
+				} else if(is.parent.frame(parent.env(e)$local_options_start_env, parent.frame())) {
+					options = local_options
+					# cat("in child environment, still under local mode.\n")
+				} else {
+					local_options_start_env <<- NULL
+					local_options <<- NULL
+					under_local_mode = FALSE
+					options = options
+					# cat("leave the local mode, now it is global mode.\n")
+				}
+			} else {
+				options = options
+				# cat("under global mode.\n")
+			}
+		}
+
 		if(RESET) {
 			for(i in seq_along(options)) {
 				options[[i]]$reset(calling_ns)
@@ -271,6 +324,36 @@ print_env_stack = function(e, depth = Inf) {
 	}
 }
 
+is.parent.env = function(p, e) {
+	while(1) {
+		e = parent.env(e)
+		
+		if(identical(e, emptyenv())) {
+			return(FALSE)
+		}
+		if(identical(p, e)) {
+			return(TRUE)
+		}
+	}
+	return(FALSE)
+}
+
+is.parent.frame = function(p, e) {
+	if(identical(p, e)) {
+		return(FALSE)
+	}
+
+	i = 1 + 1
+	while(!identical(e, .GlobalEnv)) {
+		e = parent.frame(n = i)
+		if(identical(p, e)) {
+			return(TRUE)
+		}
+		i = i + 1
+	}
+	return(FALSE)
+}
+
 # with_sink is copied from testthat package
 with_sink = function (connection, code, ...) 
 {
@@ -289,8 +372,7 @@ get_env_str = function(env) {
 
 
 stop = function(msg) {
-	e = simpleError(msg)
-	base::stop(e)
+	base::stop(strwrap(msg), call. = FALSE)
 }
 
 # == title

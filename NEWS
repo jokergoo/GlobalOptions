@@ -1,6 +1,11 @@
 Changes in version 0.0.8
 -----------------------------------------------------------------------------
 
+* support local mode
+
+Changes in version 0.0.8
+-----------------------------------------------------------------------------
+
 * assign a class for the generated functions
 * option value can be assigned by '$' symbol
 

@@ -75,8 +75,8 @@ foo.options = setGlobalOptions(
 
 test_that("tesing on .length and .class ", {
 	expect_that(foo.options(), is_identical_to(list(a = 1)))
-	expect_that(foo.options(a = 1:3), throws_error("Length of .* should be one of"))
-	expect_that(foo.options(a = "text"), throws_error("Class of .* should be one of"))		
+	expect_that(foo.options(a = 1:3), throws_error("Length of .* should be"))
+	expect_that(foo.options(a = "text"), throws_error("Class of .* should be"))		
 })
 
 # testing read.only
@@ -91,6 +91,16 @@ test_that("tesing on .read.only ", {
 	expect_that(foo.options(a = 2), throws_error("is a read-only option"))
 	expect_that(foo.options(READ.ONLY = TRUE), is_identical_to(list(a = 1)))
 	expect_that(foo.options(READ.ONLY = FALSE), is_identical_to(list(b = 2)))
+})
+
+foo.options = setGlobalOptions(
+	a = list(.value = 1,
+		     .validate = function(x) x > 0,
+		     .failed_msg = "'a' should be a positive number.")
+)
+
+test_that("testing on .failed_msg", {
+	expect_that(foo.options(a = -1), throws_error("positive"))
 })
 
 # testing .validate and .filter
@@ -132,7 +142,7 @@ test_that("testing if '.value' is set as a function", {
 	expect_that(foo.options("a"), is_identical_to(1))
 	foo.options(b = function(x) 2)
 	expect_that(body(foo.options("b")), is_identical_to(2))
-	expect_that(foo.options(c = function(x) "text"), throws_error("Class of .* should be one of"))
+	expect_that(foo.options(c = function(x) "text"), throws_error("Class of .* should be"))
 
 })
 
@@ -201,3 +211,59 @@ test_that("testing if '.value' is visible", {
 	expect_that(foo.options("a"), is_identical_to(2))
 })
 
+
+
+opt = setGlobalOptions(
+	a = 1
+)
+
+f1 = function() {
+	opt(LOCAL = TRUE)
+	opt(a = 2)
+	return(opt("a"))
+}
+
+f1() # 2
+
+
+f2 = function() {
+	opt(LOCAL = TRUE)
+	opt(a = 4)
+	return(opt("a"))
+}
+
+f2() # 4
+
+test_that("testing local mode", {
+	expect_that(f1(), is_identical_to(2))
+	expect_that(f2(), is_identical_to(4))
+	expect_that(opt$a, is_identical_to(1))
+
+	opt(LOCAL = TRUE)
+	opt(a = 4)
+	expect_that(opt("a"), is_identical_to(4))
+	opt(LOCAL = FALSE)
+	expect_that(opt("a"), is_identical_to(1))
+})
+
+
+opt = setGlobalOptions(
+	a = 1
+)
+
+f1 = function() {
+	opt(LOCAL = TRUE)
+	opt(a = 2)
+	return(f2())
+}
+
+f2 = function() {
+	opt("a")
+}
+
+f1()  # 2
+
+test_that("testing local mode 2", {
+	expect_that(f1(), is_identical_to(2))
+	expect_that(opt("a"), is_identical_to(1))
+})

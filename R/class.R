@@ -11,16 +11,23 @@ GlobalOption = setRefClass("GlobalOption",
 		length = "numeric",
 		class = "character",
 		validate = "function",
+		failed_msg = "character",
 		filter = "function",
 		read.only = "logical",
 		private = "logical",
 		visible = "logical",
 		"__generated_namespace__" = "environment"),
+
 	methods = list(
 
 		initialize = function(...) {
-			callSuper(...)
+			obj = callSuper(...)
+			if(length(obj$failed_msg) == 0) {
+				obj$failed_msg = "Your option is invalid."
+			}
+			return(obj)
 		},
+
 		# get current value
 		get = function(calling_ns = parent.frame(), read.only = NULL, enforce_visible = FALSE) {
 
@@ -76,19 +83,27 @@ GlobalOption = setRefClass("GlobalOption",
 			# test on value length
 			if(length(.self$length)) {
 				if(!(length(opt_value) %in% .self$length)) {
-					stop(paste("Length of '", .self$name, "' should be one of ", paste(.self$length, collapse = ", "), ".\n", sep = ""))
+					if(length(.self$length) == 1) {
+						stop(paste("Length of '", .self$name, "' should be ", .self$length, ".\n", sep = ""))
+					} else {
+						stop(paste("Length of '", .self$name, "' should be one of ", paste(.self$length, collapse = ", "), ".\n", sep = ""))
+					}
 				}
 			}
 
 			# test on classes of the values
 			if(length(.self$class)) {
 				if(!any(sapply(.self$class, function(cl) inherits(opt_value, cl)))) {
-					stop(paste("Class of '", .self$name, "' should be one of '", paste(.self$class, collapse = ", "), "'.\n", sep = ""))
+					if(length(.self$class)) {
+						stop(paste("Class of '", .self$name, "' should be '", .self$class, "'.\n", sep = ""))
+					} else {
+						stop(paste("Class of '", .self$name, "' should be one of '", paste(.self$class, collapse = ", "), "'.\n", sep = ""))
+					}
 				}
 			}
 						
 			# test on validate function
-			if(!.self$validate(opt_value)) stop("Didn't pass the validation. Your option is invalid.\n")
+			if(!.self$validate(opt_value)) stop(paste("Didn't pass the validation. ", .self$failed_msg, "\n", sep = ""))
 
 			# filter on data
 			opt_value = .self$filter(opt_value)
@@ -141,7 +156,30 @@ GlobalOption = setRefClass("GlobalOption",
 			} else {
 				.self$real_value = .self$value
 			}
+		},
+
+		copy = function (shallow = FALSE) {
+		    def <- .refClassDef
+		    value_ <- new(def)
+		    vEnv <- as.environment(value_)
+		    selfEnv <- as.environment(.self)
+		    for (field in names(def@fieldClasses)) {
+		        if (shallow)
+		            base::assign(field, base::get(field, envir = selfEnv), envir = vEnv)  # get here will conflict with the `get` in this reference class
+		        else {
+		            current <- base::get(field, envir = selfEnv)
+		            if (is(current, "envRefClass"))
+		                current <- current$copy(FALSE)
+		            base::assign(field, current, envir = vEnv)
+		        }
+		    }
+		    value_
+		},
+
+		show = function() {
+			cat("option ", .self$name, "\n")
 		}
 
 	)
 )
+
