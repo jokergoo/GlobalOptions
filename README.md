@@ -100,6 +100,23 @@ foo_opt("prefix")
 ## [1] "[ 2015-08-18 17:49:08 ] "
 ```
 
+### Local options
+
+Local options can be created by specifying `LOCAL` to `TRUE`. The local mode will end when
+`LOCAL` is set to `FALSE` explicitely or the environment changes.
+
+```{r}
+opt = setGlobalOptions(
+    a = 1
+)
+
+f1 = function() {
+    opt(LOCAL = TRUE)
+    opt(a = 2)
+    return(f2())
+}
+```
+
 ### License
 
 GPL (>= 2)
