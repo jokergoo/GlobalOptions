@@ -10,6 +10,10 @@ This package aims to provide a simple way to handle global configurations. It ca
 4. set private options which are only accessable in a certain namespace.
 5. support local options and global options
 
+There is a [vignette](https://cran.r-project.org/web/packages/GlobalOptions/vignettes/GlobalOptions.html) in 
+the package which explains with more detail.
+
+
 ### Usage
 
 The most simple way is to construct an option function (e.g. `foo_opt()`) as:
@@ -128,7 +132,3 @@ opt("a")
 ### License
 
 GPL (>= 2)
-
-### Vignette
-
-For more detailed explanation of the package, please go to the [vignette](https://cran.r-project.org/web/packages/GlobalOptions/vignettes/GlobalOptions.html).
