@@ -7,7 +7,7 @@ Set option value by dollar symbol
 Set option value by dollar symbol
 }
 \usage{
-\method{$<-}{GlobalOptionsFun}(x, nm, value)
+\method{$}{GlobalOptionsFun}(x, nm) <- value
 }
 \arguments{
 
@@ -17,7 +17,7 @@ Set option value by dollar symbol
 
 }
 \details{
-\code{opt$a = 1} is same as \code{opt("a" = 1)}
+\code{opt\$a = 1} is same as \code{opt("a" = 1)}
 }
 \author{
 Zuguang Gu <z.gu@dkfz.de>

@@ -16,7 +16,7 @@ Get option value by dollar symbol
 
 }
 \details{
-\code{opt$a} is same as \code{opt("a")}
+\code{opt\$a} is same as \code{opt("a")}
 }
 \author{
 Zuguang Gu <z.gu@dkfz.de>
