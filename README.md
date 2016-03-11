@@ -128,3 +128,7 @@ opt("a")
 ### License
 
 GPL (>= 2)
+
+### Vignette
+
+For more detailed explanation of the package, please go to the [vignette](https://cran.r-project.org/web/packages/GlobalOptions/vignettes/GlobalOptions.html).
