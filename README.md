@@ -115,6 +115,14 @@ f1 = function() {
     opt(a = 2)
     return(f2())
 }
+f1()
+
+## [1] 2
+
+opt("a")
+
+## [1] 1
+
 ```
 
 ### License
