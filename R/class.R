@@ -72,7 +72,7 @@ GlobalOption = setRefClass("GlobalOption",
 			# test on private
 			# in option function generation and calling are in the same namespace, then private options can be modified
 			if( (!identical(.self$`__generated_namespace__`, calling_ns)) && .self$private) {
-				stop(paste("'", .self$name, "' is a private option and it can only be modified inside '", env2txt(.self$`__generated_namespace__`), "' namespace.\n", sep = ""))
+				stop(paste("'", .self$name, "' is a private option and it can only be modified inside '", env2txt(.self$`__generated_namespace__`), "' namespace while not '", env2txt(calling_ns), "'.\n", sep = ""))
 			}
 			
 			if(is.function(opt_value) && length(intersect(.self$class, "function")) == 0) {

@@ -387,7 +387,7 @@ get_env_str = function(env) {
 
 
 stop = function(msg) {
-	base::stop(strwrap(msg), call. = FALSE)
+	base::stop(paste(strwrap(msg), collapse = "\n"), call. = FALSE)
 }
 
 # == title
@@ -424,7 +424,11 @@ stop = function(msg) {
 "$<-.GlobalOptionsFun" = function(x, nm, value) {
 	lt = list()
 	lt[[nm]] = value
-	do.call("x", lt)
-	x
+
+	assign(".__temp_opt__.", x, envir = parent.frame())
+	do.call(".__temp_opt__.", lt, envir = parent.frame())
+	rm(".__temp_opt__.", envir = parent.frame())
+
+	return(x)
 }
 
