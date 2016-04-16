@@ -2,16 +2,16 @@ Package: GlobalOptions
 Type: Package
 Title: Generate Functions to Get or Set Global Options
 Version: 0.0.10
-Date: 2016-3-10
+Date: 2016-4-17
 Author: Zuguang Gu
 Maintainer: Zuguang Gu <z.gu@dkfz.de>
 Depends: R (>= 2.10.0), methods
-Suggests: testthat (>= 0.3), knitr, markdown
+Suggests: testthat (>= 1.0.0), knitr, markdown
 VignetteBuilder: knitr
 Description: It provides more controls on the option values such as validation
     and filtering on the values, making options invisible or private.
 URL: https://github.com/jokergoo/GlobalOptions
 License: GPL (>= 2)
-Packaged: 2016-3-10 00:00:00 UTC; Administrator
+Packaged: 2016-4-17 00:00:00 UTC; Administrator
 Repository: CRAN
-Date/Publication: 2016-3-10 00:00:00
+Date/Publication: 2016-4-17 00:00:00

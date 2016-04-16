@@ -285,7 +285,15 @@ test_that("testing local mode 3", {
 	expect_that(f1(), is_identical_to(2))
 })
 
-
-
+opt = setGlobalOptions(
+	a = list(.value = 1,
+		     .private = TRUE)
+)
+require(stats)
+ns = getNamespace("stats")
+environment(opt)$options$a$`__generated_namespace__` = ns
+test_that("testing private", {
+	expect_that(opt$a <- 2, throws_error("is a private option"))
+})
 
 
