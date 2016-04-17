@@ -397,7 +397,7 @@ ns = getNamespace("stats")
 environment(opt)$options$a$`__generated_namespace__` = ns
 ```
 
-There will be error if trying to modify `a` which is private in stats namespace.
+There will be error if trying to modify `a` which is private in `stats` namespace.
 
 ```{r error = TRUE, purl = FALSE}
 opt$a = 2
@@ -414,7 +414,8 @@ args(opt)
 ```
 
 You should put `GlobalOptions (>= 0.0.10)` to the `Depends` field in your DESCRIPTION file
-if you want users to access the options by the `$` and `$<-` operator.
+if you want users to access the options by the `$` and `$<-` operator. If not, they can 
+only access the options by the normal `opt(name)` and `opt(name = value)` way.
 
 ## Misc
 
