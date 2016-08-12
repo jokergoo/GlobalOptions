@@ -1,6 +1,7 @@
 [![ Status](https://travis-ci.org/jokergoo/GlobalOptions.svg)](https://travis-ci.org/jokergoo/GlobalOptions) [![CRAN](http://www.r-pkg.org/badges/version/GlobalOptions)](https://cran.r-project.org/web/packages/GlobalOptions/index.html) [![codecov](https://img.shields.io/codecov/c/github/jokergoo/GlobalOptions.svg)](https://codecov.io/github/jokergoo/GlobalOptions) 
 
-## GlobalOptions
+GlobalOptions
+======================
 
 This package aims to provide a simple way to handle global configurations. It can:
 
@@ -14,7 +15,7 @@ There is a [vignette](https://cran.r-project.org/web/packages/GlobalOptions/vign
 the package which explains with more detail.
 
 
-### Usage
+## Usage
 
 The most simple way is to construct an option function (e.g. `foo_opt()`) as:
 
@@ -45,7 +46,7 @@ Users can reset their default values by:
 foo_opt(RESET = TRUE)
 ```
 
-### Advanced control on options
+## Advanced control on options
 
 The value for each option can be set as a list which may contain more controls on the option:
 
@@ -78,7 +79,7 @@ Other fields mean:
 3. it is visible;
 4. it is public.
 
-### Dynamic option values
+## Dynamic option values
 
 If the value of the option is set as a function and the class of the option is non-function.
 The function will be executed everytime when querying the option. In following example, the
@@ -104,7 +105,7 @@ foo_opt("prefix")
 ## [1] "[ 2015-08-18 17:49:08 ] "
 ```
 
-### Local options
+## Local options
 
 Local options can be created by specifying `LOCAL` to `TRUE`. The local mode will end when
 `LOCAL` is set to `FALSE` explicitely or the environment changes.
@@ -129,6 +130,6 @@ opt("a")
 
 ```
 
-### License
+## License
 
 GPL (>= 2)
