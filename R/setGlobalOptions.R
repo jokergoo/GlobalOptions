@@ -398,11 +398,14 @@ stop = function(msg) {
 # -nm a single option name
 #
 # == details
-# ``opt\$a`` is same as ``opt("a")``
+# ``opt$a`` is same as ``opt("a")``
 #
 # == author
 # Zuguang Gu <z.gu@dkfz.de>
 #
+# == example
+# opt = setGlobalOptions(a = 1)
+# opt$a
 "$.GlobalOptionsFun" = function(x, nm) {
 	x(nm)
 }
@@ -416,11 +419,15 @@ stop = function(msg) {
 # -value the value which is assigned to the option
 #
 # == details
-# ``opt\$a = 1`` is same as ``opt("a" = 1)``
+# ``opt$a = 1`` is same as ``opt("a" = 1)``
 #
 # == author
 # Zuguang Gu <z.gu@dkfz.de>
 #
+# == example
+# opt = setGlobalOptions(a = 1)
+# opt$a = 2
+# opt$a
 "$<-.GlobalOptionsFun" = function(x, nm, value) {
 	lt = list()
 	lt[[nm]] = value

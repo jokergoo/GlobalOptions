@@ -17,13 +17,13 @@ Set option value by dollar symbol
 
 }
 \details{
-\code{opt\$a = 1} is same as \code{opt("a" = 1)}
+\code{opt$a = 1} is same as \code{opt("a" = 1)}
 }
 \author{
 Zuguang Gu <z.gu@dkfz.de>
 }
 \examples{
-# There is no example
-NULL
-
+opt = setGlobalOptions(a = 1)
+opt$a = 2
+opt$a
 }
