@@ -296,4 +296,9 @@ test_that("testing private", {
 	expect_that(opt$a <- 2, throws_error("is a private option"))
 })
 
-
+opt = setGlobalOptions(a = NULL)
+opt$a = 1
+opt$a = NULL
+test_that("testing set value to NULL", {
+	expect_that(opt$a, is_identical_to(NULL))
+})

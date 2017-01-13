@@ -1,6 +1,7 @@
 Changes in version 0.0.11
 
 * improved docs
+* opt$nm can be set to NULL now
 
 ---------------------------------------------------------------------------
 

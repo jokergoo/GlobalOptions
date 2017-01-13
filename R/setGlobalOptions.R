@@ -211,7 +211,7 @@ setGlobalOptions = function(..., get_opt_value_fun = FALSE) {
 		
 		
 		args = list(...)
-		
+
 		# input value is NULL
 		if(length(args) == 1 && is.null(names(args)) && is.null(args[[1]])) {
 			return(NULL)
@@ -429,8 +429,8 @@ stop = function(msg) {
 # opt$a = 2
 # opt$a
 "$<-.GlobalOptionsFun" = function(x, nm, value) {
-	lt = list()
-	lt[[nm]] = value
+	lt = list(value)
+	names(lt) = nm
 
 	assign(".__temp_opt__.", x, envir = parent.frame())
 	do.call(".__temp_opt__.", lt, envir = parent.frame())
