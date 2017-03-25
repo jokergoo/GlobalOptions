@@ -302,3 +302,17 @@ opt$a = NULL
 test_that("testing set value to NULL", {
 	expect_that(opt$a, is_identical_to(NULL))
 })
+
+opt = setGlobalOptions(a = 1, b = list(".synonymous" = "a"))
+test_that("test .synonymous", {
+	expect_that(opt$a, is_identical_to(opt$b))
+	opt(a = 2)
+	expect_that(opt$a, is_identical_to(opt$b))
+	expect_that(opt$a, is_identical_to(2))
+	opt(b = 3)
+	expect_that(opt$a, is_identical_to(opt$b))
+	expect_that(opt$a, is_identical_to(3))
+
+	expect_that(opt <- setGlobalOptions(a = 1, b = list(".synonymous" = "c"), c = 1), 
+		throws_error("has not been created yet"))
+})

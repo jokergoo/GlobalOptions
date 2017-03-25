@@ -88,8 +88,19 @@ setGlobalOptions = function(..., get_opt_value_fun = FALSE) {
 	names(options) = opt_names
 	
 	for(i in seq_along(args)) {
-	
+
 		arg = args[[i]]
+		
+		if(is.list(arg)) {
+			if(identical(names(arg), ".synonymous")) {
+				if(is.null(options[[ arg[[".synonymous"]] ]])) {
+					stop(paste0("Option ", arg[[".synonymous"]], " has not been created yet."))
+				}
+				options[[i]] = options[[ arg[[".synonymous"]] ]]
+				next
+			}
+		}
+	
 		# if it is an advanced setting
 		if(is.list(arg) && length(setdiff(names(arg), c(".value", ".class", ".length", ".validate", ".failed_msg", ".filter", ".read.only", ".private", ".visible"))) == 0) {
 			default_value = arg[[".value"]]
