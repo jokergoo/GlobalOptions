@@ -40,15 +40,16 @@
 #
 # The different fields in the list can be used to filter or validate the option values.
 #
-# -.value The default value.
-# -.length The valid length of the option value. It can be a vector, the check will be passed if one of the length fits.
-# -.class The valid class of the option value. It can be a vector, the check will be passed if one of the classes fits.
-# -.validate Validation function. The input parameter is the option value and should return a single logical value.
-# -.failed_msg Once validation failed, the error message that is printed.
-# -.filter Filtering function. The input parameter is the option value and it should return a filtered option value.
-# -.read.only Logical. The option value can not be modified if it is set to ``TRUE``.
-# -.visible Logical. Whether the option is visible to users.
-# -.private Logical. The option value can only be modified in the same namespace where the option function is created.
+# -``.value`` The default value.
+# -``.length`` The valid length of the option value. It can be a vector, the check will be passed if one of the length fits.
+# -``.class`` The valid class of the option value. It can be a vector, the check will be passed if one of the classes fits.
+# -``.validate`` Validation function. The input parameter is the option value and should return a single logical value.
+# -``.failed_msg`` Once validation failed, the error message that is printed.
+# -``.filter`` Filtering function. The input parameter is the option value and it should return a filtered option value.
+# -``.read.only`` Logical. The option value can not be modified if it is set to ``TRUE``.
+# -``.visible`` Logical. Whether the option is visible to users.
+# -``.private`` Logical. The option value can only be modified in the same namespace where the option function is created.
+# -``.synonymous`` a single option name which should have been already defined ahead of current option. The option specified will be shared by current option.
 #
 # For more detailed explanation, please go to the vignette.
 #

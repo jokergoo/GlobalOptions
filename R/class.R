@@ -103,9 +103,9 @@ GlobalOption = setRefClass("GlobalOption",
 			}
 						
 			# test on validate function
-			failed_msg = paste(strwrap(paste("Didn't pass the validation. ", .self$failed_msg, "\n", sep = "")), collapse = "\n")
-			failed_msg = paste0(failed_msg, "\n")
-			if(!.self$validate(opt_value)) stop(failed_msg)
+			failed_msg_ = paste(strwrap(paste("Didn't pass the validation. ", .self$failed_msg, "\n", sep = "")), collapse = "\n")
+			failed_msg_ = paste0(failed_msg_, "\n")
+			if(!.self$validate(opt_value)) stop(failed_msg_)
 
 			# filter on data
 			opt_value = .self$filter(opt_value)

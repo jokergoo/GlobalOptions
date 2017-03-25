@@ -54,15 +54,16 @@ The value for each option can be set as a list which contains more controls of t
 The different fields in the list can be used to filter or validate the option values.
 
 \describe{
-  \item{.value}{The default value.}
-  \item{.length}{The valid length of the option value. It can be a vector, the check will be passed if one of the length fits.}
-  \item{.class}{The valid class of the option value. It can be a vector, the check will be passed if one of the classes fits.}
-  \item{.validate}{Validation function. The input parameter is the option value and should return a single logical value.}
-  \item{.failed_msg}{Once validation failed, the error message that is printed.}
-  \item{.filter}{Filtering function. The input parameter is the option value and it should return a filtered option value.}
-  \item{.read.only}{Logical. The option value can not be modified if it is set to \code{TRUE}.}
-  \item{.visible}{Logical. Whether the option is visible to users.}
-  \item{.private}{Logical. The option value can only be modified in the same namespace where the option function is created.}
+  \item{\code{.value}}{The default value.}
+  \item{\code{.length}}{The valid length of the option value. It can be a vector, the check will be passed if one of the length fits.}
+  \item{\code{.class}}{The valid class of the option value. It can be a vector, the check will be passed if one of the classes fits.}
+  \item{\code{.validate}}{Validation function. The input parameter is the option value and should return a single logical value.}
+  \item{\code{.failed_msg}}{Once validation failed, the error message that is printed.}
+  \item{\code{.filter}}{Filtering function. The input parameter is the option value and it should return a filtered option value.}
+  \item{\code{.read.only}}{Logical. The option value can not be modified if it is set to \code{TRUE}.}
+  \item{\code{.visible}}{Logical. Whether the option is visible to users.}
+  \item{\code{.private}}{Logical. The option value can only be modified in the same namespace where the option function is created.}
+  \item{\code{.synonymous}}{a single option name which should have been already defined ahead of current option. The option specified will be shared by current option.}
 }
 
 For more detailed explanation, please go to the vignette.
