@@ -417,6 +417,49 @@ You should put `GlobalOptions (>= 0.0.10)` to the `Depends` field in your DESCRI
 if you want users to access the options by the `$` and `$<-` operator. If not, they can 
 only access the options by the normal `opt(name)` and `opt(name = value)` way.
 
+### Integrate options with interactions between them in a custom R-package
+If you create a package using roxygen2, here is the proposition.
+
+1. To be able to call the option as a modifiable list (`opt$a`), you need to add `GlobalOptions` in `Depends` in your DESCRIPTION file, so that it is attached when loading your package. 
+2. The R file describing the functions should be the following one. Note that this applies only if you use `get_opt_value_fun = TRUE`, otherwise, function `lt$get_opt_value` will not exist.
+
+```
+#' Internal function for global options
+#' @keywords internal
+#' @seealso \code{\link{opt}}
+lt <- GlobalOptions::setGlobalOptions(
+    a = list(.value = 1),
+    b = list(.value = function() 2 * get_opt_value('a')),
+    get_opt_value_fun = TRUE
+)
+
+#' Internal function for global options
+#' @keywords internal
+#' @seealso \code{\link{opt}}
+get_opt_value <- lt$get_opt_value
+
+#' Global options for my package
+#'
+#' @param RESET reset options to default
+#' @param LOCAL set to true to use modified options in a local environment but not in global.
+#' @param a Numeric. Default to 1.
+#' @param b Numeric. Default to 2*a.
+#'
+#' @return A list with all options
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#' # List options
+#' opt()
+#' # Show one option
+#' opt("b")
+#' # Modify model type
+#' opt$a <- 2; opt("b")
+#' }
+opt <- lt$opt_fun
+```
+
 ## Misc
 
 The order of validation when modifying an option value is `.read.only`, `.private`, 
