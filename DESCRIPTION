@@ -11,7 +11,7 @@ VignetteBuilder: knitr
 Description: It provides more controls on the option values such as validation
     and filtering on the values, making options invisible or private.
 URL: https://github.com/jokergoo/GlobalOptions
-License: GPL (>= 2)
+License: MIT
 Packaged: 2018-3-15 00:00:00 UTC; Administrator
 Repository: CRAN
 Date/Publication: 2018-3-15 00:00:00
