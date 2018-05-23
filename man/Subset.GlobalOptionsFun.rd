@@ -11,17 +11,17 @@ Get option value by dollar symbol
 }
 \arguments{
 
-  \item{x}{the function returned by \code{\link{setGlobalOptions}}}
-  \item{nm}{a single option name}
+  \item{x}{the object returned by \code{\link{set_opt}} or \code{\link{setGlobalOptions}}.}
+  \item{nm}{a single option name.}
 
 }
 \details{
-\code{opt$a} is same as \code{opt("a")}
+\code{opt$a} is same as \code{opt("a")}.
 }
 \author{
 Zuguang Gu <z.gu@dkfz.de>
 }
 \examples{
-opt = setGlobalOptions(a = 1)
+opt = set_opt(a = 1)
 opt$a
 }

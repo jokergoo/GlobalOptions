@@ -1,64 +1,76 @@
 context("Test `GlobalOptions`")
 
+"%==%" = function(x, y) {
+	expect_that(x, is_identical_to(y))
+}
 
-foo.options = setGlobalOptions(
+"%err%" = function(x, y) {
+	expect_that(x, throws_error(y))
+}
+
+
+opt = set_opt(
 	a = 1,
 	b = "text"
 )
 
 test_that("get option values", {
-	expect_that(foo.options(), is_identical_to(list(a = 1, b = "text")))
-	expect_that(foo.options("a"), is_identical_to(1))
-	expect_that(foo.options$a, is_identical_to(1))
-	expect_that(foo.options("b"), is_identical_to("text"))
-	expect_that(foo.options("c"), throws_error("No such option"))
-	expect_that(foo.options(c("a", "b")), is_identical_to(list(a = 1, b = "text")))
-	expect_that(foo.options("a", "b"), is_identical_to(list(a = 1, b = "text")))
-	expect_that(foo.options(c("a", "b", "c")), throws_error("No such option"))
-	expect_that(foo.options("a", "b", "c"), throws_error("No such option"))
+	opt() %==% list(a = 1, b = "text")
+	opt("a") %==% 1
+	opt[["a"]] %==% 1
+	opt$a %==% 1
+	opt("b") %==% "text"
+	opt("c") %err% "No such option"
+	opt(c("a", "b")) %==% list(a = 1, b = "text")
+	opt("a", "b") %==% list(a = 1, b = "text")
+	opt(c("a", "b", "c")) %err% "No such option"
+	opt("a", "b", "c") %err% "No such option"
 })
 
 test_that("set option values", {
-	foo.options("a" = 2)
-	expect_that(foo.options("a"), is_identical_to(2))
+	opt("a" = 2)
+	opt("a") %==% 2
 
-	foo.options$a = 4
-	expect_that(foo.options$a, is_identical_to(4))
+	opt$a = 4
+	opt$a %==% 4
+
+	opt[["a"]] = 6
+	opt$a %==% 6
 	
-	foo.options(RESET = TRUE)
-	expect_that(foo.options("a"), is_identical_to(1))
+	opt(RESET = TRUE)
+	opt("a") %==% 1
 	
-	foo.options("a" = 2, "b" = "str")
-	expect_that(foo.options("a"), is_identical_to(2))
-	expect_that(foo.options("b"), is_identical_to("str"))
+	opt("a" = 2, "b" = "str")
+	opt("a") %==% 2
+	opt("b") %==% "str"
 	
-	foo.options(RESET = TRUE)
-	op = foo.options()
-	foo.options("a" = 2, "b" = "str")
-	foo.options(op)
-	expect_that(foo.options("a"), is_identical_to(1))
-	expect_that(foo.options("b"), is_identical_to("text"))
+	opt(RESET = TRUE)
+	op = opt()
+	opt("a" = 2, "b" = "str")
+	opt(op)
+	opt("a") %==% 1
+	opt("b") %==% "text"
 	
-	expect_that(foo.options("c" = 1), throws_error("No such option"))
-	expect_that(foo.options(1, "b" = "a"), throws_error("When setting options, all arguments should be named"))
-	expect_that(foo.options(list(1, "b" = "a")), throws_error("When setting options, all arguments should be named"))
-	expect_that(foo.options("a" = 1, "c" = 1), throws_error("No such option"))
+	opt("c" = 1) %err% "No such option"
+	opt(1, "b" = "a") %err% "When setting options, all arguments should be named"
+	opt(list(1, "b" = "a")) %err% "When setting options, all arguments should be named"
+	opt("a" = 1, "c" = 1) %err% "No such option"
 })
 
 test_that("testing valus are also list", {
-	foo.options("a" = list(a = 1, b = 2))
-	expect_that(foo.options("a"), is_identical_to(list(a = 1, b = 2)))
+	opt("a" = list(a = 1, b = 2))
+	expect_that(opt("a"), is_identical_to(list(a = 1, b = 2)))
 
 })
 
 # testing if advanced setting is not mixed
 test_that("testing on mixed setting", {
-	expect_that(foo.options <- setGlobalOptions(
+	expect_that(opt <- set_opt(
 	a = list(.value = 1,
 	         length = 1,
 	         class = "numeric")
 	), gives_warning("mixed"))
-	expect_that(foo.options("a"), is_identical_to(
+	expect_that(opt("a"), is_identical_to(
 		list(.value = 1,
 	         length = 1,
 	         class = "numeric")
@@ -67,68 +79,68 @@ test_that("testing on mixed setting", {
 
 
 # testing .length and .class
-foo.options = setGlobalOptions(
+opt = set_opt(
 	a = list(.value = 1,
 	         .length = 1,
 	         .class = "numeric")
 )
 
 test_that("tesing on .length and .class ", {
-	expect_that(foo.options(), is_identical_to(list(a = 1)))
-	expect_that(foo.options(a = 1:3), throws_error("Length of .* should be"))
-	expect_that(foo.options(a = "text"), throws_error("Class of .* should be"))		
+	expect_that(opt(), is_identical_to(list(a = 1)))
+	expect_that(opt(a = 1:3), throws_error("Length of .* should be"))
+	expect_that(opt(a = "text"), throws_error("Class of .* should be"))		
 })
 
 # testing read.only
-foo.options = setGlobalOptions(
+opt = set_opt(
 	a = list(.value = 1,
 	         .read.only = TRUE),
 	b = 2
 )
 
 test_that("tesing on .read.only ", {
-	expect_that(foo.options(), is_identical_to(list(a = 1, b = 2)))
-	expect_that(foo.options(a = 2), throws_error("is a read-only option"))
-	expect_that(foo.options(READ.ONLY = TRUE), is_identical_to(list(a = 1)))
-	expect_that(foo.options(READ.ONLY = FALSE), is_identical_to(list(b = 2)))
+	expect_that(opt(), is_identical_to(list(a = 1, b = 2)))
+	expect_that(opt(a = 2), throws_error("is a read-only option"))
+	expect_that(opt(READ.ONLY = TRUE), is_identical_to(list(a = 1)))
+	expect_that(opt(READ.ONLY = FALSE), is_identical_to(list(b = 2)))
 })
 
-foo.options = setGlobalOptions(
+opt = set_opt(
 	a = list(.value = 1,
 		     .validate = function(x) x > 0,
 		     .failed_msg = "'a' should be a positive number.")
 )
 
 test_that("testing on .failed_msg", {
-	expect_that(foo.options(a = -1), throws_error("positive"))
+	expect_that(opt(a = -1), throws_error("positive"))
 })
 
 # testing .validate and .filter
-foo.options = setGlobalOptions(
+opt = set_opt(
 	a = list(.value = 1,
 	         .validate = function(x) x > 0 && x < 10,
 	         .filter = function(x) c(x, x))
 )
 
 test_that("tesing on .validate and .filter ", {
-	expect_that(foo.options(), is_identical_to(list(a = c(1))))
-	foo.options(a = 2)
-	expect_that(foo.options(), is_identical_to(list(a = c(2, 2))))
-	expect_that(foo.options(a = 20), throws_error("Your option is invalid"))
+	expect_that(opt(), is_identical_to(list(a = c(1))))
+	opt(a = 2)
+	expect_that(opt(), is_identical_to(list(a = c(2, 2))))
+	expect_that(opt(a = 20), throws_error("Your option is invalid"))
 })
 
 # test value after filter
-foo.options = setGlobalOptions(
+opt = set_opt(
 	a = list(.value = 1,
 	         .length = 1,
 	         .filter = function(x) c(x, x))
 )
 test_that("testing on validation of filtered value", {
-	expect_that(foo.options(a = 2), throws_error("Length of filtered"))
+	expect_that(opt(a = 2), throws_error("Length of filtered"))
 })
 
 # testing if .value is a function
-foo.options = setGlobalOptions(
+opt = set_opt(
 	a = list(.value = 1),
 	b = list(.value = 2,
 		     .class = "function"),
@@ -137,83 +149,77 @@ foo.options = setGlobalOptions(
 )
 
 test_that("testing if '.value' is set as a function", {
-	#expect_that(foo.options(), is_identical_to(list(a = 1, b = 2, c = 3)))
-	foo.options(a = function(x) 1)
-	expect_that(foo.options("a"), is_identical_to(1))
-	foo.options(b = function(x) 2)
-	expect_that(body(foo.options("b")), is_identical_to(2))
-	expect_that(foo.options(c = function(x) "text"), throws_error("Class of .* should be"))
+	#expect_that(opt(), is_identical_to(list(a = 1, b = 2, c = 3)))
+	opt(a = function(x) 1)
+	expect_that(opt("a"), is_identical_to(1))
+	opt(b = function(x) 2)
+	expect_that(body(opt("b")), is_identical_to(2))
+	expect_that(opt(c = function(x) "text"), throws_error("Class of .* should be"))
 
 })
 
 # testing if.value is a function and uses OPT
-lt = setGlobalOptions(
-	a = list(.value = 1),
-	b = list(.value = function() 2 * get_opt_value('a'))
-, get_opt_value_fun = TRUE)
-foo.options = lt$opt_fun
-get_opt_value = lt$get_opt_value
-
+opt = set_opt(
+	a = 1,
+	b = function() .v$a * 2
+)
 
 test_that("tesing if '.value' is a function and using other option values", {
-	expect_that(foo.options("b"), is_identical_to(2))
-	foo.options(a = 2)
-	expect_that(foo.options("b"), is_identical_to(4))
-	foo.options(RESET = TRUE)
-	expect_that(foo.options("b"), is_identical_to(2))
+	expect_that(opt("b"), is_identical_to(2))
+	opt(a = 2)
+	expect_that(opt("b"), is_identical_to(4))
+	opt(RESET = TRUE)
+	expect_that(opt("b"), is_identical_to(2))
 })
 
 # testing if.validate and .filter use OPT
-lt = setGlobalOptions(
-	a = list(.value = 1),
+opt = set_opt(
+	a = 1,
 	b = list(.value = 2,
-		     .validate = function(x) {
-		     	if(get_opt_value('a') > 0) x > 0
-		     	else x < 0
-		     },
-		     .filter = function(x) {
-		     	x + get_opt_value('a')
-		     })
-, get_opt_value_fun = TRUE)
-foo.options = lt$opt_fun
-get_opt_value = lt$get_opt_value
-
+	     .validate = function(x) {
+	     	if(.v$a > 0) x > 0
+	     	else x < 0
+	     },
+	     .filter = function(x) {
+	     	x + .v$a
+	     })
+)
 
 test_that("tesing '.validate' and '.filter' using other option values", {
-	foo.options(a = 1, b = 2)
-	expect_that(foo.options("b"), is_identical_to(3))
-	expect_that(foo.options(a = 1, b = -1), throws_error("Your option is invalid"))
-	expect_that(foo.options(a = -1, b = 1), throws_error("Your option is invalid"))
+	opt(a = 1, b = 2)
+	expect_that(opt("b"), is_identical_to(3))
+	expect_that(opt(a = 1, b = -1), throws_error("Your option is invalid"))
+	expect_that(opt(a = -1, b = 1), throws_error("Your option is invalid"))
 })
 
 # test in input value is NULL
-foo.options = setGlobalOptions(
+opt = set_opt(
 	a = 1
 )
 
 test_that("tesing if input value is NULL", {
-	expect_that(foo.options(NULL), is_identical_to(NULL))
-	foo.options(a = NULL)
-	expect_that(foo.options("a"), is_identical_to(NULL))
+	expect_that(opt(NULL), is_identical_to(NULL))
+	opt(a = NULL)
+	expect_that(opt("a"), is_identical_to(NULL))
 })
 
 ## test if .value is invisible
-foo.options = setGlobalOptions(
+opt = set_opt(
 	a = list(.value = 1,
 	         .visible = FALSE),
 	b = 1
 )
 
 test_that("testing if '.value' is visible", {
-	expect_that(foo.options(), is_identical_to(list(b = 1)))
-	expect_that(foo.options("a"), is_identical_to(1))
-	foo.options(a = 2)
-	expect_that(foo.options("a"), is_identical_to(2))
+	expect_that(opt(), is_identical_to(list(b = 1)))
+	expect_that(opt("a"), is_identical_to(1))
+	opt(a = 2)
+	expect_that(opt("a"), is_identical_to(2))
 })
 
+############################################
 
-
-opt = setGlobalOptions(
+opt = set_opt(
 	a = 1
 )
 
@@ -268,7 +274,7 @@ test_that("testing local mode 2", {
 	expect_that(opt("a"), is_identical_to(1))
 })
 
-opt = setGlobalOptions(
+opt = set_opt(
 	a = 1
 )
 
@@ -285,7 +291,7 @@ test_that("testing local mode 3", {
 	expect_that(f1(), is_identical_to(2))
 })
 
-opt = setGlobalOptions(
+opt = set_opt(
 	a = list(.value = 1,
 		     .private = TRUE)
 )
@@ -296,14 +302,19 @@ test_that("testing private", {
 	expect_that(opt$a <- 2, throws_error("is a private option"))
 })
 
-opt = setGlobalOptions(a = NULL)
+
+##########################################
+
+opt = set_opt(a = NULL)
 opt$a = 1
 opt$a = NULL
 test_that("testing set value to NULL", {
 	expect_that(opt$a, is_identical_to(NULL))
 })
 
-opt = setGlobalOptions(a = 1, b = list(".synonymous" = "a"))
+##########################################
+
+opt = set_opt(a = 1, b = list(".synonymous" = "a"))
 test_that("test .synonymous", {
 	expect_that(opt$a, is_identical_to(opt$b))
 	opt(a = 2)
@@ -313,6 +324,6 @@ test_that("test .synonymous", {
 	expect_that(opt$a, is_identical_to(opt$b))
 	expect_that(opt$a, is_identical_to(3))
 
-	expect_that(opt <- setGlobalOptions(a = 1, b = list(".synonymous" = "c"), c = 1), 
+	expect_that(opt <- set_opt(a = 1, b = list(".synonymous" = "c"), c = 1), 
 		throws_error("has not been created yet"))
 })

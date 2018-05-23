@@ -7,19 +7,20 @@ Produce a function which can get or set global options
 Produce a function which can get or set global options
 }
 \usage{
-setGlobalOptions(..., get_opt_value_fun = FALSE)
+setGlobalOptions(...)
 }
 \arguments{
 
   \item{...}{specification of options, see 'details' section}
-  \item{get_opt_value_fun}{whether return a \code{get_opt_value} function as well}
 
 }
 \details{
-The most simple way is to construct an option function (e.g. \code{foo.options()}) as:
+The function has a short name \code{\link{set_opt}}.
+
+The most simple way is to construct an option function (e.g. \code{opt()}) as:
 
   \preformatted{
-    foo.options = setGlobalOptions(
+    opt = set_opt(
         "a" = 1,
         "b" = "text"
     )  }
@@ -27,24 +28,26 @@ The most simple way is to construct an option function (e.g. \code{foo.options()
 Then users can get or set the options by
 
   \preformatted{
-    foo.options()
-    foo.options("a")
-    foo.options$a
-    foo.options(c("a", "b"))
-    foo.options("a", "b")
-    foo.options("a" = 2)
-    foo.options$a = 2
-    foo.options("a" = 2, "b" = "new_text")  }
+    opt()
+    opt("a")
+    opt$a
+    opt[["a"]]
+    opt(c("a", "b"))
+    opt("a", "b")
+    opt("a" = 2)
+    opt$a = 2
+    opt[["a"]] = 2
+    opt("a" = 2, "b" = "new_text")  }
 
 Options can be reset to their default values by:
 
   \preformatted{
-    foo.options(RESET = TRUE)  }
+    opt(RESET = TRUE)  }
 
-The value for each option can be set as a list which contains more controls of the option:
+The value for each option can be set as a list which contains more configurations of the option:
 
   \preformatted{
-    foo.options = setGlobalOptions(
+    opt = set_opt(
         "a" = list(.value = 1,
                    .length = 1,
                    .class = "numeric",
@@ -64,6 +67,7 @@ The different fields in the list can be used to filter or validate the option va
   \item{\code{.visible}}{Logical. Whether the option is visible to users.}
   \item{\code{.private}}{Logical. The option value can only be modified in the same namespace where the option function is created.}
   \item{\code{.synonymous}}{a single option name which should have been already defined ahead of current option. The option specified will be shared by current option.}
+  \item{\code{.description}}{a short text for describing the option. The description is only used when printing the object.}
 }
 
 For more detailed explanation, please go to the vignette.

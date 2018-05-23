@@ -4,34 +4,37 @@
 #
 # == param
 # -... specification of options, see 'details' section
-# -get_opt_value_fun whether return a ``get_opt_value`` function as well
 #
 # == detail
-# The most simple way is to construct an option function (e.g. ``foo.options()``) as:
+# The function has a short name `set_opt`.
 #
-#     foo.options = setGlobalOptions(
+# The most simple way is to construct an option function (e.g. ``opt()``) as:
+#
+#     opt = set_opt(
 #         "a" = 1,
 #         "b" = "text"
 #     )
 #
 # Then users can get or set the options by 
 #
-#     foo.options()
-#     foo.options("a")
-#     foo.options$a
-#     foo.options(c("a", "b"))
-#     foo.options("a", "b")
-#     foo.options("a" = 2)
-#     foo.options$a = 2
-#     foo.options("a" = 2, "b" = "new_text")
+#     opt()
+#     opt("a")
+#     opt$a
+#     opt[["a"]]
+#     opt(c("a", "b"))
+#     opt("a", "b")
+#     opt("a" = 2)
+#     opt$a = 2
+#     opt[["a"]] = 2
+#     opt("a" = 2, "b" = "new_text")
 #
 # Options can be reset to their default values by:
 #
-#     foo.options(RESET = TRUE)
+#     opt(RESET = TRUE)
 #
-# The value for each option can be set as a list which contains more controls of the option:
+# The value for each option can be set as a list which contains more configurations of the option:
 #
-#     foo.options = setGlobalOptions(
+#     opt = set_opt(
 #         "a" = list(.value = 1,
 #                    .length = 1,
 #                    .class = "numeric",
@@ -50,6 +53,7 @@
 # -``.visible`` Logical. Whether the option is visible to users.
 # -``.private`` Logical. The option value can only be modified in the same namespace where the option function is created.
 # -``.synonymous`` a single option name which should have been already defined ahead of current option. The option specified will be shared by current option.
+# -``.description`` a short text for describing the option. The description is only used when printing the object.
 #
 # For more detailed explanation, please go to the vignette.
 #
@@ -58,7 +62,7 @@
 #
 # == example
 # # please go to the vignette
-setGlobalOptions = function(..., get_opt_value_fun = FALSE) {
+setGlobalOptions = function(...) {
 
 	# the environment where the function is called
 	envoking_env = parent.frame()
@@ -66,44 +70,36 @@ setGlobalOptions = function(..., get_opt_value_fun = FALSE) {
 	args = list(...)
 	
 	if(any(is.null(names(args))) || any(names(args) == "")) {
-		stop("You should provide named arguments.\n")
+		stop("You should provide named arguments.")
 	}
 	
 	
 	if("RESET" %in% names(args)) {
-		stop("Don't use 'RESET' as the option name.\n")
+		stop("Don't use 'RESET' as the option name.")
 	}
 	
 	if("READ.ONLY" %in% names(args)) {
-		stop("Don't use 'READ.ONLY' as the option name.\n")
+		stop("Don't use 'READ.ONLY' as the option name.")
 	}
 
 	if("LOCAL" %in% names(args)) {
-		stop("Don't use 'LOCAL' as the option name.\n")
+		stop("Don't use 'LOCAL' as the option name.")
 	}
 
-	# format the options
-	options = vector("list", length = length(args))
+	add_opt = function(arg, name, envoking_env, calling_ns = NULL) {
 
-	opt_names = names(args)
-	names(options) = opt_names
-	
-	for(i in seq_along(args)) {
-
-		arg = args[[i]]
-		
 		if(is.list(arg)) {
 			if(identical(names(arg), ".synonymous")) {
 				if(is.null(options[[ arg[[".synonymous"]] ]])) {
 					stop(paste0("Option ", arg[[".synonymous"]], " has not been created yet."))
 				}
-				options[[i]] = options[[ arg[[".synonymous"]] ]]
-				next
+				opt = options[[ arg[[".synonymous"]] ]]
+				return(opt)
 			}
 		}
-	
+
 		# if it is an advanced setting
-		if(is.list(arg) && length(setdiff(names(arg), c(".value", ".class", ".length", ".validate", ".failed_msg", ".filter", ".read.only", ".private", ".visible"))) == 0) {
+		if(is.list(arg) && length(setdiff(names(arg), c(".value", ".class", ".length", ".validate", ".failed_msg", ".filter", ".read.only", ".private", ".visible", ".description"))) == 0) {
 			default_value = arg[[".value"]]
 			length = if(is.null(arg[[".length"]])) numeric(0) else arg[[".length"]]
 			class = if(is.null(arg[[".class"]])) character(0) else arg[[".class"]]
@@ -113,7 +109,7 @@ setGlobalOptions = function(..., get_opt_value_fun = FALSE) {
 				if(is.function(arg[[".validate"]])) {
 					validate = arg[[".validate"]]
 				} else {
-					stop(paste("'.validate' field in", names(args)[i], "should be a function.\n"))
+					stop(paste("'.validate' field in", name, "should be a function.\n"))
 				}
 			}
 			failed_msg = ifelse(is.null(arg[[".failed_msg"]]), "Your option is invalid.", arg[[".failed_msg"]][1])
@@ -123,16 +119,18 @@ setGlobalOptions = function(..., get_opt_value_fun = FALSE) {
 				if(is.function(arg[[".filter"]])) {
 					filter = arg[[".filter"]]
 				} else {
-					stop(paste("'.filter' field in", names(args)[i], "should be a function.\n"))
+					stop(paste("'.filter' field in", name, "should be a function.\n"))
 				}
 			}
 			read.only = ifelse(is.null(arg[[".read.only"]]), FALSE, arg[[".read.only"]])
 			private = ifelse(is.null(arg[[".private"]]), FALSE, arg[[".private"]])
 			visible = ifelse(is.null(arg[[".visible"]]), TRUE, arg[[".visible"]])
+			description = ifelse(is.null(arg[[".description"]]), "", arg[[".description"]])
 		} else {
-			if(is.list(arg) && length(intersect(names(arg), c(".value", ".class", ".length", ".validate", "failed_msg", ".filter", ".read.only", ".private", ".visible"))) > 0 &&
-				length(setdiff(names(arg), c(".value", ".class", ".length", ".validate", "failed_msg", ".filter", ".read.only", ".private", ".visible"))) > 0) {
-				warning(paste("Your definition for '", names(args)[i], "' is mixed. It should only contain\n.value, .class, .length, .validate, .failed_msg, .filter, .read.only, .private, .visible.\nIgnore the setting and use the whole list as the default value.\n", sep = ""))
+			if(is.list(arg) && 
+				length(intersect(names(arg), c(".value", ".class", ".length", ".validate", "failed_msg", ".filter", ".read.only", ".private", ".visible", ".synonymous", ".description"))) > 0 &&
+				length(setdiff(names(arg), c(".value", ".class", ".length", ".validate", "failed_msg", ".filter", ".read.only", ".private", ".visible", ".synonymous", ".description"))) > 0) {
+				warning(paste("Your definition for '", name, "' is mixed. It should only contain\n.value, .class, .length, .validate, .failed_msg, .filter, .read.only, .private, .visible, .synonymous, .description. Ignore the setting and use the whole list as the default value.\n", sep = ""))
 			}
 			default_value = arg
 			length = numeric(0)
@@ -143,10 +141,11 @@ setGlobalOptions = function(..., get_opt_value_fun = FALSE) {
 			read.only = FALSE
 			private = FALSE
 			visible = TRUE
+			description = ""
 		}
 
-		options[[i]] = GlobalOption$new(
-			name          = opt_names[i],
+		opt = GlobalOption$new(
+			name          = name,
 			default_value = default_value,
 			value         = default_value,
 		    length        = length,
@@ -157,8 +156,25 @@ setGlobalOptions = function(..., get_opt_value_fun = FALSE) {
 			read.only     = read.only,
 			private       = private,
 			visible       = visible,
+			description   = description,
 			"__generated_namespace__" = topenv(envoking_env))
 
+		if(!is.null(calling_ns)) {
+			opt$set(default_value, calling_ns)
+		} else {
+			opt$set(default_value, calling_ns, initialize = TRUE)
+		}
+		return(opt)
+	}
+
+	# format the options
+	options = vector("list", length = length(args))
+
+	opt_names = names(args)
+	names(options) = opt_names
+	
+	for(i in seq_along(args)) {
+		options[[i]] = add_opt(args[[i]], opt_names[i], envoking_env)
 	}
 
 	local_options = NULL
@@ -218,10 +234,6 @@ setGlobalOptions = function(..., get_opt_value_fun = FALSE) {
 			return(invisible(NULL))
 		}
 
-		# refresh all 
-		lapply(options, function(opt) opt$refresh())
-		
-		
 		args = list(...)
 
 		# input value is NULL
@@ -234,6 +246,9 @@ setGlobalOptions = function(..., get_opt_value_fun = FALSE) {
 			args = args[[1]]
 		}
 
+		# refresh all 
+		# lapply(options[intersect(names(args), names(options))], function(opt) opt$refresh())
+		
 		# getting all options
 		if(length(args) == 0) {
 			opts = lapply(options, function(opt) opt$get(calling_ns, read.only = READ.ONLY))
@@ -249,7 +264,7 @@ setGlobalOptions = function(..., get_opt_value_fun = FALSE) {
 			args = unlist(args)
 			
 			if(length(setdiff(args, names(options)))) {
-				stop(paste("No such option(s):", paste(setdiff(args, names(options)), collapse = ""), "\n"))
+				stop(paste("No such option(s):", paste(setdiff(args, names(options)), collapse = "")))
 			}
 			
 			opts = lapply(options[args], function(opt) opt$get(calling_ns, read.only = READ.ONLY, enforce_visible = TRUE))
@@ -265,41 +280,210 @@ setGlobalOptions = function(..., get_opt_value_fun = FALSE) {
 		name = names(args)
 		option.names = names(options)
 		if(any(name == "")) {
-			stop("When setting options, all arguments should be named.\n")
+			stop("When setting options, all arguments should be named.")
 		} else {
 
 			# first check on copy
 			for(i in seq_along(args)) {
 					
-				# if there are names which are not defined in options
+				# if there are names which are not defined in options, create one
 				if(sum(name[i] %in% option.names) == 0) {
 					stop(paste("No such option: '", name[i], "\n", sep = ""))
+					# options[[ name[i] ]] <<- add_opt(args[[ name[i] ]], name[i], envoking_env, calling_ns)
+				} else {
+					# user's value
+					value = args[[ name[i] ]]	
+					options[[ name[i] ]]$set(value, calling_ns)
 				}
-
-				# user's value
-				value = args[[ name[i] ]]	
-				options[[ name[i] ]]$set(value, calling_ns)
 			}
 		}
 		
 		return(invisible(NULL))
 	}
 
-	get_opt_value = function(name) {
-		if(sum(name %in% names(options)) == 0) {
-			stop(paste("No such option: '", name, "\n", sep = ""))
-		}
-
-		options[[name]]$real_value
-	}
-
 	class(opt_fun) = "GlobalOptionsFun"
-	
-	if(get_opt_value_fun) {
-		return(list(opt_fun = opt_fun, get_opt_value = get_opt_value))
-	} else {
-		return(opt_fun)
+	return(opt_fun)
+}
+
+# == title
+# Print the GlobalOptionsFun object
+#
+# == param
+# -x the option object returned by `set_opt` or `setGlobalOptions`.
+# -... other arguments
+#
+# == author
+# z.gu@dkfz.de
+#
+print.GlobalOptionsFun = function(x, ...) {
+	lt = x()
+	options = get("options", envir = environment(x))
+	options = options[names(lt)]
+
+	df = data.frame("Option" = names(options), 
+		"Value" = sapply(options, function(opt) value2text(opt$real_value, width = Inf)),
+		"Description" = sapply(options, function(opt) value2text(opt$description, width = Inf)),
+		check.names = FALSE,
+		stringsAsFactors = FALSE)
+	if(all(df$Description == "\"\"")) {
+		df$Description = NULL
 	}
+	max_nchar = sapply(df, function(x) max(nchar(x)))
+	max_nchar = pmax(max_nchar, nchar(colnames(df)))
+
+	if(sum(max_nchar) + length(max_nchar) <= getOption("width")) {
+		print(df, row.names = FALSE)
+	} else {
+		df = lapply(df, function(x) sapply(x, function(y) toString(y, width = round(getOption("width")/ncol(df)))))
+		df = do.call("data.frame", df)
+		print(df, row.names = FALSE)
+	}
+}
+
+
+# == title
+# Get a single GlobalOption object
+# 
+# == param
+# -x the option object returned by `set_opt` or `setGlobalOptions`.
+# -nm a single name of the option.
+#
+# == details
+# This function is only used internally.
+#
+# == author
+# Zuguang Gu <z.gu@dkfz.de>
+#
+# == example
+# opt = set_opt(a = 1, b = "b")
+# opt["a"]
+# opt["b"]
+"[.GlobalOptionsFun" = function(x, nm) {
+	options = get("options", envir = environment(x))
+	if(length(nm) > 1) {
+		stop("The index can only be length of 1.\n")
+	}
+	options[[nm]]
+}
+
+# == title
+# Print all fields of a single option
+#
+# == param
+# -opt the option object returned by `set_opt` or `setGlobalOptions`.
+# -opt_name a single name of the option.
+#
+# == details
+# Actually this function is identical to ``opt[opt_name]``.
+#
+# == author
+# z.gu@dkfz.de
+#
+# == example
+# opt = set_opt(a = 1, b = "b")
+# dump_opt(opt, "a")
+# dump_opt(opt, "b")
+dump_opt = function(opt, opt_name) {
+	if(length(opt_name) > 1) {
+		stop("The option name can only be length of 1.\n")
+	}
+	opt[opt_name]
+}
+
+# == title
+# Get option value by subset operator
+#
+# == param
+# -x the option object returned by `set_opt` or `setGlobalOptions`.
+# -nm a single option name.
+#
+# == details
+# ``opt[["a"]]`` is same as ``opt("a")`` or ``opt$a``.
+#
+# == author
+# Zuguang Gu <z.gu@dkfz.de>
+#
+# == example
+# opt = set_opt(a = 1)
+# opt[["a"]]
+"[[.GlobalOptionsFun" = function(x, nm) {
+	if(is.numeric(nm)) {
+		stop("The index should only be option name.\n")
+	}
+	if(length(nm) > 1) {
+		stop("The index can only be length of 1.\n")
+	}
+	x(nm)
+}
+
+# == title
+# Set option value by subset operator
+#
+# == param
+# -x the option object returned by `set_opt` or `setGlobalOptions`.
+# -nm a single option name.
+# -value the value which is assigned to the option.
+#
+# == details
+# ``opt[["a"]] = 1`` is same as ``opt("a" = 1)`` or ``opt$a = 1``.
+#
+# == author
+# Zuguang Gu <z.gu@dkfz.de>
+#
+# == example
+# opt = set_opt(a = 1)
+# opt[["a"]] = 2
+# opt$a
+"[[<-.GlobalOptionsFun" = function(x, nm, value) {
+	if(is.numeric(nm)) {
+		stop("The index should only be option names.\n")
+	}
+	if(length(nm) > 1) {
+		stop("The index can only be length of 1.\n")
+	}
+	
+	lt = list(value)
+	names(lt) = nm
+
+	assign(".__temp_opt__.", x, envir = parent.frame())
+	do.call(".__temp_opt__.", lt, envir = parent.frame())
+	rm(".__temp_opt__.", envir = parent.frame())
+
+	return(x)
+}
+
+# == title
+# The .DollarNames method for the GlobalOptionsFun class
+#
+# == param
+# -x the object returned by `set_opt` or `setGlobalOptions`.
+# -pattern pattern, please ignore it.
+#
+# == details
+# This makes the option object looks like a list that it allows
+# option name completion after ``$``.
+#
+# == author
+# z.gu@dkfz.de
+#
+.DollarNames.GlobalOptionsFun = function(x, pattern = "") {
+	options = get("options", envir = environment(x))
+	names(options)
+}
+
+# == title
+# Produce a function which can get or set global options
+# 
+# == param
+# -... all go to `setGlobalOptions`
+#
+# == details
+# This is just a short name for `setGlobalOptions`.
+#
+# == author
+# z.gu@dkfz.de
+set_opt = function(...) {
+	setGlobalOptions(...)
 }
 
 env2txt = function(env) {
@@ -402,21 +586,25 @@ stop = function(msg) {
 	base::stop(paste(strwrap(msg), collapse = "\n"), call. = FALSE)
 }
 
+warning = function(msg) {
+	base::warning(paste(strwrap(msg), collapse = "\n"), call. = FALSE)
+}
+
 # == title
 # Get option value by dollar symbol
 #
 # == param
-# -x the function returned by `setGlobalOptions`
-# -nm a single option name
+# -x the object returned by `set_opt` or `setGlobalOptions`.
+# -nm a single option name.
 #
 # == details
-# ``opt$a`` is same as ``opt("a")``
+# ``opt$a`` is same as ``opt("a")``.
 #
 # == author
 # Zuguang Gu <z.gu@dkfz.de>
 #
 # == example
-# opt = setGlobalOptions(a = 1)
+# opt = set_opt(a = 1)
 # opt$a
 "$.GlobalOptionsFun" = function(x, nm) {
 	x(nm)
@@ -426,18 +614,20 @@ stop = function(msg) {
 # Set option value by dollar symbol
 #
 # == param
-# -x the function returned by `setGlobalOptions`
-# -nm a single option name
-# -value the value which is assigned to the option
+# -x the object returned by `set_opt` or `setGlobalOptions`.
+# -nm a single option name.
+# -value the value which is assigned to the option.
 #
 # == details
-# ``opt$a = 1`` is same as ``opt("a" = 1)``
+# ``opt$a = 1`` is same as ``opt("a" = 1)``.
+#
+# Note you cannot reconfigurate the option by assigning a configuration list.
 #
 # == author
 # Zuguang Gu <z.gu@dkfz.de>
 #
 # == example
-# opt = setGlobalOptions(a = 1)
+# opt = set_opt(a = 1)
 # opt$a = 2
 # opt$a
 "$<-.GlobalOptionsFun" = function(x, nm, value) {
