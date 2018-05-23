@@ -200,11 +200,11 @@ GlobalOption = setRefClass("GlobalOption",
 		show = function() {
 			fd = .self$fields()
 			fd = setdiff(fd, "value")
-			fd[fd == "real_value"] = "current_value"
 			df = data.frame("Field" = fd,
 				"Value" = sapply(fd, function(x) value2text(.self[[x]], x)),
 				check.names = FALSE,
 				stringsAsFactors = FALSE)
+			df[[1]][ df[1] == "real_value" ] = "current_value"
 			print(df, row.names = FALSE)
 		}
 
