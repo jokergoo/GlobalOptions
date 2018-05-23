@@ -89,7 +89,7 @@ setGlobalOptions = function(...) {
 	add_opt = function(arg, name, envoking_env, calling_ns = NULL) {
 
 		if(is.list(arg)) {
-			if(identical(names(arg), ".synonymous")) {
+			if(".synonymous" %in% names(arg)) {
 				if(is.null(options[[ arg[[".synonymous"]] ]])) {
 					stop(paste0("Option ", arg[[".synonymous"]], " has not been created yet."))
 				}
@@ -482,9 +482,8 @@ dump_opt = function(opt, opt_name) {
 #
 # == author
 # z.gu@dkfz.de
-set_opt = function(...) {
-	setGlobalOptions(...)
-}
+set_opt = function(...) {}
+set_opt = setGlobalOptions
 
 env2txt = function(env) {
 	if(identical(env, emptyenv())) {

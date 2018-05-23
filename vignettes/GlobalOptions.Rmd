@@ -272,7 +272,7 @@ opt(a = 2)
 opt("b")
 ```
 
-However, you can still overwritten option `b`:
+However, you can still overwrite option `b`:
 
 ```{r}
 opt(a = 2, b = 3) # b was overwriiten and will not be 2*a
@@ -373,9 +373,9 @@ opt$a
 It can be possible that several weeks later, developers have better names for
 the options. They want to use the new option names but still do not want to
 disable the old ones. In this case, `.synonymous` field can be set to let the
-new option and old option reference to a same internal option object. The
-change of values of either one will also affect the companions
-correspondingly.
+new option and old option reference to a same internal option object (which
+means all other configuration specified for this option is ignored). The change of
+values of either one will also affect the companions correspondingly.
 
 ```{r}
 opt = set_opt(
@@ -393,7 +393,7 @@ opt()
 ### Print the object
 
 There is a `.description` field for each option which is only used when
-printing the summary of options. As shown before, simply enter the option
+printing the summary of options. As shown before, simply entering the option
 object gives a summary table for all options.
 
 ```{r}
