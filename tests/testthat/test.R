@@ -327,3 +327,20 @@ test_that("test .synonymous", {
 	expect_that(opt <- set_opt(a = 1, b = list(".synonymous" = "c"), c = 1), 
 		throws_error("has not been created yet"))
 })
+
+#### test ADD
+opt = set_opt(a = 1)
+test_that("test ADD", {
+	expect_that(opt$b <- 1, throws_error("No such option"))
+	opt(b = 1, ADD = TRUE)
+	expect_that(opt$b, is_identical_to(1))
+
+	opt(c = list(.value = "a", .class = "character"), ADD = TRUE)
+	expect_that(opt$c <- 1, throws_error("should be"))
+
+	opt(d = list(.value = 1, .class = "numeric"),
+		e = list(.value = "a", .class = "character"),
+		ADD = TRUE)
+	expect_that(opt$d, is_identical_to(1))
+	expect_that(opt$e, is_identical_to("a"))
+})

@@ -5,7 +5,8 @@ Changes in version 0.1.0
 * add `.v()` and `.v$..` to access other option values when configuring 
   current option.
 * add `set_opt()` to replace `setGlobalOptions()`
-
+* add `ADD` argument in the option function to add new options after the 
+  option function is created.
 -------------------------------------------------------------------------
 
 Changes in version 0.0.13

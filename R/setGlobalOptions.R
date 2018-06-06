@@ -86,6 +86,10 @@ setGlobalOptions = function(...) {
 		stop("Don't use 'LOCAL' as the option name.")
 	}
 
+	if("ADD" %in% names(args)) {
+		stop("Don't use 'ADD' as the option name.")
+	}
+
 	add_opt = function(arg, name, envoking_env, calling_ns = NULL) {
 
 		if(is.list(arg)) {
@@ -180,7 +184,7 @@ setGlobalOptions = function(...) {
 	local_options = NULL
 	local_options_start_env = NULL
 	
-	opt_fun = function(..., RESET = FALSE, READ.ONLY = NULL, LOCAL = FALSE) {
+	opt_fun = function(..., RESET = FALSE, READ.ONLY = NULL, LOCAL = FALSE, ADD = FALSE) {
 		# the environment where foo.options() is called
 		calling_ns = topenv(parent.frame())  # top package where foo.options() is called
 		
@@ -250,6 +254,9 @@ setGlobalOptions = function(...) {
 		# lapply(options[intersect(names(args), names(options))], function(opt) opt$refresh())
 		
 		# getting all options
+		if(length(args) == 0 && ADD) {
+			return(invisible(NULL))
+		}
 		if(length(args) == 0) {
 			opts = lapply(options, function(opt) opt$get(calling_ns, read.only = READ.ONLY))
 
@@ -260,6 +267,9 @@ setGlobalOptions = function(...) {
 		}
 		
 		# getting part of the options
+		if(is.null(names(args)) && ADD) {
+			return(invisible(NULL))
+		}
 		if(is.null(names(args))) {
 			args = unlist(args)
 			
@@ -288,8 +298,11 @@ setGlobalOptions = function(...) {
 					
 				# if there are names which are not defined in options, create one
 				if(sum(name[i] %in% option.names) == 0) {
-					stop(paste("No such option: '", name[i], "\n", sep = ""))
-					# options[[ name[i] ]] <<- add_opt(args[[ name[i] ]], name[i], envoking_env, calling_ns)
+					if(ADD) {
+						options[[ name[i] ]] <<- add_opt(args[[ name[i] ]], name[i], envoking_env, calling_ns)
+					} else {
+						stop(paste("No such option: '", name[i], "'.\nIf you want to add this new option, please use your_opt_fun(", name[i], " = ..., ADD = TRUE)", sep = ""))
+					}
 				} else {
 					# user's value
 					value = args[[ name[i] ]]	
