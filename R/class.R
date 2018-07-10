@@ -33,7 +33,9 @@ GlobalOption = setRefClass("GlobalOption",
 		get = function(calling_ns = parent.frame(), read.only = NULL, enforce_visible = FALSE) {
 
 			# in case the value is an executable function
-			.self$refresh()
+			if(inherits(.self$value, "function") && !("function" %in% .self$class)) {
+				.self$refresh()
+			}
 
 			if(!.self$visible && !enforce_visible) {
 				return(NOT_AVAILABLE)

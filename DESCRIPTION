@@ -1,7 +1,7 @@
 Package: GlobalOptions
 Type: Package
 Title: Generate Functions to Get or Set Global Options
-Version: 0.1.0
+Version: 0.1.1
 Date: 2018-6-4
 Author: Zuguang Gu
 Maintainer: Zuguang Gu <z.gu@dkfz.de>

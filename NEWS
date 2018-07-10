@@ -1,3 +1,8 @@
+Changes in version 0.1.1
+
+* do not refresh if the value is not an executable function
+-----------------------------------------------------------------------
+
 Changes in version 0.1.0
 
 * add `print.GlobalOptionsFun()` and `dump_opt()`.
