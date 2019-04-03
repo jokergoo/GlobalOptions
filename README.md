@@ -161,4 +161,4 @@ opt("a")
 
 ## License
 
-MIT
+MIT @ Zuguang Gu
