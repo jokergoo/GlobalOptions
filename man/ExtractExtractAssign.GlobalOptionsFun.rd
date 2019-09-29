@@ -1,5 +1,6 @@
 \name{[[<-.GlobalOptionsFun}
 \alias{[[<-.GlobalOptionsFun}
+\alias{ExtractExtractAssign.GlobalOptionsFun}
 \title{
 Set option value by subset operator
 }

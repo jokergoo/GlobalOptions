@@ -1,5 +1,6 @@
 \name{[[.GlobalOptionsFun}
 \alias{[[.GlobalOptionsFun}
+\alias{ExtractExtract.GlobalOptionsFun}
 \title{
 Get option value by subset operator
 }

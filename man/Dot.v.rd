@@ -1,5 +1,6 @@
 \name{.v}
 \alias{.v}
+\alias{Dot.v}
 \title{
 Get value of other options
 }

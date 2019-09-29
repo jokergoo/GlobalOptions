@@ -1,5 +1,6 @@
 \name{[.GlobalOptionsFun}
 \alias{[.GlobalOptionsFun}
+\alias{Extract.GlobalOptionsFun}
 \title{
 Get a single GlobalOption object
 }

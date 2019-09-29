@@ -1,5 +1,6 @@
 \name{$<-.GlobalOptionsFun}
 \alias{$<-.GlobalOptionsFun}
+\alias{Assign.GlobalOptionsFun}
 \title{
 Set option value by dollar symbol
 }

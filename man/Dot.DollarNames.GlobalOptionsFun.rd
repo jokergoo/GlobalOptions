@@ -1,5 +1,6 @@
 \name{.DollarNames.GlobalOptionsFun}
 \alias{.DollarNames.GlobalOptionsFun}
+\alias{Dot.DollarNames.GlobalOptionsFun}
 \title{
 The .DollarNames method for the GlobalOptionsFun class
 }
@@ -25,5 +26,4 @@ z.gu@dkfz.de
 \examples{
 # There is no example
 NULL
-
 }

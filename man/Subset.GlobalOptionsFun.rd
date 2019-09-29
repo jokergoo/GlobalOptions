@@ -1,5 +1,6 @@
 \name{$.GlobalOptionsFun}
 \alias{$.GlobalOptionsFun}
+\alias{Subset.GlobalOptionsFun}
 \title{
 Get option value by dollar symbol
 }
