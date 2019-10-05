@@ -480,8 +480,8 @@ dump_opt = function(opt, opt_name) {
 # z.gu@dkfz.de
 #
 .DollarNames.GlobalOptionsFun = function(x, pattern = "") {
-	options = get("options", envir = environment(x))
-	names(options)
+	lt = x()
+	names(lt)
 }
 
 # == title

@@ -1,3 +1,9 @@
+Changes in version 0.1.2
+
+* `.DollarNames.GlobalOptionsFun` now only completes with public options
+----------------------------------------------------------------------
+
+
 Changes in version 0.1.1
 
 * do not refresh if the value is not an executable function
