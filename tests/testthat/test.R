@@ -1,3 +1,6 @@
+library(testthat)
+library(GlobalOptions)
+
 context("Test `GlobalOptions`")
 
 "%==%" = function(x, y) {
