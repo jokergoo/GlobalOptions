@@ -346,7 +346,7 @@ print.GlobalOptionsFun = function(x, ...) {
 	cat("\n")
 
 	cat(" ", strrep("-", option_max_width), sep = "")
-	cat(":", strrep("-", getOption("width") - option_max_width - value_max_width - 2), sep = "")
+	cat(":", strrep("-", getOption("width") - option_max_width  - 2), sep = "")
 	cat("\n")
 
 	for(i in seq_along(option)) {
