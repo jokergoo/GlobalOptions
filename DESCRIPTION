@@ -1,8 +1,8 @@
 Package: GlobalOptions
 Type: Package
 Title: Generate Functions to Get or Set Global Options
-Version: 0.1.2
-Date: 2019-9-30
+Version: 0.1.3
+Date: 2020-5-28
 Author: Zuguang Gu
 Maintainer: Zuguang Gu <z.gu@dkfz.de>
 Depends: R (>= 3.3.0), methods

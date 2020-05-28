@@ -410,7 +410,7 @@ opt = set_opt(
              .description = "start points in the unit circle"),
     e = list(.value = rnorm,
              .class = "function",
-             .description = "distribution to generate random numbers")
+             .description = "distribution to generate random numbers and a very long long long long long long long long text")
 )
 opt
 ```

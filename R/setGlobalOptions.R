@@ -333,23 +333,34 @@ print.GlobalOptionsFun = function(x, ...) {
 	options = get("options", envir = environment(x))
 	options = options[names(lt)]
 
-	df = data.frame("Option" = names(options), 
-		"Value" = sapply(options, function(opt) value2text(opt$real_value, width = Inf)),
-		"Description" = sapply(options, function(opt) value2text(opt$description, width = Inf)),
-		check.names = FALSE,
-		stringsAsFactors = FALSE)
-	if(all(df$Description == "\"\"")) {
-		df$Description = NULL
-	}
-	max_nchar = sapply(df, function(x) max(nchar(x)))
-	max_nchar = pmax(max_nchar, nchar(colnames(df)))
 
-	if(sum(max_nchar) + length(max_nchar) <= getOption("width")) {
-		print(df, row.names = FALSE)
-	} else {
-		df = lapply(df, function(x) sapply(x, function(y) toString(y, width = round(getOption("width")/ncol(df)))))
-		df = do.call("data.frame", df)
-		print(df, row.names = FALSE)
+	option = names(options)
+	value = sapply(options, function(opt) value2text(opt$real_value, width = Inf))
+	description = sapply(options, function(opt) opt$description)
+
+	option_max_width = max(nchar(c("Option", option)))
+	value_max_width = max(nchar(c("Value", value)))
+
+	cat(" ", "Option", strrep(" ", option_max_width - 6), sep = "")
+	cat(" ", "Value", strrep(" ", value_max_width - 5), sep = "")
+	cat("\n")
+
+	cat(" ", strrep("-", option_max_width), sep = "")
+	cat(":", strrep("-", getOption("width") - option_max_width - value_max_width - 2), sep = "")
+	cat("\n")
+
+	for(i in seq_along(option)) {
+		cat(" ", option[i], strrep(" ", option_max_width - nchar(option[i])), sep = "")
+		cat(" ", value[i], strrep(" ", value_max_width - nchar(value[i])), sep = "")
+		cat("\n")
+		if(description[i] != "") {
+			txt = paste0("(", description[i], ")")
+			txt = strwrap(txt, width = 0.9*getOption("width") - option_max_width + 1)
+			txt = paste(strrep(" ", option_max_width + 2), txt, sep = "")
+			txt = paste(txt, collapse = "\n")
+			cat(txt, sep = "")
+			cat("\n")
+		}
 	}
 }
 
