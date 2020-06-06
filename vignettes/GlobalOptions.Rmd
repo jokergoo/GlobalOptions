@@ -1,30 +1,30 @@
-<!--
-%\VignetteEngine{knitr}
-%\VignetteIndexEntry{Generate Global Options}
--->
+---
+title: "Generate Global Options"
+author: "Zuguang Gu (z.gu@dkfz.de)"
+date: '`r Sys.Date()`'
+output:
+  html_document:
+    fig_caption: true
+    toc: true
+    toc_depth: 3
+    toc_float: true
+vignette: >
+  %\VignetteIndexEntry{Generate Global Options}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
 
-Generate Global Options
-========================================
-
-**Author**: Zuguang Gu ( z.gu@dkfz.de )
-
-**Date**: `r Sys.Date()`
-
--------------------------------------------------------------
+---------------------------------------------------------------------
 
 ```{r, echo = FALSE, message = FALSE}
-library(markdown)
-options(markdown.HTML.options = c(options('markdown.HTML.options')[[1]], "toc"))
-
 library(knitr)
 knitr::opts_chunk$set(
     error = FALSE,
     tidy  = FALSE,
     message = FALSE,
+    comment = NA,
     fig.align = "center")
-options(markdown.HTML.stylesheet = "custom.css")
-
-options(width = 100)
+library(GetoptLong)
 ```
 
 
@@ -35,8 +35,9 @@ general and controlable way to generate such functions, which can:
 1. validate the values (e.g. class, length and self-defined validations);
 2. set read-only options;
 3. set invisible options;
-4. set private options which are only accessable in a certain namespace.
-5. support local options and global options
+4. set private options which are only accessable in a certain namespace;
+5. support local options and global option;
+6. print options with explanations.
 
 ## General usage
 

@@ -76,5 +76,10 @@ For more detailed explanation, please go to the vignette.
 Zuguang Gu <z.gu@dkfz.de>
 }
 \examples{
-# please go to the vignette
+opt = set_opt(
+    a = 1,
+    b = "text"
+)
+opt
+# for more examples, please go to the vignette
 }

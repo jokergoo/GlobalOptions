@@ -61,7 +61,12 @@
 # Zuguang Gu <z.gu@dkfz.de>
 #
 # == example
-# # please go to the vignette
+# opt = set_opt(
+#     a = 1,
+#     b = "text"
+# )
+# opt
+# # for more examples, please go to the vignette
 setGlobalOptions = function(...) {
 
 	# the environment where the function is called
@@ -340,13 +345,14 @@ print.GlobalOptionsFun = function(x, ...) {
 
 	option_max_width = max(nchar(c("Option", option)))
 	value_max_width = max(nchar(c("Value", value)))
+	desc_max_width = max(nchar(description))
 
 	cat(" ", "Option", strrep(" ", option_max_width - 6), sep = "")
 	cat(" ", "Value", strrep(" ", value_max_width - 5), sep = "")
 	cat("\n")
 
 	cat(" ", strrep("-", option_max_width), sep = "")
-	cat(":", strrep("-", getOption("width") - option_max_width  - 2), sep = "")
+	cat(":", strrep("-", min( max(value_max_width + 2, desc_max_width), getOption("width") - option_max_width  - 2)), sep = "")
 	cat("\n")
 
 	for(i in seq_along(option)) {
