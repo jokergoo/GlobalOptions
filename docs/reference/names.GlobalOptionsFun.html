@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Function reference • GlobalOptions</title>
+<title>Option names — names.GlobalOptionsFun • GlobalOptions</title>
 
 
 <!-- jquery -->
@@ -39,7 +39,8 @@
 
 
 
-<meta property="og:title" content="Function reference" />
+<meta property="og:title" content="Option names — names.GlobalOptionsFun" />
+<meta property="og:description" content="Option names" />
 
 
 
@@ -58,7 +59,7 @@
   </head>
 
   <body data-spy="scroll" data-target="#toc">
-    <div class="container template-reference-index">
+    <div class="container template-reference-topic">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -108,114 +109,40 @@
       </header>
 
 <div class="row">
-  <div class="contents col-md-9">
+  <div class="col-md-9 contents">
     <div class="page-header">
-      <h1>Reference</h1>
+    <h1>Option names</h1>
+    
+    <div class="hidden name"><code>names.GlobalOptionsFun.Rd</code></div>
     </div>
 
-    <table class="ref-index">
+    <div class="ref-description">
+    <p>Option names</p>
+    </div>
 
-    <colgroup>
-      
-      <col class="alias" />
-      <col class="title" />
-    </colgroup>
+    <pre class="usage"><span class='co'># S3 method for GlobalOptionsFun</span>
+<span class='fu'><a href='https://rdrr.io/r/base/names.html'>names</a></span>(<span class='no'>x</span>)</pre>
 
-    <tbody>
-      <tr>
-        <th colspan="2">
-          <h2 id="section-all-functions" class="hasAnchor"><a href="#section-all-functions" class="anchor"></a>All functions</h2>
-          <p class="section-desc"></p>
-        </th>
-      </tr>
-      
-      
-    </tbody><tbody>
-      
-      
-      <tr>
-        
-        <td>
-          <p><code><a href="Assign.GlobalOptionsFun.html">`$&lt;-`(<i>&lt;GlobalOptionsFun&gt;</i>)</a></code> </p>
-        </td>
-        <td><p>Set option value by dollar symbol</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="Dot.DollarNames.GlobalOptionsFun.html">.DollarNames(<i>&lt;GlobalOptionsFun&gt;</i>)</a></code> </p>
-        </td>
-        <td><p>The .DollarNames method for the GlobalOptionsFun class</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="Dot.v.html">.v()</a></code> </p>
-        </td>
-        <td><p>Get value of other options</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="Extract.GlobalOptionsFun.html">`[`(<i>&lt;GlobalOptionsFun&gt;</i>)</a></code> </p>
-        </td>
-        <td><p>Get a single GlobalOption object</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="ExtractExtract.GlobalOptionsFun.html">`[[`(<i>&lt;GlobalOptionsFun&gt;</i>)</a></code> </p>
-        </td>
-        <td><p>Get option value by subset operator</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="ExtractExtractAssign.GlobalOptionsFun.html">`[[&lt;-`(<i>&lt;GlobalOptionsFun&gt;</i>)</a></code> </p>
-        </td>
-        <td><p>Set option value by subset operator</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="Subset.GlobalOptionsFun.html">`$`(<i>&lt;GlobalOptionsFun&gt;</i>)</a></code> </p>
-        </td>
-        <td><p>Get option value by dollar symbol</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="Subset.InternalOptionValue.html">`$`(<i>&lt;InternalOptionValue&gt;</i>)</a></code> </p>
-        </td>
-        <td><p>Get value of other options</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="dump_opt.html">dump_opt()</a></code> </p>
-        </td>
-        <td><p>Print all fields of a single option</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="names.GlobalOptionsFun.html">names(<i>&lt;GlobalOptionsFun&gt;</i>)</a></code> </p>
-        </td>
-        <td><p>Option names</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="print.GlobalOptionsFun.html">print(<i>&lt;GlobalOptionsFun&gt;</i>)</a></code> </p>
-        </td>
-        <td><p>Print the GlobalOptionsFun object</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="setGlobalOptions.html">setGlobalOptions()</a></code> </p>
-        </td>
-        <td><p>Produce a function which can get or set global options</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="set_opt.html">set_opt()</a></code> </p>
-        </td>
-        <td><p>Produce a function which can get or set global options</p></td>
-      </tr>
-    </tbody>
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
+    <table class="ref-arguments">
+    <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>x</th>
+      <td><p>the option object returned by <code><a href='set_opt.html'>set_opt</a></code> or <code><a href='setGlobalOptions.html'>setGlobalOptions</a></code>.</p></td>
+    </tr>
     </table>
-  </div>
 
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
+
+    <p>A vector of option names</p>
+
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'><span class='no'>opt</span> <span class='kw'>=</span> <span class='fu'><a href='set_opt.html'>set_opt</a></span>(
+    <span class='kw'>a</span> <span class='kw'>=</span> <span class='fl'>1</span>,
+    <span class='kw'>b</span> <span class='kw'>=</span> <span class='st'>"text"</span>
+)
+<span class='fu'><a href='https://rdrr.io/r/base/names.html'>names</a></span>(<span class='no'>opt</span>)</div><div class='output co'>#&gt; [1] "a" "b"</div></pre>
+  </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
       <h2 data-toc-skip>Contents</h2>

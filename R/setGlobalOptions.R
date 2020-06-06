@@ -334,10 +334,10 @@ setGlobalOptions = function(...) {
 # z.gu@dkfz.de
 #
 print.GlobalOptionsFun = function(x, ...) {
+	
 	lt = x()
 	options = get("options", envir = environment(x))
 	options = options[names(lt)]
-
 
 	option = names(options)
 	value = sapply(options, function(opt) value2text(opt$real_value, width = Inf))
@@ -368,6 +368,12 @@ print.GlobalOptionsFun = function(x, ...) {
 			cat("\n")
 		}
 	}
+	# cat(" ", strrep("-", option_max_width), sep = "")
+	# cat("-", strrep("-", min( max(value_max_width + 2, desc_max_width), getOption("width") - option_max_width  - 2)), sep = "")
+	# cat("\n")
+
+	# cat(" Use `", opt_nm, "$opt_name` or `", opt_nm, "[['opt_name']]` to retrieve the value.\n", sep = "")
+	# cat(" Use `", opt_nm, "$opt_name = value` or `", opt_nm, "[['opt_name']] = value` to set the value.\n", sep = "")
 }
 
 
@@ -480,6 +486,25 @@ dump_opt = function(opt, opt_name) {
 	rm(".__temp_opt__.", envir = parent.frame())
 
 	return(x)
+}
+
+# == title
+# Option names
+#
+# == param
+# -x the option object returned by `set_opt` or `setGlobalOptions`.
+#
+# == value
+# A vector of option names
+#
+# == example
+# opt = set_opt(
+#     a = 1,
+#     b = "text"
+# )
+# names(opt)
+names.GlobalOptionsFun = function(x) {
+	names(x())
 }
 
 # == title

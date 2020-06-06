@@ -278,10 +278,10 @@ $b
 )
 <span class="fu">opt</span>(<span class="kw">prefix</span> <span class="kw">=</span> <span class="kw">function</span>() <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span>(<span class="st">"["</span>, <span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html">Sys.time</a></span>(), <span class="st">"] "</span>, <span class="kw">sep</span> <span class="kw">=</span> <span class="st">" "</span>))
 <span class="fu">opt</span>(<span class="st">"prefix"</span>)  <span class="co"># or opt$prefix</span></pre></body></html></div>
-<pre><code>[1] "[ 2020-06-06 21:51:05 ] "</code></pre>
+<pre><code>[1] "[ 2020-06-06 22:11:03 ] "</code></pre>
 <div class="sourceCode" id="cb49"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/Sys.sleep.html">Sys.sleep</a></span>(<span class="fl">2</span>)
 <span class="fu">opt</span>(<span class="st">"prefix"</span>)</pre></body></html></div>
-<pre><code>[1] "[ 2020-06-06 21:51:07 ] "</code></pre>
+<pre><code>[1] "[ 2020-06-06 22:11:05 ] "</code></pre>
 <p>If the value of the option is a real function and users don’t want to execute it, just set <code>.class</code> to contain <code>function</code>, then the function will be treated as a simple value.</p>
 <div class="sourceCode" id="cb51"><html><body><pre class="r"><span class="no">opt</span> <span class="kw">=</span> <span class="fu"><a href="../reference/set_opt.html">set_opt</a></span>(
     <span class="kw">test_fun</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="kw">.value</span> <span class="kw">=</span> <span class="kw">function</span>(<span class="no">x1</span>, <span class="no">x2</span>) <span class="fu"><a href="https://rdrr.io/r/stats/t.test.html">t.test</a></span>(<span class="no">x1</span>, <span class="no">x2</span>)$<span class="no">p.value</span>,
