@@ -13,4 +13,3 @@ Description: It provides more configurations on the option values such as valida
     and filtering on the values, making options invisible or private.
 URL: https://github.com/jokergoo/GlobalOptions
 License: MIT + file LICENSE
-Repository: CRAN
