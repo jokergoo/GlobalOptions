@@ -7,7 +7,7 @@ Author: Zuguang Gu
 Maintainer: Zuguang Gu <z.gu@dkfz.de>
 Depends: R (>= 3.3.0), methods
 Imports: utils
-Suggests: testthat (>= 1.0.0), knitr, markdown, GetoptLong
+Suggests: testthat (>= 1.0.0), knitr, markdown, GetoptLong, rmarkdown
 VignetteBuilder: knitr
 Description: It provides more configurations on the option values such as validation
     and filtering on the values, making options invisible or private.
