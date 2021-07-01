@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Articles • GlobalOptions</title>
+<title>Print the GlobalOptionsFun object — print.GlobalOptionsFun • GlobalOptions</title>
 
 
 <!-- jquery -->
@@ -39,7 +39,8 @@
 
 
 
-<meta property="og:title" content="Articles" />
+<meta property="og:title" content="Print the GlobalOptionsFun object — print.GlobalOptionsFun" />
+<meta property="og:description" content="Print the GlobalOptionsFun object" />
 
 
 
@@ -58,7 +59,7 @@
   </head>
 
   <body data-spy="scroll" data-target="#toc">
-    <div class="container template-article-index">
+    <div class="container template-reference-topic">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -110,18 +111,45 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-      <h1>Articles</h1>
+    <h1>Print the GlobalOptionsFun object</h1>
+    
+    <div class="hidden name"><code>print.GlobalOptionsFun.rd</code></div>
     </div>
 
-    <div class="section ">
-      <h3>All vignettes</h3>
-      <p class="section-desc"></p>
-
-      <dl>
-        <dt><a href="GlobalOptions.html">Generate Global Options</a></dt>
-        <dd></dt>
-      </dl>
+    <div class="ref-description">
+    <p>Print the GlobalOptionsFun object</p>
     </div>
+
+    <pre class="usage"><span class='co'># S3 method for GlobalOptionsFun</span>
+<span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>...</span><span class='op'>)</span></pre>
+
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
+    <table class="ref-arguments">
+    <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>x</th>
+      <td><p>the option object returned by <code><a href='set_opt.html'>set_opt</a></code> or <code><a href='setGlobalOptions.html'>setGlobalOptions</a></code>.</p></td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td><p>other arguments</p></td>
+    </tr>
+    </table>
+
+    <h2 class="hasAnchor" id="author"><a class="anchor" href="#author"></a>Author</h2>
+
+    <p>z.gu@dkfz.de</p>
+
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'><span class='co'># There is no example</span>
+<span class='cn'>NULL</span>
+</div><div class='output co'>#&gt; NULL</div><div class='input'>
+</div></pre>
+  </div>
+  <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
+    <nav id="toc" data-toggle="toc" class="sticky-top">
+      <h2 data-toc-skip>Contents</h2>
+    </nav>
   </div>
 </div>
 

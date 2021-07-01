@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Articles • GlobalOptions</title>
+<title>Set option value by subset operator — [[&lt;-.GlobalOptionsFun • GlobalOptions</title>
 
 
 <!-- jquery -->
@@ -39,7 +39,8 @@
 
 
 
-<meta property="og:title" content="Articles" />
+<meta property="og:title" content="Set option value by subset operator — [[&lt;-.GlobalOptionsFun" />
+<meta property="og:description" content="Set option value by subset operator" />
 
 
 
@@ -58,7 +59,7 @@
   </head>
 
   <body data-spy="scroll" data-target="#toc">
-    <div class="container template-article-index">
+    <div class="container template-reference-topic">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -110,18 +111,52 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-      <h1>Articles</h1>
+    <h1>Set option value by subset operator</h1>
+    
+    <div class="hidden name"><code>ExtractExtractAssign.GlobalOptionsFun.rd</code></div>
     </div>
 
-    <div class="section ">
-      <h3>All vignettes</h3>
-      <p class="section-desc"></p>
-
-      <dl>
-        <dt><a href="GlobalOptions.html">Generate Global Options</a></dt>
-        <dd></dt>
-      </dl>
+    <div class="ref-description">
+    <p>Set option value by subset operator</p>
     </div>
+
+    <pre class="usage"># S3 method for GlobalOptionsFun
+[[(x, nm) &lt;- value</pre>
+
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
+    <table class="ref-arguments">
+    <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>x</th>
+      <td><p>the option object returned by <code><a href='set_opt.html'>set_opt</a></code> or <code><a href='setGlobalOptions.html'>setGlobalOptions</a></code>.</p></td>
+    </tr>
+    <tr>
+      <th>nm</th>
+      <td><p>a single option name.</p></td>
+    </tr>
+    <tr>
+      <th>value</th>
+      <td><p>the value which is assigned to the option.</p></td>
+    </tr>
+    </table>
+
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+
+    <p><code>opt[["a"]] = 1</code> is same as <code>opt("a" = 1)</code> or <code>opt$a = 1</code>.</p>
+    <h2 class="hasAnchor" id="author"><a class="anchor" href="#author"></a>Author</h2>
+
+    <p>Zuguang Gu &lt;z.gu@dkfz.de&gt;</p>
+
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'><span class='va'>opt</span> <span class='op'>=</span> <span class='fu'><a href='set_opt.html'>set_opt</a></span><span class='op'>(</span>a <span class='op'>=</span> <span class='fl'>1</span><span class='op'>)</span>
+<span class='va'>opt</span><span class='op'>[[</span><span class='st'>"a"</span><span class='op'>]</span><span class='op'>]</span> <span class='op'>=</span> <span class='fl'>2</span>
+<span class='va'>opt</span><span class='op'>$</span><span class='va'>a</span>
+</div><div class='output co'>#&gt; [1] 2</div></pre>
+  </div>
+  <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
+    <nav id="toc" data-toggle="toc" class="sticky-top">
+      <h2 data-toc-skip>Contents</h2>
+    </nav>
   </div>
 </div>
 

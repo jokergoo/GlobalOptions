@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Articles • GlobalOptions</title>
+<title>Get a single GlobalOption object — [.GlobalOptionsFun • GlobalOptions</title>
 
 
 <!-- jquery -->
@@ -39,7 +39,8 @@
 
 
 
-<meta property="og:title" content="Articles" />
+<meta property="og:title" content="Get a single GlobalOption object — [.GlobalOptionsFun" />
+<meta property="og:description" content="Get a single GlobalOption object" />
 
 
 
@@ -58,7 +59,7 @@
   </head>
 
   <body data-spy="scroll" data-target="#toc">
-    <div class="container template-article-index">
+    <div class="container template-reference-topic">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -110,18 +111,74 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-      <h1>Articles</h1>
+    <h1>Get a single GlobalOption object</h1>
+    
+    <div class="hidden name"><code>Extract.GlobalOptionsFun.rd</code></div>
     </div>
 
-    <div class="section ">
-      <h3>All vignettes</h3>
-      <p class="section-desc"></p>
-
-      <dl>
-        <dt><a href="GlobalOptions.html">Generate Global Options</a></dt>
-        <dd></dt>
-      </dl>
+    <div class="ref-description">
+    <p>Get a single GlobalOption object</p>
     </div>
+
+    <pre class="usage"># S3 method for GlobalOptionsFun
+[(x, nm)</pre>
+
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
+    <table class="ref-arguments">
+    <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>x</th>
+      <td><p>the option object returned by <code><a href='set_opt.html'>set_opt</a></code> or <code><a href='setGlobalOptions.html'>setGlobalOptions</a></code>.</p></td>
+    </tr>
+    <tr>
+      <th>nm</th>
+      <td><p>a single name of the option.</p></td>
+    </tr>
+    </table>
+
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+
+    <p>This function is only used internally.</p>
+    <h2 class="hasAnchor" id="author"><a class="anchor" href="#author"></a>Author</h2>
+
+    <p>Zuguang Gu &lt;z.gu@dkfz.de&gt;</p>
+
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'><span class='va'>opt</span> <span class='op'>=</span> <span class='fu'><a href='set_opt.html'>set_opt</a></span><span class='op'>(</span>a <span class='op'>=</span> <span class='fl'>1</span>, b <span class='op'>=</span> <span class='st'>"b"</span><span class='op'>)</span>
+<span class='va'>opt</span><span class='op'>[</span><span class='st'>"a"</span><span class='op'>]</span>
+</div><div class='output co'>#&gt;                    Field                   Value
+#&gt;                     name                       a
+#&gt;            default_value                       1
+#&gt;            current_value                       1
+#&gt;                   length                no limit
+#&gt;                    class                no limit
+#&gt;                 validate a user-defined function
+#&gt;               failed_msg Your option is invalid.
+#&gt;                   filter a user-defined function
+#&gt;                read.only                   FALSE
+#&gt;                  private                   FALSE
+#&gt;                  visible                    TRUE
+#&gt;              description                      ""
+#&gt;  __generated_namespace__             R_GlobalEnv</div><div class='input'><span class='va'>opt</span><span class='op'>[</span><span class='st'>"b"</span><span class='op'>]</span>
+</div><div class='output co'>#&gt;                    Field                   Value
+#&gt;                     name                       b
+#&gt;            default_value                       b
+#&gt;            current_value                       b
+#&gt;                   length                no limit
+#&gt;                    class                no limit
+#&gt;                 validate a user-defined function
+#&gt;               failed_msg Your option is invalid.
+#&gt;                   filter a user-defined function
+#&gt;                read.only                   FALSE
+#&gt;                  private                   FALSE
+#&gt;                  visible                    TRUE
+#&gt;              description                      ""
+#&gt;  __generated_namespace__             R_GlobalEnv</div></pre>
+  </div>
+  <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
+    <nav id="toc" data-toggle="toc" class="sticky-top">
+      <h2 data-toc-skip>Contents</h2>
+    </nav>
   </div>
 </div>
 

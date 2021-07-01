@@ -39,7 +39,7 @@
       <ul class="nav navbar-nav">
 <li>
   <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -53,7 +53,7 @@
 <ul class="nav navbar-nav navbar-right">
 <li>
   <a href="https://github.com/jokergoo/GlobalOptions/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -67,13 +67,13 @@
 
       
 
-      </header><script src="GlobalOptions_files/header-attrs-2.1/header-attrs.js"></script><div class="row">
+      </header><script src="GlobalOptions_files/header-attrs-2.9/header-attrs.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Generate Global Options</h1>
                         <h4 class="author">Zuguang Gu (<a href="mailto:z.gu@dkfz.de" class="email">z.gu@dkfz.de</a>)</h4>
             
-            <h4 class="date">2020-06-06</h4>
+            <h4 class="date">2021-07-01</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/jokergoo/GlobalOptions/blob/master/vignettes/GlobalOptions.Rmd"><code>vignettes/GlobalOptions.Rmd</code></a></small>
       <div class="hidden name"><code>GlobalOptions.Rmd</code></div>
@@ -96,61 +96,71 @@
 <h2 class="hasAnchor">
 <a href="#general-usage" class="anchor"></a>General usage</h2>
 <p>The most simple use is to generate an option function with default values by callling <code><a href="../reference/setGlobalOptions.html">setGlobalOptions()</a></code> or its short versoin <code><a href="../reference/set_opt.html">set_opt()</a></code>:</p>
-<div class="sourceCode" id="cb1"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">GlobalOptions</span>)
-<span class="no">opt</span> <span class="kw">=</span> <span class="fu"><a href="../reference/set_opt.html">set_opt</a></span>(
-    <span class="kw">a</span> <span class="kw">=</span> <span class="fl">1</span>,
-    <span class="kw">b</span> <span class="kw">=</span> <span class="st">"text"</span>
-)</pre></body></html></div>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/jokergoo/GlobalOptions">GlobalOptions</a></span><span class="op">)</span>
+<span class="va">opt</span> <span class="op">=</span> <span class="fu"><a href="../reference/set_opt.html">set_opt</a></span><span class="op">(</span>
+    a <span class="op">=</span> <span class="fl">1</span>,
+    b <span class="op">=</span> <span class="st">"text"</span>
+<span class="op">)</span></code></pre></div>
 <p>The returned value <code>opt</code> is an option function which can be used to get or set options. Options in <code>opt</code> can be accessed either by specifying as arguments or by using the <code><a href="https://rdrr.io/r/base/Extract.html">$</a></code> operator.</p>
-<div class="sourceCode" id="cb2"><html><body><pre class="r"><span class="fu">opt</span>()</pre></body></html></div>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu">opt</span><span class="op">(</span><span class="op">)</span></code></pre></div>
 <pre><code>$a
 [1] 1
 
 $b
 [1] "text"</code></pre>
-<div class="sourceCode" id="cb4"><html><body><pre class="r"><span class="fu">opt</span>(<span class="st">"a"</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu">opt</span><span class="op">(</span><span class="st">"a"</span><span class="op">)</span></code></pre></div>
 <pre><code>[1] 1</code></pre>
-<div class="sourceCode" id="cb6"><html><body><pre class="r"><span class="no">opt</span>$<span class="no">a</span></pre></body></html></div>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">opt</span><span class="op">$</span><span class="va">a</span></code></pre></div>
 <pre><code>[1] 1</code></pre>
-<div class="sourceCode" id="cb8"><html><body><pre class="r"><span class="no">op</span> <span class="kw">=</span> <span class="fu">opt</span>()
-<span class="no">op</span></pre></body></html></div>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">op</span> <span class="op">=</span> <span class="fu">opt</span><span class="op">(</span><span class="op">)</span>
+<span class="va">op</span></code></pre></div>
 <pre><code>$a
 [1] 1
 
 $b
 [1] "text"</code></pre>
-<div class="sourceCode" id="cb10"><html><body><pre class="r"><span class="fu">opt</span>(<span class="kw">a</span> <span class="kw">=</span> <span class="fl">2</span>, <span class="kw">b</span> <span class="kw">=</span> <span class="st">"new text"</span>)
-<span class="fu">opt</span>()</pre></body></html></div>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu">opt</span><span class="op">(</span>a <span class="op">=</span> <span class="fl">2</span>, b <span class="op">=</span> <span class="st">"new text"</span><span class="op">)</span>
+<span class="fu">opt</span><span class="op">(</span><span class="op">)</span></code></pre></div>
 <pre><code>$a
 [1] 2
 
 $b
 [1] "new text"</code></pre>
-<div class="sourceCode" id="cb12"><html><body><pre class="r"><span class="no">opt</span>$<span class="no">b</span> <span class="kw">=</span> <span class="st">""</span>
-<span class="fu">opt</span>()</pre></body></html></div>
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">opt</span><span class="op">$</span><span class="va">b</span> <span class="op">=</span> <span class="st">""</span>
+<span class="fu">opt</span><span class="op">(</span><span class="op">)</span></code></pre></div>
 <pre><code>$a
 [1] 2
 
 $b
 [1] ""</code></pre>
-<div class="sourceCode" id="cb14"><html><body><pre class="r"><span class="fu">opt</span>(<span class="no">op</span>)
-<span class="fu">opt</span>()</pre></body></html></div>
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu">opt</span><span class="op">(</span><span class="va">op</span><span class="op">)</span>
+<span class="fu">opt</span><span class="op">(</span><span class="op">)</span></code></pre></div>
 <pre><code>$a
 [1] 1
 
 $b
 [1] "text"</code></pre>
 <p><code>opt</code> generated by <code><a href="../reference/set_opt.html">set_opt()</a></code> contains an argument <code>RESET</code> which is used to reset the options to the default:</p>
-<div class="sourceCode" id="cb16"><html><body><pre class="r"><span class="fu">opt</span>(<span class="kw">a</span> <span class="kw">=</span> <span class="fl">2</span>, <span class="kw">b</span> <span class="kw">=</span> <span class="st">"new text"</span>)
-<span class="fu">opt</span>(<span class="kw">RESET</span> <span class="kw">=</span> <span class="fl">TRUE</span>)
-<span class="fu">opt</span>()</pre></body></html></div>
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu">opt</span><span class="op">(</span>a <span class="op">=</span> <span class="fl">2</span>, b <span class="op">=</span> <span class="st">"new text"</span><span class="op">)</span>
+<span class="fu">opt</span><span class="op">(</span>RESET <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
+<span class="fu">opt</span><span class="op">(</span><span class="op">)</span></code></pre></div>
 <pre><code>$a
 [1] 1
 
 $b
 [1] "text"</code></pre>
 <p>Simply printing <code>opt</code> gives a summary of all options.</p>
-<div class="sourceCode" id="cb18"><html><body><pre class="r"><span class="no">opt</span></pre></body></html></div>
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">opt</span></code></pre></div>
 <pre><code> Option Value
  ------:-------
  a      1    
@@ -164,40 +174,47 @@ $b
 <h3 class="hasAnchor">
 <a href="#simple-validation" class="anchor"></a>Simple validation</h3>
 <p>There are two basic fields that are used to check the input option values:</p>
-<div class="sourceCode" id="cb20"><html><body><pre class="r"><span class="no">opt</span> <span class="kw">=</span> <span class="fu"><a href="../reference/set_opt.html">set_opt</a></span>(
-    <span class="kw">a</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="kw">.value</span> <span class="kw">=</span> <span class="fl">1</span>,
-             <span class="kw">.length</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">1</span>, <span class="fl">3</span>),
-             <span class="kw">.class</span> <span class="kw">=</span> <span class="st">"numeric"</span>)
-)</pre></body></html></div>
+<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">opt</span> <span class="op">=</span> <span class="fu"><a href="../reference/set_opt.html">set_opt</a></span><span class="op">(</span>
+    a <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>.value <span class="op">=</span> <span class="fl">1</span>,
+             .length <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">3</span><span class="op">)</span>,
+             .class <span class="op">=</span> <span class="st">"numeric"</span><span class="op">)</span>
+<span class="op">)</span></code></pre></div>
 <p>In above code, <code>.value</code> is the default value for the option <code>a</code>. The length of the value is controlled by <code>.length</code> and the length should be either 1 or 3. The class of the value should be <code>numeric</code>. If the input value does not fit these criterions, there will be an error. The value of <code>.length</code> or <code>.class</code> is a vector and the checking will be passed if one of the value fits user’s input.</p>
-<div class="sourceCode" id="cb21"><html><body><pre class="r"><span class="fu">opt</span>(<span class="kw">a</span> <span class="kw">=</span> <span class="fl">1</span>:<span class="fl">2</span>)  <span class="co"># there will be error because the length is 2</span></pre></body></html></div>
+<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu">opt</span><span class="op">(</span>a <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">2</span><span class="op">)</span>  <span class="co"># there will be error because the length is 2</span></code></pre></div>
 <pre><code>Error: Length of 'a' should be one of 1, 3.</code></pre>
-<div class="sourceCode" id="cb23"><html><body><pre class="r"><span class="fu">opt</span>(<span class="kw">a</span> <span class="kw">=</span> <span class="st">"text"</span>)  <span class="co"># there will be error because the input is character</span></pre></body></html></div>
+<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu">opt</span><span class="op">(</span>a <span class="op">=</span> <span class="st">"text"</span><span class="op">)</span>  <span class="co"># there will be error because the input is character</span></code></pre></div>
 <pre><code>Error: Class of 'a' should be 'numeric'.</code></pre>
 </div>
 <div id="read-only-options" class="section level3">
 <h3 class="hasAnchor">
 <a href="#read-only-options" class="anchor"></a>Read-only options</h3>
 <p>The value can be set as read-only by <code>.read.only</code> field and modifying such option will cause an error.</p>
-<div class="sourceCode" id="cb25"><html><body><pre class="r"><span class="no">opt</span> <span class="kw">=</span> <span class="fu"><a href="../reference/set_opt.html">set_opt</a></span>(
-    <span class="kw">a</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="kw">.value</span> <span class="kw">=</span> <span class="fl">1</span>,
-             <span class="kw">.read.only</span> <span class="kw">=</span> <span class="fl">TRUE</span>)
-)
-<span class="fu">opt</span>(<span class="kw">a</span> <span class="kw">=</span> <span class="fl">2</span>)  <span class="co"># there will be error because a is read-only</span></pre></body></html></div>
+<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">opt</span> <span class="op">=</span> <span class="fu"><a href="../reference/set_opt.html">set_opt</a></span><span class="op">(</span>
+    a <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>.value <span class="op">=</span> <span class="fl">1</span>,
+             .read.only <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
+<span class="op">)</span>
+<span class="fu">opt</span><span class="op">(</span>a <span class="op">=</span> <span class="fl">2</span><span class="op">)</span>  <span class="co"># there will be error because a is read-only</span></code></pre></div>
 <pre><code>Error: 'a' is a read-only option.</code></pre>
 <p>There is also a pre-defined argument <code>READ.ONLY</code> in <code>opt()</code> which controls whether to return only the read-only options or not.</p>
-<div class="sourceCode" id="cb27"><html><body><pre class="r"><span class="no">opt</span> <span class="kw">=</span> <span class="fu"><a href="../reference/set_opt.html">set_opt</a></span>(
-    <span class="kw">a</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="kw">.value</span> <span class="kw">=</span> <span class="fl">1</span>,
-             <span class="kw">.read.only</span> <span class="kw">=</span> <span class="fl">TRUE</span>),
-    <span class="kw">b</span> <span class="kw">=</span> <span class="fl">2</span>
-)
-<span class="fu">opt</span>(<span class="kw">READ.ONLY</span> <span class="kw">=</span> <span class="fl">TRUE</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">opt</span> <span class="op">=</span> <span class="fu"><a href="../reference/set_opt.html">set_opt</a></span><span class="op">(</span>
+    a <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>.value <span class="op">=</span> <span class="fl">1</span>,
+             .read.only <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,
+    b <span class="op">=</span> <span class="fl">2</span>
+<span class="op">)</span>
+<span class="fu">opt</span><span class="op">(</span>READ.ONLY <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
 <pre><code>$a
 [1] 1</code></pre>
-<div class="sourceCode" id="cb29"><html><body><pre class="r"><span class="fu">opt</span>(<span class="kw">READ.ONLY</span> <span class="kw">=</span> <span class="fl">FALSE</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu">opt</span><span class="op">(</span>READ.ONLY <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></code></pre></div>
 <pre><code>$b
 [1] 2</code></pre>
-<div class="sourceCode" id="cb31"><html><body><pre class="r"><span class="fu">opt</span>(<span class="kw">READ.ONLY</span> <span class="kw">=</span> <span class="kw">NULL</span>)  <span class="co"># default, to return both</span></pre></body></html></div>
+<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu">opt</span><span class="op">(</span>READ.ONLY <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span>  <span class="co"># default, to return both</span></code></pre></div>
 <pre><code>$a
 [1] 1
 
@@ -209,210 +226,236 @@ $b
 <a href="#user-defined-validation" class="anchor"></a>User-defined validation</h3>
 <p>More customized validation of the option values can be controlled by <code>.validate</code> field. The value of <code>.validate</code> should be a function. The input of the validation function is the input option value and the function should only return a logical value.</p>
 <p><code>a</code> should only between 0 and 10 in following example.</p>
-<div class="sourceCode" id="cb33"><html><body><pre class="r"><span class="no">opt</span> <span class="kw">=</span> <span class="fu"><a href="../reference/set_opt.html">set_opt</a></span>(
-    <span class="kw">a</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="kw">.value</span> <span class="kw">=</span> <span class="fl">1</span>,
-             <span class="kw">.validate</span> <span class="kw">=</span> <span class="kw">function</span>(<span class="no">x</span>) <span class="no">x</span> <span class="kw">&gt;</span> <span class="fl">0</span> <span class="kw">&amp;&amp;</span> <span class="no">x</span> <span class="kw">&lt;</span> <span class="fl">10</span>
-    )
-)
-<span class="fu">opt</span>(<span class="kw">a</span> <span class="kw">=</span> <span class="fl">20</span>)  <span class="co"># This will cause an error</span></pre></body></html></div>
+<div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">opt</span> <span class="op">=</span> <span class="fu"><a href="../reference/set_opt.html">set_opt</a></span><span class="op">(</span>
+    a <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>.value <span class="op">=</span> <span class="fl">1</span>,
+             .validate <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="va">x</span> <span class="op">&gt;</span> <span class="fl">0</span> <span class="op">&amp;&amp;</span> <span class="va">x</span> <span class="op">&lt;</span> <span class="fl">10</span>
+    <span class="op">)</span>
+<span class="op">)</span>
+<span class="fu">opt</span><span class="op">(</span>a <span class="op">=</span> <span class="fl">20</span><span class="op">)</span>  <span class="co"># This will cause an error</span></code></pre></div>
 <pre><code>Error: a didn't pass the validation. Your option is invalid.</code></pre>
 <p><code>.failed_msg</code> is used to configure the error message once validation is failed.</p>
-<div class="sourceCode" id="cb35"><html><body><pre class="r"><span class="no">opt</span> <span class="kw">=</span> <span class="fu"><a href="../reference/set_opt.html">set_opt</a></span>(
-    <span class="kw">a</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="kw">.value</span> <span class="kw">=</span> <span class="fl">1</span>,
-             <span class="kw">.validate</span> <span class="kw">=</span> <span class="kw">function</span>(<span class="no">x</span>) <span class="no">x</span> <span class="kw">&gt;</span> <span class="fl">0</span> <span class="kw">&amp;&amp;</span> <span class="no">x</span> <span class="kw">&lt;</span> <span class="fl">10</span>,
-             <span class="kw">.failed_msg</span> <span class="kw">=</span> <span class="st">"'a' should be in (0, 10)."</span>
-    )
-)
-<span class="fu">opt</span>(<span class="kw">a</span> <span class="kw">=</span> <span class="fl">20</span>)  <span class="co"># This will cause an error</span></pre></body></html></div>
+<div class="sourceCode" id="cb35"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">opt</span> <span class="op">=</span> <span class="fu"><a href="../reference/set_opt.html">set_opt</a></span><span class="op">(</span>
+    a <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>.value <span class="op">=</span> <span class="fl">1</span>,
+             .validate <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="va">x</span> <span class="op">&gt;</span> <span class="fl">0</span> <span class="op">&amp;&amp;</span> <span class="va">x</span> <span class="op">&lt;</span> <span class="fl">10</span>,
+             .failed_msg <span class="op">=</span> <span class="st">"'a' should be in (0, 10)."</span>
+    <span class="op">)</span>
+<span class="op">)</span>
+<span class="fu">opt</span><span class="op">(</span>a <span class="op">=</span> <span class="fl">20</span><span class="op">)</span>  <span class="co"># This will cause an error</span></code></pre></div>
 <pre><code>Error: a didn't pass the validation. 'a' should be in (0, 10).</code></pre>
 </div>
 <div id="filter-the-option-values" class="section level3">
 <h3 class="hasAnchor">
 <a href="#filter-the-option-values" class="anchor"></a>Filter the option values</h3>
 <p>Filtering on the option values can be controlled by <code>.filter</code> field. This is useful when the input option value is not valid but it is not necessary to throw errors. More proper way is to modify the value silently. For example, there is an option to control whether to print messages or not and it should be set to <code>TRUE</code> or <code>FALSE</code>. However, users may set some other type of values such as <code>NULL</code> or <code>NA</code>. In this case, non-<code>TRUE</code> values can be converted to logical values by <code>.filter</code>. Similar as <code>.validate</code>, the input value for filter function is the input option value, and it should return a filtered option value.</p>
-<div class="sourceCode" id="cb37"><html><body><pre class="r"><span class="no">opt</span> <span class="kw">=</span> <span class="fu"><a href="../reference/set_opt.html">set_opt</a></span>(
-    <span class="kw">verbose</span> <span class="kw">=</span>
-        <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="kw">.value</span> <span class="kw">=</span> <span class="fl">TRUE</span>,
-             <span class="kw">.filter</span> <span class="kw">=</span> <span class="kw">function</span>(<span class="no">x</span>) {
-                 <span class="kw">if</span>(<span class="fu"><a href="https://rdrr.io/r/base/NULL.html">is.null</a></span>(<span class="no">x</span>)) {
-                     <span class="fu"><a href="https://rdrr.io/r/base/function.html">return</a></span>(<span class="fl">FALSE</span>)
-                 } <span class="kw">else</span> <span class="kw">if</span>(<span class="fu"><a href="https://rdrr.io/r/base/NA.html">is.na</a></span>(<span class="no">x</span>)) {
-                     <span class="fu"><a href="https://rdrr.io/r/base/function.html">return</a></span>(<span class="fl">FALSE</span>)
-                 } <span class="kw">else</span> {
-                     <span class="fu"><a href="https://rdrr.io/r/base/function.html">return</a></span>(<span class="no">x</span>)
-                 }
-              })
-)
-<span class="fu">opt</span>(<span class="kw">verbose</span> <span class="kw">=</span> <span class="fl">FALSE</span>); <span class="fu">opt</span>(<span class="st">"verbose"</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb37"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">opt</span> <span class="op">=</span> <span class="fu"><a href="../reference/set_opt.html">set_opt</a></span><span class="op">(</span>
+    verbose <span class="op">=</span> 
+        <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>.value <span class="op">=</span> <span class="cn">TRUE</span>,
+             .filter <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">{</span>
+                 <span class="kw">if</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/NULL.html">is.null</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span>
+                     <span class="kw"><a href="https://rdrr.io/r/base/function.html">return</a></span><span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span>
+                 <span class="op">}</span> <span class="kw">else</span> <span class="kw">if</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html">is.na</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span>
+                     <span class="kw"><a href="https://rdrr.io/r/base/function.html">return</a></span><span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span>
+                 <span class="op">}</span> <span class="kw">else</span> <span class="op">{</span>
+                     <span class="kw"><a href="https://rdrr.io/r/base/function.html">return</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span>
+                 <span class="op">}</span>
+              <span class="op">}</span><span class="op">)</span>
+<span class="op">)</span>
+<span class="fu">opt</span><span class="op">(</span>verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>; <span class="fu">opt</span><span class="op">(</span><span class="st">"verbose"</span><span class="op">)</span></code></pre></div>
 <pre><code>[1] FALSE</code></pre>
-<div class="sourceCode" id="cb39"><html><body><pre class="r"><span class="fu">opt</span>(<span class="kw">verbose</span> <span class="kw">=</span> <span class="fl">NA</span>); <span class="fu">opt</span>(<span class="st">"verbose"</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb39"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu">opt</span><span class="op">(</span>verbose <span class="op">=</span> <span class="cn">NA</span><span class="op">)</span>; <span class="fu">opt</span><span class="op">(</span><span class="st">"verbose"</span><span class="op">)</span></code></pre></div>
 <pre><code>[1] FALSE</code></pre>
-<div class="sourceCode" id="cb41"><html><body><pre class="r"><span class="fu">opt</span>(<span class="kw">verbose</span> <span class="kw">=</span> <span class="kw">NULL</span>); <span class="fu">opt</span>(<span class="st">"verbose"</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb41"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu">opt</span><span class="op">(</span>verbose <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span>; <span class="fu">opt</span><span class="op">(</span><span class="st">"verbose"</span><span class="op">)</span></code></pre></div>
 <pre><code>[1] FALSE</code></pre>
 <p>Another example is when there is an option which controls four margin values of a plot, the length of the value can either be 1, 2, or 4. With <code>.filter</code>, length can be normaliezd to 4 consistently.</p>
-<div class="sourceCode" id="cb43"><html><body><pre class="r"><span class="no">opt</span> <span class="kw">=</span> <span class="fu"><a href="../reference/set_opt.html">set_opt</a></span>(
-    <span class="kw">margin</span> <span class="kw">=</span>
-        <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="kw">.value</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">1</span>, <span class="fl">1</span>, <span class="fl">1</span>, <span class="fl">1</span>),
-             <span class="kw">.length</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">1</span>, <span class="fl">2</span>, <span class="fl">4</span>),
-             <span class="kw">.filter</span> <span class="kw">=</span> <span class="kw">function</span>(<span class="no">x</span>) {
-                <span class="kw">if</span>(<span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span>(<span class="no">x</span>) <span class="kw">==</span> <span class="fl">1</span>) {
-                    <span class="fu"><a href="https://rdrr.io/r/base/function.html">return</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span>(<span class="no">x</span>, <span class="fl">4</span>))
-                } <span class="kw">else</span> <span class="kw">if</span>(<span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span>(<span class="no">x</span>) <span class="kw">==</span> <span class="fl">2</span>) {
-                    <span class="fu"><a href="https://rdrr.io/r/base/function.html">return</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span>(<span class="no">x</span>, <span class="fl">2</span>))
-                } <span class="kw">else</span> {
-                    <span class="fu"><a href="https://rdrr.io/r/base/function.html">return</a></span>(<span class="no">x</span>)
-                }
-            })
-)
-<span class="fu">opt</span>(<span class="kw">margin</span> <span class="kw">=</span> <span class="fl">2</span>); <span class="fu">opt</span>(<span class="st">"margin"</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb43"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">opt</span> <span class="op">=</span> <span class="fu"><a href="../reference/set_opt.html">set_opt</a></span><span class="op">(</span>
+    margin <span class="op">=</span> 
+        <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>.value <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">1</span>, <span class="fl">1</span>, <span class="fl">1</span><span class="op">)</span>,
+             .length <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span>, <span class="fl">4</span><span class="op">)</span>,
+             .filter <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">{</span>
+                <span class="kw">if</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">==</span> <span class="fl">1</span><span class="op">)</span> <span class="op">{</span>
+                    <span class="kw"><a href="https://rdrr.io/r/base/function.html">return</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span><span class="op">(</span><span class="va">x</span>, <span class="fl">4</span><span class="op">)</span><span class="op">)</span>
+                <span class="op">}</span> <span class="kw">else</span> <span class="kw">if</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">==</span> <span class="fl">2</span><span class="op">)</span> <span class="op">{</span>
+                    <span class="kw"><a href="https://rdrr.io/r/base/function.html">return</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span><span class="op">(</span><span class="va">x</span>, <span class="fl">2</span><span class="op">)</span><span class="op">)</span>
+                <span class="op">}</span> <span class="kw">else</span> <span class="op">{</span>
+                    <span class="kw"><a href="https://rdrr.io/r/base/function.html">return</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span>
+                <span class="op">}</span>
+            <span class="op">}</span><span class="op">)</span>
+<span class="op">)</span>
+<span class="fu">opt</span><span class="op">(</span>margin <span class="op">=</span> <span class="fl">2</span><span class="op">)</span>; <span class="fu">opt</span><span class="op">(</span><span class="st">"margin"</span><span class="op">)</span></code></pre></div>
 <pre><code>[1] 2 2 2 2</code></pre>
-<div class="sourceCode" id="cb45"><html><body><pre class="r"><span class="fu">opt</span>(<span class="kw">margin</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">2</span>, <span class="fl">4</span>)); <span class="fu">opt</span>(<span class="st">"margin"</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb45"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu">opt</span><span class="op">(</span>margin <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">4</span><span class="op">)</span><span class="op">)</span>; <span class="fu">opt</span><span class="op">(</span><span class="st">"margin"</span><span class="op">)</span></code></pre></div>
 <pre><code>[1] 2 4 2 4</code></pre>
 </div>
 <div id="dynamic-querying-the-option-value" class="section level3">
 <h3 class="hasAnchor">
 <a href="#dynamic-querying-the-option-value" class="anchor"></a>Dynamic querying the option value</h3>
 <p>The input option value can be set dynamicly by setting it as a function. When the option value is set as a function and class of the option is non-function, it will be executed when querying the option. In the following example, the <code>prefix</code> option corresponds to the prefix of log messages. The returned option value is the string after the execution of the input function.</p>
-<div class="sourceCode" id="cb47"><html><body><pre class="r"><span class="no">opt</span> <span class="kw">=</span> <span class="fu"><a href="../reference/set_opt.html">set_opt</a></span>(
-    <span class="kw">prefix</span> <span class="kw">=</span> <span class="st">""</span>
-)
-<span class="fu">opt</span>(<span class="kw">prefix</span> <span class="kw">=</span> <span class="kw">function</span>() <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span>(<span class="st">"["</span>, <span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html">Sys.time</a></span>(), <span class="st">"] "</span>, <span class="kw">sep</span> <span class="kw">=</span> <span class="st">" "</span>))
-<span class="fu">opt</span>(<span class="st">"prefix"</span>)  <span class="co"># or opt$prefix</span></pre></body></html></div>
-<pre><code>[1] "[ 2020-06-06 22:11:03 ] "</code></pre>
-<div class="sourceCode" id="cb49"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/Sys.sleep.html">Sys.sleep</a></span>(<span class="fl">2</span>)
-<span class="fu">opt</span>(<span class="st">"prefix"</span>)</pre></body></html></div>
-<pre><code>[1] "[ 2020-06-06 22:11:05 ] "</code></pre>
+<div class="sourceCode" id="cb47"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">opt</span> <span class="op">=</span> <span class="fu"><a href="../reference/set_opt.html">set_opt</a></span><span class="op">(</span>
+    prefix <span class="op">=</span> <span class="st">""</span>
+<span class="op">)</span>
+<span class="fu">opt</span><span class="op">(</span>prefix <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span><span class="op">(</span><span class="st">"["</span>, <span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html">Sys.time</a></span><span class="op">(</span><span class="op">)</span>, <span class="st">"] "</span>, sep <span class="op">=</span> <span class="st">" "</span><span class="op">)</span><span class="op">)</span>
+<span class="fu">opt</span><span class="op">(</span><span class="st">"prefix"</span><span class="op">)</span>  <span class="co"># or opt$prefix</span></code></pre></div>
+<pre><code>[1] "[ 2021-07-01 14:46:08 ] "</code></pre>
+<div class="sourceCode" id="cb49"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/Sys.sleep.html">Sys.sleep</a></span><span class="op">(</span><span class="fl">2</span><span class="op">)</span>
+<span class="fu">opt</span><span class="op">(</span><span class="st">"prefix"</span><span class="op">)</span></code></pre></div>
+<pre><code>[1] "[ 2021-07-01 14:46:10 ] "</code></pre>
 <p>If the value of the option is a real function and users don’t want to execute it, just set <code>.class</code> to contain <code>function</code>, then the function will be treated as a simple value.</p>
-<div class="sourceCode" id="cb51"><html><body><pre class="r"><span class="no">opt</span> <span class="kw">=</span> <span class="fu"><a href="../reference/set_opt.html">set_opt</a></span>(
-    <span class="kw">test_fun</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="kw">.value</span> <span class="kw">=</span> <span class="kw">function</span>(<span class="no">x1</span>, <span class="no">x2</span>) <span class="fu"><a href="https://rdrr.io/r/stats/t.test.html">t.test</a></span>(<span class="no">x1</span>, <span class="no">x2</span>)$<span class="no">p.value</span>,
-                    <span class="kw">.class</span> <span class="kw">=</span> <span class="st">"function"</span>)
-)
-<span class="fu">opt</span>(<span class="kw">test_fun</span> <span class="kw">=</span> <span class="kw">function</span>(<span class="no">x1</span>, <span class="no">x2</span>) <span class="fu"><a href="https://rdrr.io/r/stats/cor.test.html">cor.test</a></span>(<span class="no">x1</span>, <span class="no">x2</span>)$<span class="no">p.value</span>)
-<span class="fu">opt</span>(<span class="st">"test_fun"</span>)  <span class="co"># or opt$test_fun</span></pre></body></html></div>
+<div class="sourceCode" id="cb51"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">opt</span> <span class="op">=</span> <span class="fu"><a href="../reference/set_opt.html">set_opt</a></span><span class="op">(</span>
+    test_fun <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>.value <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">x1</span>, <span class="va">x2</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/stats/t.test.html">t.test</a></span><span class="op">(</span><span class="va">x1</span>, <span class="va">x2</span><span class="op">)</span><span class="op">$</span><span class="va">p.value</span>,
+                    .class <span class="op">=</span> <span class="st">"function"</span><span class="op">)</span>
+<span class="op">)</span>
+<span class="fu">opt</span><span class="op">(</span>test_fun <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">x1</span>, <span class="va">x2</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/stats/cor.test.html">cor.test</a></span><span class="op">(</span><span class="va">x1</span>, <span class="va">x2</span><span class="op">)</span><span class="op">$</span><span class="va">p.value</span><span class="op">)</span>
+<span class="fu">opt</span><span class="op">(</span><span class="st">"test_fun"</span><span class="op">)</span>  <span class="co"># or opt$test_fun</span></code></pre></div>
 <pre><code>function(x1, x2) cor.test(x1, x2)$p.value</code></pre>
 </div>
 <div id="interaction-between-options" class="section level3">
 <h3 class="hasAnchor">
 <a href="#interaction-between-options" class="anchor"></a>Interaction between options</h3>
-<p>The self-defined function (i.e. value function, validation function or filter function) is applied per-option independently. But sometimes we want to set one option based on values of other options. In this case, we need a function which can get other option values. <code><a href="../reference/Dot.v.html">.v()</a></code> can be used to access other option values defined beforehand. <code><a href="../reference/Dot.v.html">.v("a")</a></code> can also be written as <code><a href="../reference/Dot.v.html">.v(a)</a></code> or <code>.v$a</code>.</p>
-<div class="sourceCode" id="cb53"><html><body><pre class="r"><span class="no">opt</span> <span class="kw">=</span> <span class="fu"><a href="../reference/set_opt.html">set_opt</a></span>(
-    <span class="kw">a</span> <span class="kw">=</span> <span class="fl">1</span>,
-    <span class="kw">b</span> <span class="kw">=</span> <span class="kw">function</span>() <span class="fl">2</span> * <span class="no">.v</span>$<span class="no">a</span>
-)
-<span class="fu">opt</span>(<span class="st">"b"</span>)  <span class="co"># or opt$b</span></pre></body></html></div>
+<p>The self-defined function (i.e. value function, validation function or filter function) is applied per-option independently. But sometimes we want to set one option based on values of other options. In this case, we need a function which can get other option values. <code><a href="../reference/.v.html">.v()</a></code> can be used to access other option values defined beforehand. <code><a href="../reference/.v.html">.v("a")</a></code> can also be written as <code><a href="../reference/.v.html">.v(a)</a></code> or <code>.v$a</code>.</p>
+<div class="sourceCode" id="cb53"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">opt</span> <span class="op">=</span> <span class="fu"><a href="../reference/set_opt.html">set_opt</a></span><span class="op">(</span>
+    a <span class="op">=</span> <span class="fl">1</span>,
+    b <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="op">)</span> <span class="fl">2</span> <span class="op">*</span> <span class="va">.v</span><span class="op">$</span><span class="va">a</span>
+<span class="op">)</span>
+<span class="fu">opt</span><span class="op">(</span><span class="st">"b"</span><span class="op">)</span>  <span class="co"># or opt$b</span></code></pre></div>
 <pre><code>[1] 2</code></pre>
-<div class="sourceCode" id="cb55"><html><body><pre class="r"><span class="fu">opt</span>(<span class="kw">a</span> <span class="kw">=</span> <span class="fl">2</span>)
-<span class="fu">opt</span>(<span class="st">"b"</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb55"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu">opt</span><span class="op">(</span>a <span class="op">=</span> <span class="fl">2</span><span class="op">)</span>
+<span class="fu">opt</span><span class="op">(</span><span class="st">"b"</span><span class="op">)</span></code></pre></div>
 <pre><code>[1] 4</code></pre>
 <p>However, you can still overwrite option <code>b</code>:</p>
-<div class="sourceCode" id="cb57"><html><body><pre class="r"><span class="fu">opt</span>(<span class="kw">a</span> <span class="kw">=</span> <span class="fl">2</span>, <span class="kw">b</span> <span class="kw">=</span> <span class="fl">3</span>) <span class="co"># b was overwriiten and will not be 2*a</span>
-<span class="fu">opt</span>()</pre></body></html></div>
+<div class="sourceCode" id="cb57"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu">opt</span><span class="op">(</span>a <span class="op">=</span> <span class="fl">2</span>, b <span class="op">=</span> <span class="fl">3</span><span class="op">)</span> <span class="co"># b was overwriiten and will not be 2*a</span>
+<span class="fu">opt</span><span class="op">(</span><span class="op">)</span></code></pre></div>
 <pre><code>$a
 [1] 2
 
 $b
 [1] 3</code></pre>
 <p><code>.v</code> can also be used in <code>.validate</code> and <code>.filter</code> fields. In the second example, sign of <code>b</code> should be as same as sign of <code>a</code>.</p>
-<div class="sourceCode" id="cb59"><html><body><pre class="r"><span class="no">opt</span> <span class="kw">=</span> <span class="fu"><a href="../reference/set_opt.html">set_opt</a></span>(
-    <span class="kw">a</span> <span class="kw">=</span> <span class="fl">1</span>,
-    <span class="kw">b</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="kw">.value</span> <span class="kw">=</span> <span class="fl">0</span>,
-             <span class="kw">.validate</span> <span class="kw">=</span> <span class="kw">function</span>(<span class="no">x</span>) {
-                 <span class="kw">if</span>(<span class="no">.v</span>$<span class="no">a</span> <span class="kw">&gt;</span> <span class="fl">0</span>) <span class="no">x</span> <span class="kw">&gt;</span> <span class="fl">0</span>
-                 <span class="kw">else</span> <span class="no">x</span> <span class="kw">&lt;</span> <span class="fl">0</span>
-             },
-             <span class="kw">.filter</span> <span class="kw">=</span> <span class="kw">function</span>(<span class="no">x</span>) {
-                 <span class="no">x</span> + <span class="no">.v</span>$<span class="no">a</span>
-             },
-             <span class="kw">.failed_msg</span> <span class="kw">=</span> <span class="st">"'b' should have same sign as 'a'."</span>)
-)
-<span class="fu">opt</span>(<span class="kw">b</span> <span class="kw">=</span> <span class="fl">1</span>)
-<span class="fu">opt</span>(<span class="st">"b"</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb59"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">opt</span> <span class="op">=</span> <span class="fu"><a href="../reference/set_opt.html">set_opt</a></span><span class="op">(</span>
+    a <span class="op">=</span> <span class="fl">1</span>,
+    b <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>.value <span class="op">=</span> <span class="fl">0</span>,
+             .validate <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">{</span>
+                 <span class="kw">if</span><span class="op">(</span><span class="va">.v</span><span class="op">$</span><span class="va">a</span> <span class="op">&gt;</span> <span class="fl">0</span><span class="op">)</span> <span class="va">x</span> <span class="op">&gt;</span> <span class="fl">0</span>
+                 <span class="kw">else</span> <span class="va">x</span> <span class="op">&lt;</span> <span class="fl">0</span>
+             <span class="op">}</span>,
+             .filter <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">{</span>
+                 <span class="va">x</span> <span class="op">+</span> <span class="va">.v</span><span class="op">$</span><span class="va">a</span>
+             <span class="op">}</span>,
+             .failed_msg <span class="op">=</span> <span class="st">"'b' should have same sign as 'a'."</span><span class="op">)</span>
+<span class="op">)</span>
+<span class="fu">opt</span><span class="op">(</span>b <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>
+<span class="fu">opt</span><span class="op">(</span><span class="st">"b"</span><span class="op">)</span></code></pre></div>
 <pre><code>[1] 2</code></pre>
-<div class="sourceCode" id="cb61"><html><body><pre class="r"><span class="fu">opt</span>(<span class="kw">a</span> <span class="kw">=</span> <span class="fl">1</span>, <span class="kw">b</span> <span class="kw">=</span> -<span class="fl">1</span>)  <span class="co"># this should cause an error</span></pre></body></html></div>
+<div class="sourceCode" id="cb61"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu">opt</span><span class="op">(</span>a <span class="op">=</span> <span class="fl">1</span>, b <span class="op">=</span> <span class="op">-</span><span class="fl">1</span><span class="op">)</span>  <span class="co"># this should cause an error</span></code></pre></div>
 <pre><code>Error: b didn't pass the validation. 'b' should have same sign as 'a'.</code></pre>
 </div>
 <div id="local-options" class="section level3">
 <h3 class="hasAnchor">
 <a href="#local-options" class="anchor"></a>Local options</h3>
 <p>The option funtion also has a <code>LOCAL</code> argument which switches local mode and global mode. When <code>LOCAL</code> is set to <code>TRUE</code>, a copy of current options is generated and all queries are applied on the copy version. The local mode is turned off when <code>LOCAL</code> is explicitely specified to <code>FALSE</code>.</p>
-<div class="sourceCode" id="cb63"><html><body><pre class="r"><span class="no">opt</span> <span class="kw">=</span> <span class="fu"><a href="../reference/set_opt.html">set_opt</a></span>(
-    <span class="kw">a</span> <span class="kw">=</span> <span class="fl">1</span>
-)
+<div class="sourceCode" id="cb63"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">opt</span> <span class="op">=</span> <span class="fu"><a href="../reference/set_opt.html">set_opt</a></span><span class="op">(</span>
+    a <span class="op">=</span> <span class="fl">1</span>
+<span class="op">)</span>
 
-<span class="fu">opt</span>(<span class="kw">LOCAL</span> <span class="kw">=</span> <span class="fl">TRUE</span>)
-<span class="fu">opt</span>(<span class="kw">a</span> <span class="kw">=</span> <span class="fl">2</span>)
-<span class="no">opt</span>$<span class="no">a</span></pre></body></html></div>
+<span class="fu">opt</span><span class="op">(</span>LOCAL <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
+<span class="fu">opt</span><span class="op">(</span>a <span class="op">=</span> <span class="fl">2</span><span class="op">)</span>
+<span class="va">opt</span><span class="op">$</span><span class="va">a</span></code></pre></div>
 <pre><code>[1] 2</code></pre>
-<div class="sourceCode" id="cb65"><html><body><pre class="r"><span class="fu">opt</span>(<span class="kw">LOCAL</span> <span class="kw">=</span> <span class="fl">FALSE</span>)
-<span class="no">opt</span>$<span class="no">a</span></pre></body></html></div>
+<div class="sourceCode" id="cb65"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu">opt</span><span class="op">(</span>LOCAL <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
+<span class="va">opt</span><span class="op">$</span><span class="va">a</span></code></pre></div>
 <pre><code>[1] 1</code></pre>
 <p>Local mode will be automatically turned off when enrivonment changes. In following example, local mode only works inside <code>f1()</code> and <code>f2()</code> functions and the local copies are independent in <code>f1()</code> and <code>f2()</code>. Note when leaving e.g. <code>f1()</code>, the copy of the option is deleted.</p>
-<div class="sourceCode" id="cb67"><html><body><pre class="r"><span class="no">opt</span> <span class="kw">=</span> <span class="fu"><a href="../reference/set_opt.html">set_opt</a></span>(
-    <span class="kw">a</span> <span class="kw">=</span> <span class="fl">1</span>
-)
+<div class="sourceCode" id="cb67"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">opt</span> <span class="op">=</span> <span class="fu"><a href="../reference/set_opt.html">set_opt</a></span><span class="op">(</span>
+    a <span class="op">=</span> <span class="fl">1</span>
+<span class="op">)</span>
 
-<span class="no">f1</span> <span class="kw">=</span> <span class="kw">function</span>() {
-    <span class="fu">opt</span>(<span class="kw">LOCAL</span> <span class="kw">=</span> <span class="fl">TRUE</span>)
-    <span class="fu">opt</span>(<span class="kw">a</span> <span class="kw">=</span> <span class="fl">2</span>)
-    <span class="fu"><a href="https://rdrr.io/r/base/function.html">return</a></span>(<span class="no">opt</span>$<span class="no">a</span>)
-}
-<span class="fu">f1</span>()</pre></body></html></div>
+<span class="va">f1</span> <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="op">)</span> <span class="op">{</span>
+    <span class="fu">opt</span><span class="op">(</span>LOCAL <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
+    <span class="fu">opt</span><span class="op">(</span>a <span class="op">=</span> <span class="fl">2</span><span class="op">)</span>
+    <span class="kw"><a href="https://rdrr.io/r/base/function.html">return</a></span><span class="op">(</span><span class="va">opt</span><span class="op">$</span><span class="va">a</span><span class="op">)</span>
+<span class="op">}</span>
+<span class="fu">f1</span><span class="op">(</span><span class="op">)</span></code></pre></div>
 <pre><code>[1] 2</code></pre>
-<div class="sourceCode" id="cb69"><html><body><pre class="r"><span class="no">opt</span>$<span class="no">a</span></pre></body></html></div>
+<div class="sourceCode" id="cb69"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">opt</span><span class="op">$</span><span class="va">a</span></code></pre></div>
 <pre><code>[1] 1</code></pre>
-<div class="sourceCode" id="cb71"><html><body><pre class="r"><span class="no">f2</span> <span class="kw">=</span> <span class="kw">function</span>() {
-    <span class="fu">opt</span>(<span class="kw">LOCAL</span> <span class="kw">=</span> <span class="fl">TRUE</span>)
-    <span class="fu">opt</span>(<span class="kw">a</span> <span class="kw">=</span> <span class="fl">4</span>)
-    <span class="fu"><a href="https://rdrr.io/r/base/function.html">return</a></span>(<span class="no">opt</span>$<span class="no">a</span>)
-}
-<span class="fu">f2</span>()</pre></body></html></div>
+<div class="sourceCode" id="cb71"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">f2</span> <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="op">)</span> <span class="op">{</span>
+    <span class="fu">opt</span><span class="op">(</span>LOCAL <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
+    <span class="fu">opt</span><span class="op">(</span>a <span class="op">=</span> <span class="fl">4</span><span class="op">)</span>
+    <span class="kw"><a href="https://rdrr.io/r/base/function.html">return</a></span><span class="op">(</span><span class="va">opt</span><span class="op">$</span><span class="va">a</span><span class="op">)</span>
+<span class="op">}</span>
+<span class="fu">f2</span><span class="op">(</span><span class="op">)</span></code></pre></div>
 <pre><code>[1] 4</code></pre>
-<div class="sourceCode" id="cb73"><html><body><pre class="r"><span class="no">opt</span>$<span class="no">a</span></pre></body></html></div>
+<div class="sourceCode" id="cb73"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">opt</span><span class="op">$</span><span class="va">a</span></code></pre></div>
 <pre><code>[1] 1</code></pre>
 <p>If <code>f1()</code> calls <code>f2()</code>, <code>f2()</code> will be in the same local mode as <code>f1()</code>. In other word, all children frames are in a same local mode if the parent frame is in local mode.</p>
-<div class="sourceCode" id="cb75"><html><body><pre class="r"><span class="no">opt</span> <span class="kw">=</span> <span class="fu"><a href="../reference/set_opt.html">set_opt</a></span>(
-    <span class="kw">a</span> <span class="kw">=</span> <span class="fl">1</span>
-)
+<div class="sourceCode" id="cb75"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">opt</span> <span class="op">=</span> <span class="fu"><a href="../reference/set_opt.html">set_opt</a></span><span class="op">(</span>
+    a <span class="op">=</span> <span class="fl">1</span>
+<span class="op">)</span>
 
-<span class="no">f1</span> <span class="kw">=</span> <span class="kw">function</span>() {
-    <span class="fu">opt</span>(<span class="kw">LOCAL</span> <span class="kw">=</span> <span class="fl">TRUE</span>)
-    <span class="fu">opt</span>(<span class="kw">a</span> <span class="kw">=</span> <span class="fl">2</span>)
-    <span class="fu"><a href="https://rdrr.io/r/base/function.html">return</a></span>(<span class="fu">f2</span>())
-}
+<span class="va">f1</span> <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="op">)</span> <span class="op">{</span>
+    <span class="fu">opt</span><span class="op">(</span>LOCAL <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
+    <span class="fu">opt</span><span class="op">(</span>a <span class="op">=</span> <span class="fl">2</span><span class="op">)</span>
+    <span class="kw"><a href="https://rdrr.io/r/base/function.html">return</a></span><span class="op">(</span><span class="fu">f2</span><span class="op">(</span><span class="op">)</span><span class="op">)</span>
+<span class="op">}</span>
 
-<span class="no">f2</span> <span class="kw">=</span> <span class="kw">function</span>() {
-    <span class="no">opt</span>$<span class="no">a</span>
-}
+<span class="va">f2</span> <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="op">)</span> <span class="op">{</span>
+    <span class="va">opt</span><span class="op">$</span><span class="va">a</span>
+<span class="op">}</span>
 
-<span class="fu">f1</span>()</pre></body></html></div>
+<span class="fu">f1</span><span class="op">(</span><span class="op">)</span></code></pre></div>
 <pre><code>[1] 2</code></pre>
-<div class="sourceCode" id="cb77"><html><body><pre class="r"><span class="no">opt</span>$<span class="no">a</span></pre></body></html></div>
+<div class="sourceCode" id="cb77"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">opt</span><span class="op">$</span><span class="va">a</span></code></pre></div>
 <pre><code>[1] 1</code></pre>
 </div>
 <div id="synonymous-options" class="section level3">
 <h3 class="hasAnchor">
 <a href="#synonymous-options" class="anchor"></a>Synonymous options</h3>
 <p>It can be possible that several weeks later, developers have better names for the options. They want to use the new option names but still do not want to disable the old ones. In this case, <code>.synonymous</code> field can be set to let the new option and old option reference to a same internal option object (which means all other configuration specified for this option is ignored). The change of values of either one will also affect the companions correspondingly.</p>
-<div class="sourceCode" id="cb79"><html><body><pre class="r"><span class="no">opt</span> <span class="kw">=</span> <span class="fu"><a href="../reference/set_opt.html">set_opt</a></span>(
-    <span class="kw">old</span> <span class="kw">=</span> <span class="fl">1</span>,
-    <span class="kw">new</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="kw">.value</span> <span class="kw">=</span> <span class="fl">1</span>,
-               <span class="kw">.synonymous</span> <span class="kw">=</span> <span class="st">"old"</span>)
-)
-<span class="fu">opt</span>()</pre></body></html></div>
+<div class="sourceCode" id="cb79"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">opt</span> <span class="op">=</span> <span class="fu"><a href="../reference/set_opt.html">set_opt</a></span><span class="op">(</span>
+    old <span class="op">=</span> <span class="fl">1</span>,
+    new <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>.value <span class="op">=</span> <span class="fl">1</span>,
+               .synonymous <span class="op">=</span> <span class="st">"old"</span><span class="op">)</span>
+<span class="op">)</span>
+<span class="fu">opt</span><span class="op">(</span><span class="op">)</span></code></pre></div>
 <pre><code>$old
 [1] 1
 
 $new
 [1] 1</code></pre>
-<div class="sourceCode" id="cb81"><html><body><pre class="r"><span class="no">opt</span>$<span class="no">old</span> <span class="kw">=</span> <span class="fl">2</span>
-<span class="fu">opt</span>()</pre></body></html></div>
+<div class="sourceCode" id="cb81"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">opt</span><span class="op">$</span><span class="va">old</span> <span class="op">=</span> <span class="fl">2</span>
+<span class="fu">opt</span><span class="op">(</span><span class="op">)</span></code></pre></div>
 <pre><code>$old
 [1] 2
 
 $new
 [1] 2</code></pre>
-<div class="sourceCode" id="cb83"><html><body><pre class="r"><span class="no">opt</span>$<span class="no">new</span> <span class="kw">=</span> <span class="fl">3</span>
-<span class="fu">opt</span>()</pre></body></html></div>
+<div class="sourceCode" id="cb83"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">opt</span><span class="op">$</span><span class="va">new</span> <span class="op">=</span> <span class="fl">3</span>
+<span class="fu">opt</span><span class="op">(</span><span class="op">)</span></code></pre></div>
 <pre><code>$old
 [1] 3
 
@@ -423,22 +466,23 @@ $new
 <h3 class="hasAnchor">
 <a href="#print-the-object" class="anchor"></a>Print the object</h3>
 <p>There is a <code>.description</code> field for each option which is only used when printing the summary of options. As shown before, simply entering the option object gives a summary table for all options.</p>
-<div class="sourceCode" id="cb85"><html><body><pre class="r"><span class="no">opt</span> <span class="kw">=</span> <span class="fu"><a href="../reference/set_opt.html">set_opt</a></span>(
-    <span class="kw">a</span> <span class="kw">=</span> <span class="fl">1</span>,
-    <span class="kw">b</span> <span class="kw">=</span> <span class="st">"b"</span>,
-    <span class="kw">c</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="kw">.value</span> <span class="kw">=</span> <span class="no">letters</span>[<span class="fl">1</span>:<span class="fl">4</span>],
-             <span class="kw">.class</span> <span class="kw">=</span> <span class="st">"character"</span>,
-             <span class="kw">.description</span> <span class="kw">=</span> <span class="st">"26 letters"</span>),
-    <span class="kw">d</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="kw">.value</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">0</span>, <span class="fl">0</span>),
-             <span class="kw">.class</span> <span class="kw">=</span> <span class="st">"numeric"</span>,
-             <span class="kw">.validate</span> <span class="kw">=</span> <span class="kw">function</span>(<span class="no">x</span>) <span class="no">x</span>[<span class="fl">1</span>]^<span class="fl">2</span> + <span class="no">x</span>[<span class="fl">2</span>]^<span class="fl">2</span> <span class="kw">&lt;=</span> <span class="fl">1</span>,
-             <span class="kw">.failed_msg</span> <span class="kw">=</span> <span class="st">"The point should be in the unit circle"</span>,
-             <span class="kw">.description</span> <span class="kw">=</span> <span class="st">"start points in the unit circle"</span>),
-    <span class="kw">e</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="kw">.value</span> <span class="kw">=</span> <span class="no">rnorm</span>,
-             <span class="kw">.class</span> <span class="kw">=</span> <span class="st">"function"</span>,
-             <span class="kw">.description</span> <span class="kw">=</span> <span class="st">"distribution to generate random numbers and a very long long long long long long long long text"</span>)
-)
-<span class="no">opt</span></pre></body></html></div>
+<div class="sourceCode" id="cb85"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">opt</span> <span class="op">=</span> <span class="fu"><a href="../reference/set_opt.html">set_opt</a></span><span class="op">(</span>
+    a <span class="op">=</span> <span class="fl">1</span>,
+    b <span class="op">=</span> <span class="st">"b"</span>,
+    c <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>.value <span class="op">=</span> <span class="va">letters</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">4</span><span class="op">]</span>,
+             .class <span class="op">=</span> <span class="st">"character"</span>,
+             .description <span class="op">=</span> <span class="st">"26 letters"</span><span class="op">)</span>,
+    d <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>.value <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0</span><span class="op">)</span>,
+             .class <span class="op">=</span> <span class="st">"numeric"</span>,
+             .validate <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="va">x</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span><span class="op">^</span><span class="fl">2</span> <span class="op">+</span> <span class="va">x</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span><span class="op">^</span><span class="fl">2</span> <span class="op">&lt;=</span> <span class="fl">1</span>,
+             .failed_msg <span class="op">=</span> <span class="st">"The point should be in the unit circle"</span>,
+             .description <span class="op">=</span> <span class="st">"start points in the unit circle"</span><span class="op">)</span>,
+    e <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>.value <span class="op">=</span> <span class="va">rnorm</span>,
+             .class <span class="op">=</span> <span class="st">"function"</span>,
+             .description <span class="op">=</span> <span class="st">"distribution to generate random numbers and a very long long long long long long long long text"</span><span class="op">)</span>
+<span class="op">)</span>
+<span class="va">opt</span></code></pre></div>
 <pre><code> Option Value                  
  ------:------------------------------------------------------------------------
  a      1                      
@@ -451,7 +495,8 @@ $new
         (distribution to generate random numbers and a very long long long
         long long long long long text)</code></pre>
 <p>Use <code><a href="../reference/dump_opt.html">dump_opt()</a></code> to get summary for each option.</p>
-<div class="sourceCode" id="cb87"><html><body><pre class="r"><span class="fu"><a href="../reference/dump_opt.html">dump_opt</a></span>(<span class="no">opt</span>, <span class="st">"a"</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb87"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="../reference/dump_opt.html">dump_opt</a></span><span class="op">(</span><span class="va">opt</span>, <span class="st">"a"</span><span class="op">)</span></code></pre></div>
 <pre><code>                   Field                   Value
                     name                       a
            default_value                       1
@@ -466,7 +511,8 @@ $new
                  visible                    TRUE
              description                      ""
  __generated_namespace__             R_GlobalEnv</code></pre>
-<div class="sourceCode" id="cb89"><html><body><pre class="r"><span class="fu"><a href="../reference/dump_opt.html">dump_opt</a></span>(<span class="no">opt</span>, <span class="st">"d"</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb89"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="../reference/dump_opt.html">dump_opt</a></span><span class="op">(</span><span class="va">opt</span>, <span class="st">"d"</span><span class="op">)</span></code></pre></div>
 <pre><code>                   Field                                  Value
                     name                                      d
            default_value                                   0, 0
@@ -486,28 +532,32 @@ $new
 <h3 class="hasAnchor">
 <a href="#add-new-options" class="anchor"></a>Add new options</h3>
 <p>New options can be added after the option function is created by explicitely specifying <code>ADD = TRUE</code>:</p>
-<div class="sourceCode" id="cb91"><html><body><pre class="r"><span class="no">opt</span> <span class="kw">=</span> <span class="fu"><a href="../reference/set_opt.html">set_opt</a></span>(<span class="kw">a</span> <span class="kw">=</span> <span class="fl">1</span>)
-<span class="fu">opt</span>(<span class="kw">b</span> <span class="kw">=</span> <span class="fl">2</span>, <span class="kw">ADD</span> <span class="kw">=</span> <span class="fl">TRUE</span>)
-<span class="no">opt</span></pre></body></html></div>
+<div class="sourceCode" id="cb91"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">opt</span> <span class="op">=</span> <span class="fu"><a href="../reference/set_opt.html">set_opt</a></span><span class="op">(</span>a <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>
+<span class="fu">opt</span><span class="op">(</span>b <span class="op">=</span> <span class="fl">2</span>, ADD <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
+<span class="va">opt</span></code></pre></div>
 <pre><code> Option Value
  ------:-------
  a      1    
  b      2    </code></pre>
 <p>Note you cannot add new options by using <code><a href="https://rdrr.io/r/base/Extract.html">$</a></code> (or more precisely <code>$&lt;-</code>) operator because <code><a href="https://rdrr.io/r/base/Extract.html">$</a></code> can only access options that have already been created.</p>
-<div class="sourceCode" id="cb93"><html><body><pre class="r"><span class="no">opt</span>$<span class="no">c</span> <span class="kw">=</span> <span class="fl">3</span></pre></body></html></div>
+<div class="sourceCode" id="cb93"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">opt</span><span class="op">$</span><span class="va">c</span> <span class="op">=</span> <span class="fl">3</span></code></pre></div>
 <pre><code>Error: No such option: 'c'. If you want to add this new option, please use
 your_opt_fun(c = ..., ADD = TRUE)</code></pre>
 <p>Like using a complex configuration list when creating a new option in <code><a href="../reference/set_opt.html">set_opt()</a></code>, here you can also use configuration list with <code>ADD = TRUE</code>.</p>
-<div class="sourceCode" id="cb95"><html><body><pre class="r"><span class="fu">opt</span>(<span class="kw">c</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="kw">.value</span> <span class="kw">=</span> <span class="st">"c"</span>,
-             <span class="kw">.class</span> <span class="kw">=</span> <span class="st">"character"</span>),
-    <span class="kw">ADD</span> <span class="kw">=</span> <span class="fl">TRUE</span>)
-<span class="no">opt</span></pre></body></html></div>
+<div class="sourceCode" id="cb95"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu">opt</span><span class="op">(</span>c <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>.value <span class="op">=</span> <span class="st">"c"</span>, 
+             .class <span class="op">=</span> <span class="st">"character"</span><span class="op">)</span>, 
+    ADD <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
+<span class="va">opt</span></code></pre></div>
 <pre><code> Option Value
  ------:-------
  a      1    
  b      2    
  c      c    </code></pre>
-<div class="sourceCode" id="cb97"><html><body><pre class="r"><span class="no">opt</span>$<span class="no">c</span> <span class="kw">=</span> <span class="fl">1</span></pre></body></html></div>
+<div class="sourceCode" id="cb97"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">opt</span><span class="op">$</span><span class="va">c</span> <span class="op">=</span> <span class="fl">1</span></code></pre></div>
 <pre><code>Error: Class of 'c' should be 'character'.</code></pre>
 <p>Of course you can put more than one options in <code>opt()</code> when adding them.</p>
 </div>
@@ -516,40 +566,48 @@ your_opt_fun(c = ..., ADD = TRUE)</code></pre>
 <h2 class="hasAnchor">
 <a href="#features-for-package-development" class="anchor"></a>Features for package development</h2>
 <p>Two additional fields may be helpful when developing packages. <code>.visible</code> controls whether options are visible to users. The invisible option can only be queried or modified by specifying its option name (just like you can only open the door with the correct unique key). This would be helpful if users want to put some secret options while do not want others to access. Is this case, they can assign names with complex strings like <code>.__MY_PRIVATE_KEY__.</code> as their secret options and afterwards they can access it with this special key.</p>
-<div class="sourceCode" id="cb99"><html><body><pre class="r"><span class="no">opt</span> <span class="kw">=</span> <span class="fu"><a href="../reference/set_opt.html">set_opt</a></span>(
-    <span class="kw">a</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="kw">.value</span> <span class="kw">=</span> <span class="fl">1</span>,
-             <span class="kw">.visible</span> <span class="kw">=</span> <span class="fl">FALSE</span>),
-    <span class="kw">b</span> <span class="kw">=</span> <span class="fl">2</span>
-)
-<span class="fu">opt</span>()</pre></body></html></div>
+<div class="sourceCode" id="cb99"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">opt</span> <span class="op">=</span> <span class="fu"><a href="../reference/set_opt.html">set_opt</a></span><span class="op">(</span>
+    a <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>.value <span class="op">=</span> <span class="fl">1</span>,
+             .visible <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>,
+    b <span class="op">=</span> <span class="fl">2</span>
+<span class="op">)</span>
+<span class="fu">opt</span><span class="op">(</span><span class="op">)</span></code></pre></div>
 <pre><code>$b
 [1] 2</code></pre>
-<div class="sourceCode" id="cb101"><html><body><pre class="r"><span class="no">opt</span>$<span class="no">a</span></pre></body></html></div>
+<div class="sourceCode" id="cb101"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">opt</span><span class="op">$</span><span class="va">a</span></code></pre></div>
 <pre><code>[1] 1</code></pre>
-<div class="sourceCode" id="cb103"><html><body><pre class="r"><span class="no">opt</span>$<span class="no">a</span> <span class="kw">=</span> <span class="fl">2</span>
-<span class="no">opt</span>$<span class="no">a</span></pre></body></html></div>
+<div class="sourceCode" id="cb103"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">opt</span><span class="op">$</span><span class="va">a</span> <span class="op">=</span> <span class="fl">2</span>
+<span class="va">opt</span><span class="op">$</span><span class="va">a</span></code></pre></div>
 <pre><code>[1] 2</code></pre>
-<div class="sourceCode" id="cb105"><html><body><pre class="r"><span class="fu">opt</span>()</pre></body></html></div>
+<div class="sourceCode" id="cb105"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu">opt</span><span class="op">(</span><span class="op">)</span></code></pre></div>
 <pre><code>$b
 [1] 2</code></pre>
 <p>Another field <code>.private</code> controls whether the option is only private to the namespace (e.g. packages). If it is set to <code>TRUE</code>, the option can only be modified in the same namespace (or top environment) where the option function is generated. E.g, if you are writing a package named <strong>foo</strong> and generating an option function <code>foo_opt()</code>, by setting the option with <code>.private</code> to <code>TRUE</code>, the value for such options can only be modified inside <strong>foo</strong> package while it is not permitted outside <strong>foo</strong>. At the same time, private options become read-only options if querying outside <strong>foo</strong> package.</p>
 <p>In following example, we manually modify the namespace where <code><a href="../reference/set_opt.html">set_opt()</a></code> is called in <code>stats</code> package.</p>
-<div class="sourceCode" id="cb107"><html><body><pre class="r"><span class="no">opt</span> <span class="kw">=</span> <span class="fu"><a href="../reference/set_opt.html">set_opt</a></span>(
-    <span class="kw">a</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="kw">.value</span> <span class="kw">=</span> <span class="fl">1</span>,
-             <span class="kw">.private</span> <span class="kw">=</span> <span class="fl">TRUE</span>)
-)
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">require</a></span>(<span class="no">stats</span>)
-<span class="no">ns</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ns-reflect.html">getNamespace</a></span>(<span class="st">"stats"</span>)
-<span class="fu"><a href="https://rdrr.io/r/base/environment.html">environment</a></span>(<span class="no">opt</span>)$<span class="no">options</span>$<span class="no">a</span>$<span class="no">`__generated_namespace__`</span> <span class="kw">=</span> <span class="no">ns</span></pre></body></html></div>
+<div class="sourceCode" id="cb107"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">opt</span> <span class="op">=</span> <span class="fu"><a href="../reference/set_opt.html">set_opt</a></span><span class="op">(</span>
+    a <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>.value <span class="op">=</span> <span class="fl">1</span>,
+             .private <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
+<span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">require</a></span><span class="op">(</span><span class="va">stats</span><span class="op">)</span>
+<span class="va">ns</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ns-reflect.html">getNamespace</a></span><span class="op">(</span><span class="st">"stats"</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/base/environment.html">environment</a></span><span class="op">(</span><span class="va">opt</span><span class="op">)</span><span class="op">$</span><span class="va">options</span><span class="op">$</span><span class="va">a</span><span class="op">$</span><span class="va">`__generated_namespace__`</span> <span class="op">=</span> <span class="va">ns</span></code></pre></div>
 <p>There will be error if trying to modify <code>a</code> which is private in <code>stats</code> namespace.</p>
-<div class="sourceCode" id="cb108"><html><body><pre class="r"><span class="no">opt</span>$<span class="no">a</span> <span class="kw">=</span> <span class="fl">2</span></pre></body></html></div>
+<div class="sourceCode" id="cb108"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">opt</span><span class="op">$</span><span class="va">a</span> <span class="op">=</span> <span class="fl">2</span></code></pre></div>
 <pre><code>Error: 'a' is a private option and it can only be modified inside 'stats'
 namespace while not 'R_GlobalEnv'.</code></pre>
 <p>But you can still access it.</p>
-<div class="sourceCode" id="cb110"><html><body><pre class="r"><span class="no">opt</span>$<span class="no">a</span></pre></body></html></div>
+<div class="sourceCode" id="cb110"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">opt</span><span class="op">$</span><span class="va">a</span></code></pre></div>
 <pre><code>[1] 1</code></pre>
 <p>The option object generated by <code><a href="../reference/set_opt.html">set_opt()</a></code> is actually a function. It contains four arguments: <code>...</code>, <code>RESET</code>, <code>READ.ONLY</code>, <code>LOCAL</code>, <code>ADD</code>. If you want to put the option function into a package, remember to document all the four arguments:</p>
-<div class="sourceCode" id="cb112"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/args.html">args</a></span>(<span class="no">opt</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb112"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/args.html">args</a></span><span class="op">(</span><span class="va">opt</span><span class="op">)</span></code></pre></div>
 <pre><code>function (..., RESET = FALSE, READ.ONLY = NULL, LOCAL = FALSE, 
     ADD = FALSE) 
 NULL</code></pre>
@@ -559,93 +617,104 @@ NULL</code></pre>
 <a href="#misc" class="anchor"></a>Misc</h2>
 <p>The order of validation when modifying an option value is <code>.read.only</code>, <code>.private</code>, <code>.length</code>, <code>.class</code>, <code>.validate</code>, <code>.filter</code>, <code>.length</code>, <code>.class</code>. Note validation on length and class of the option values will be applied again after filtering.</p>
 <p>Global options are stored in private environments. Each time when generating a option function, there will be new environments created. Thus global options will not conflict if they come from different option functions.</p>
-<div class="sourceCode" id="cb114"><html><body><pre class="r"><span class="no">opt1</span> <span class="kw">=</span> <span class="fu"><a href="../reference/set_opt.html">set_opt</a></span>(
-    <span class="kw">a</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="kw">.value</span> <span class="kw">=</span> <span class="fl">1</span>)
-)
-<span class="no">opt2</span> <span class="kw">=</span> <span class="fu"><a href="../reference/set_opt.html">set_opt</a></span>(
-    <span class="kw">a</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="kw">.value</span> <span class="kw">=</span> <span class="fl">1</span>)
-)
-<span class="no">opt1</span>$<span class="no">a</span> <span class="kw">=</span> <span class="fl">2</span>
-<span class="no">opt1</span>$<span class="no">a</span></pre></body></html></div>
+<div class="sourceCode" id="cb114"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">opt1</span> <span class="op">=</span> <span class="fu"><a href="../reference/set_opt.html">set_opt</a></span><span class="op">(</span>
+    a <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>.value <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>
+<span class="op">)</span>
+<span class="va">opt2</span> <span class="op">=</span> <span class="fu"><a href="../reference/set_opt.html">set_opt</a></span><span class="op">(</span>
+    a <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>.value <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>
+<span class="op">)</span>
+<span class="va">opt1</span><span class="op">$</span><span class="va">a</span> <span class="op">=</span> <span class="fl">2</span>
+<span class="va">opt1</span><span class="op">$</span><span class="va">a</span></code></pre></div>
 <pre><code>[1] 2</code></pre>
-<div class="sourceCode" id="cb116"><html><body><pre class="r"><span class="no">opt2</span>$<span class="no">a</span></pre></body></html></div>
+<div class="sourceCode" id="cb116"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">opt2</span><span class="op">$</span><span class="va">a</span></code></pre></div>
 <pre><code>[1] 1</code></pre>
 <p>Note the option values can also be set as a list, so for the list containing configurations, names of the field is started with a dot <code>.</code> to be distinguished from the normal list.</p>
-<div class="sourceCode" id="cb118"><html><body><pre class="r"><span class="no">opt</span> <span class="kw">=</span> <span class="fu"><a href="../reference/set_opt.html">set_opt</a></span>(
-    <span class="kw">list</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="kw">a</span> <span class="kw">=</span> <span class="fl">1</span>,
-                <span class="kw">b</span> <span class="kw">=</span> <span class="fl">2</span>)
-)
-<span class="fu">opt</span>()</pre></body></html></div>
+<div class="sourceCode" id="cb118"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">opt</span> <span class="op">=</span> <span class="fu"><a href="../reference/set_opt.html">set_opt</a></span><span class="op">(</span>
+    list <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>a <span class="op">=</span> <span class="fl">1</span>,
+                b <span class="op">=</span> <span class="fl">2</span><span class="op">)</span>
+<span class="op">)</span>
+<span class="fu">opt</span><span class="op">(</span><span class="op">)</span></code></pre></div>
 <pre><code>$list
 $list$a
 [1] 1
 
 $list$b
 [1] 2</code></pre>
-<div class="sourceCode" id="cb120"><html><body><pre class="r"><span class="no">opt</span> <span class="kw">=</span> <span class="fu"><a href="../reference/set_opt.html">set_opt</a></span>(
-    <span class="kw">list</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="kw">.value</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="kw">a</span> <span class="kw">=</span> <span class="fl">1</span>, <span class="kw">b</span> <span class="kw">=</span> <span class="fl">2</span>),
-                <span class="kw">.class</span> <span class="kw">=</span> <span class="st">"list"</span>)
-)
-<span class="fu">opt</span>()</pre></body></html></div>
+<div class="sourceCode" id="cb120"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">opt</span> <span class="op">=</span> <span class="fu"><a href="../reference/set_opt.html">set_opt</a></span><span class="op">(</span>
+    list <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>.value <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>a <span class="op">=</span> <span class="fl">1</span>, b <span class="op">=</span> <span class="fl">2</span><span class="op">)</span>,
+                .class <span class="op">=</span> <span class="st">"list"</span><span class="op">)</span>
+<span class="op">)</span>
+<span class="fu">opt</span><span class="op">(</span><span class="op">)</span></code></pre></div>
 <pre><code>$list
 $list$a
 [1] 1
 
 $list$b
 [1] 2</code></pre>
-<div class="sourceCode" id="cb122"><html><body><pre class="r"><span class="no">opt</span>$<span class="no">list</span> <span class="kw">=</span> <span class="fl">1</span>  <span class="co"># this will cause an error</span></pre></body></html></div>
+<div class="sourceCode" id="cb122"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">opt</span><span class="op">$</span><span class="va">list</span> <span class="op">=</span> <span class="fl">1</span>  <span class="co"># this will cause an error</span></code></pre></div>
 <pre><code>Error: Class of 'list' should be 'list'.</code></pre>
 <p>If you made a type of the field names when configurating the options (e.g. forgot to type the leading dot), there will be a warning and the whole configuration list is treated as a normal list for this option.</p>
-<div class="sourceCode" id="cb124"><html><body><pre class="r"><span class="no">opt</span> <span class="kw">=</span> <span class="fu"><a href="../reference/set_opt.html">set_opt</a></span>(
-  <span class="kw">a</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="kw">.value</span> <span class="kw">=</span> <span class="fl">1</span>,
-           <span class="kw">class</span> <span class="kw">=</span> <span class="st">"numeric"</span>)  <span class="co"># &lt;- here it should be .class</span>
-)</pre></body></html></div>
+<div class="sourceCode" id="cb124"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">opt</span> <span class="op">=</span> <span class="fu"><a href="../reference/set_opt.html">set_opt</a></span><span class="op">(</span>
+  a <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>.value <span class="op">=</span> <span class="fl">1</span>,
+           class <span class="op">=</span> <span class="st">"numeric"</span><span class="op">)</span>  <span class="co"># &lt;- here it should be .class</span>
+<span class="op">)</span></code></pre></div>
 <pre><code>Warning: Your definition for 'a' is mixed. It should only contain .value,
 .class, .length, .validate, .failed_msg, .filter, .read.only, .private,
 .visible, .synonymous, .description. Ignore the setting and use the
 whole list as the default value.</code></pre>
-<div class="sourceCode" id="cb126"><html><body><pre class="r"><span class="no">opt</span>$<span class="no">a</span></pre></body></html></div>
+<div class="sourceCode" id="cb126"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">opt</span><span class="op">$</span><span class="va">a</span></code></pre></div>
 <pre><code>$.value
 [1] 1
 
 $class
 [1] "numeric"</code></pre>
 <p>The final and the most important thing is the validation by <code>.class</code>, <code>.length</code>, <code>.validate</code>, <code>.filter</code> will not be applied on default values because users who design their option functions should know whether the default values are valid or not.</p>
-<div class="sourceCode" id="cb128"><html><body><pre class="r"><span class="no">opt</span> <span class="kw">=</span> <span class="fu"><a href="../reference/set_opt.html">set_opt</a></span>(
-    <span class="kw">a</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="kw">.value</span> <span class="kw">=</span> -<span class="fl">1</span>,
-             <span class="kw">.validate</span> <span class="kw">=</span> <span class="kw">function</span>(<span class="no">x</span>) <span class="no">x</span> <span class="kw">&gt;</span> <span class="fl">0</span>)
-)
-<span class="no">opt</span>$<span class="no">a</span></pre></body></html></div>
+<div class="sourceCode" id="cb128"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">opt</span> <span class="op">=</span> <span class="fu"><a href="../reference/set_opt.html">set_opt</a></span><span class="op">(</span>
+    a <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>.value <span class="op">=</span> <span class="op">-</span><span class="fl">1</span>,
+             .validate <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="va">x</span> <span class="op">&gt;</span> <span class="fl">0</span><span class="op">)</span>
+<span class="op">)</span>
+<span class="va">opt</span><span class="op">$</span><span class="va">a</span></code></pre></div>
 <pre><code>[1] -1</code></pre>
 </div>
 <div id="session-info" class="section level2">
 <h2 class="hasAnchor">
 <a href="#session-info" class="anchor"></a>Session info</h2>
-<div class="sourceCode" id="cb130"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html">sessionInfo</a></span>()</pre></body></html></div>
-<pre><code>R version 4.0.0 (2020-04-24)
+<div class="sourceCode" id="cb130"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html">sessionInfo</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<pre><code>R version 4.1.0 (2021-05-18)
 Platform: x86_64-apple-darwin17.0 (64-bit)
-Running under: macOS Catalina 10.15.4
+Running under: macOS Big Sur 10.16
 
 Matrix products: default
-BLAS:   /Library/Frameworks/R.framework/Versions/4.0/Resources/lib/libRblas.dylib
-LAPACK: /Library/Frameworks/R.framework/Versions/4.0/Resources/lib/libRlapack.dylib
+BLAS:   /Library/Frameworks/R.framework/Versions/4.1/Resources/lib/libRblas.dylib
+LAPACK: /Library/Frameworks/R.framework/Versions/4.1/Resources/lib/libRlapack.dylib
 
 locale:
-[1] en_GB.UTF-8/en_GB.UTF-8/en_GB.UTF-8/C/en_GB.UTF-8/en_GB.UTF-8
+[1] C/UTF-8/C/C/C/C
 
 attached base packages:
 [1] stats     graphics  grDevices utils     datasets  methods   base     
 
 other attached packages:
-[1] GlobalOptions_0.1.2 GetoptLong_1.0.0    knitr_1.28         
+[1] GlobalOptions_0.1.2 GetoptLong_1.0.5    knitr_1.33         
 
 loaded via a namespace (and not attached):
- [1] Rcpp_1.0.4.6     rprojroot_1.3-2  crayon_1.3.4     digest_0.6.25   
- [5] assertthat_0.2.1 MASS_7.3-51.6    R6_2.4.1         backports_1.1.7 
- [9] magrittr_1.5     evaluate_0.14    stringi_1.4.6    rlang_0.4.6     
-[13] fs_1.4.1         rmarkdown_2.1    pkgdown_1.5.1    desc_1.2.0      
-[17] rjson_0.2.20     tools_4.0.0      stringr_1.4.0    yaml_2.2.1      
-[21] xfun_0.14        compiler_4.0.0   memoise_1.1.0    htmltools_0.4.0 </code></pre>
+ [1] magrittr_2.0.1    rjson_0.2.20      R6_2.5.0          ragg_1.1.3       
+ [5] rlang_0.4.11      fastmap_1.1.0     stringr_1.4.0     tools_4.1.0      
+ [9] xfun_0.24         jquerylib_0.1.4   htmltools_0.5.1.1 systemfonts_1.0.2
+[13] yaml_2.2.1        digest_0.6.27     rprojroot_2.0.2   pkgdown_1.6.1    
+[17] crayon_1.4.1      textshaping_0.3.5 sass_0.4.0        fs_1.5.0         
+[21] memoise_2.0.0     cachem_1.0.5      evaluate_0.14     rmarkdown_2.9    
+[25] stringi_1.6.2     compiler_4.1.0    bslib_0.2.5.1     desc_1.3.0       
+[29] jsonlite_1.7.2   </code></pre>
 </div>
   </div>
 
@@ -664,7 +733,7 @@ loaded via a namespace (and not attached):
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>
