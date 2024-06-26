@@ -68,6 +68,7 @@ opt = set_opt(
 )
 ```
 
+
 In above example, option value for `a` should pass following conditions:
 
 1. length should be 1;
