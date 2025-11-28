@@ -80,6 +80,12 @@ opt(RESET = TRUE)
 opt()
 ```
 
+Or use the helper function `reset_opt()`:
+
+```r
+reset_opt(opt)
+```
+
 Simply printing `opt` gives a summary of all options.
 
 ```{r}

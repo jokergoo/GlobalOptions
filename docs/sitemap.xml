@@ -1,0 +1,25 @@
+<urlset xmlns = 'http://www.sitemaps.org/schemas/sitemap/0.9'>
+<url><loc>/404.html</loc></url>
+<url><loc>/LICENSE-text.html</loc></url>
+<url><loc>/articles/GlobalOptions.html</loc></url>
+<url><loc>/articles/index.html</loc></url>
+<url><loc>/authors.html</loc></url>
+<url><loc>/index.html</loc></url>
+<url><loc>/reference/Assign.GlobalOptionsFun.html</loc></url>
+<url><loc>/reference/Dot.DollarNames.GlobalOptionsFun.html</loc></url>
+<url><loc>/reference/Dot.v.html</loc></url>
+<url><loc>/reference/Extract.GlobalOptionsFun.html</loc></url>
+<url><loc>/reference/ExtractExtract.GlobalOptionsFun.html</loc></url>
+<url><loc>/reference/ExtractExtractAssign.GlobalOptionsFun.html</loc></url>
+<url><loc>/reference/Subset.GlobalOptionsFun.html</loc></url>
+<url><loc>/reference/Subset.InternalOptionValue.html</loc></url>
+<url><loc>/reference/index.html</loc></url>
+<url><loc>/reference/internal_v.html</loc></url>
+<url><loc>/reference/opt_print.html</loc></url>
+<url><loc>/reference/opt_utility.html</loc></url>
+<url><loc>/reference/print.GlobalOptionsFun.html</loc></url>
+<url><loc>/reference/reset_opt.html</loc></url>
+<url><loc>/reference/setGlobalOptions.html</loc></url>
+<url><loc>/reference/set_opt.html</loc></url>
+</urlset>
+

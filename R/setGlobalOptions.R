@@ -1,72 +1,79 @@
 
-# == title
-# Produce a function which can get or set global options
-#
-# == param
-# -... specification of options, see 'details' section
-#
-# == detail
-# The function has a short name `set_opt`.
-#
-# The most simple way is to construct an option function (e.g. ``opt()``) as:
-#
-#     opt = set_opt(
-#         "a" = 1,
-#         "b" = "text"
-#     )
-#
-# Then users can get or set the options by 
-#
-#     opt()
-#     opt("a")
-#     opt$a
-#     opt[["a"]]
-#     opt(c("a", "b"))
-#     opt("a", "b")
-#     opt("a" = 2)
-#     opt$a = 2
-#     opt[["a"]] = 2
-#     opt("a" = 2, "b" = "new_text")
-#
-# Options can be reset to their default values by:
-#
-#     opt(RESET = TRUE)
-#
-# The value for each option can be set as a list which contains more configurations of the option:
-#
-#     opt = set_opt(
-#         "a" = list(.value = 1,
-#                    .length = 1,
-#                    .class = "numeric",
-#                    .validate = function(x) x > 0)
-#     )
-#
-# The different fields in the list can be used to filter or validate the option values.
-#
-# -``.value`` The default value.
-# -``.length`` The valid length of the option value. It can be a vector, the check will be passed if one of the length fits.
-# -``.class`` The valid class of the option value. It can be a vector, the check will be passed if one of the classes fits.
-# -``.validate`` Validation function. The input parameter is the option value and should return a single logical value.
-# -``.failed_msg`` Once validation failed, the error message that is printed.
-# -``.filter`` Filtering function. The input parameter is the option value and it should return a filtered option value.
-# -``.read.only`` Logical. The option value can not be modified if it is set to ``TRUE``.
-# -``.visible`` Logical. Whether the option is visible to users.
-# -``.private`` Logical. The option value can only be modified in the same namespace where the option function is created.
-# -``.synonymous`` a single option name which should have been already defined ahead of current option. The option specified will be shared by current option.
-# -``.description`` a short text for describing the option. The description is only used when printing the object.
-#
-# For more detailed explanation, please go to the vignette.
-#
-# == author
-# Zuguang Gu <z.gu@dkfz.de>
-#
-# == example
-# opt = set_opt(
-#     a = 1,
-#     b = "text"
-# )
-# opt
-# # for more examples, please go to the vignette
+#' Option Generator
+#'
+#' @param ... Specification of options, see the **Details** section.
+#' @rdname set_opt
+#' @details
+#' The simplest way is to construct an option function (e.g. `opt()`) as:
+#'
+#' ```
+#' opt = set_opt(
+#'      "a" = 1,
+#'      "b" = "text"
+#'  )
+#' ```
+#'
+#' Then users can get or set the options by 
+#'
+#' ```
+#' opt()
+#' opt("a")
+#' opt$a
+#' opt[["a"]]
+#' opt(c("a", "b"))
+#' opt("a", "b")
+#' opt("a" = 2)
+#' opt$a = 2
+#' opt[["a"]] = 2
+#' opt("a" = 2, "b" = "new_text")
+#' ```
+#'
+#' Options can be reset to their default values by:
+#'
+#' ```
+#' opt(RESET = TRUE)
+#' # or
+#' reset_opt(opt)
+#' ```
+#'
+#' The value for each option can be set as a list which contains more complex configurations:
+#'
+#' ```
+#' opt = set_opt(
+#'      "a" = list(
+#'          .value = 1,
+#'          .length = 1,
+#'          .class = "numeric",
+#'          .validate = function(x) x > 0
+#'      )
+#' )
+#' ```
+#'
+#' The different fields in the list can be used to filter or validate the option values.
+#'
+#' - `.value`: The default value.
+#' - `.length`: The valid length of the option value. It can be a vector, the check will be passed if one of the length fits.
+#' - `.class`: The valid class of the option value. It can be a vector, the check will be passed if one of the classes fits.
+#' - `.validate`: Validation function. The input parameter is the option value and should return a single logical value.
+#' - `.failed_msg`: Once validation failed, the error message that is printed.
+#' - `.filter`: Filtering function. The input parameter is the option value and it should return a filtered option value.
+#' - `.read.only`: Logical. The option value can not be modified if it is set to `TRUE`.
+#' - `.visible`: Logical. Whether the option is visible to users.
+#' - `.private`: Logical. The option value can only be modified in the same namespace where the option function is created.
+#' - `.synonymous`: a single option name which should have been already defined ahead of current option. The option specified will be shared by current option.
+#' - `.description`: a short text for describing the option. The description is only used when printing the object.
+#'
+#' For more detailed explanation, please go to the vignette.
+#'
+#' @export
+#' @import methods
+#' @examples
+#' opt = set_opt(
+#'     a = 1,
+#'     b = "text"
+#' )
+#' opt
+#' # for more examples, please go to the vignette
 setGlobalOptions = function(...) {
 
 	# the environment where the function is called
@@ -323,16 +330,21 @@ setGlobalOptions = function(...) {
 	return(opt_fun)
 }
 
-# == title
-# Print the GlobalOptionsFun object
-#
-# == param
-# -x the option object returned by `set_opt` or `setGlobalOptions`.
-# -... other arguments
-#
-# == author
-# z.gu@dkfz.de
-#
+#' @rdname set_opt
+#' @export
+set_opt = function(...) {}
+set_opt = setGlobalOptions
+
+
+#' Print options
+#' 
+#' @rdname opt_print
+#' @param x The option object returned by [`set_opt()`] or [`setGlobalOptions()`].
+#' @param ... Other arguments.
+#' @export
+#' @examples
+#' opt = set_opt(a = 1, b = "b")
+#' opt
 print.GlobalOptionsFun = function(x, ...) {
 	
 	lt = x()
@@ -377,23 +389,19 @@ print.GlobalOptionsFun = function(x, ...) {
 }
 
 
-# == title
-# Get a single GlobalOption object
-# 
-# == param
-# -x the option object returned by `set_opt` or `setGlobalOptions`.
-# -nm a single name of the option.
-#
-# == details
-# This function is only used internally.
-#
-# == author
-# Zuguang Gu <z.gu@dkfz.de>
-#
-# == example
-# opt = set_opt(a = 1, b = "b")
-# opt["a"]
-# opt["b"]
+#' Getter and setter functions
+#' 
+#' @param x The option object returned by [`set_opt()`] or [`setGlobalOptions()`].
+#' @param nm A single option name.
+#'
+#' @details
+#' `[` (single bracket) returns a single option object.
+#' @export
+#' @rdname opt_utility
+#' @examples
+#' opt = set_opt(a = 1, b = "b")
+#' opt["a"]
+#' opt["b"]
 "[.GlobalOptionsFun" = function(x, nm) {
 	options = get("options", envir = environment(x))
 	if(length(nm) > 1) {
@@ -402,46 +410,27 @@ print.GlobalOptionsFun = function(x, ...) {
 	options[[nm]]
 }
 
-# == title
-# Print all fields of a single option
-#
-# == param
-# -opt the option object returned by `set_opt` or `setGlobalOptions`.
-# -opt_name a single name of the option.
-#
-# == details
-# Actually this function is identical to ``opt[opt_name]``.
-#
-# == author
-# z.gu@dkfz.de
-#
-# == example
-# opt = set_opt(a = 1, b = "b")
-# dump_opt(opt, "a")
-# dump_opt(opt, "b")
-dump_opt = function(opt, opt_name) {
-	if(length(opt_name) > 1) {
+#' @rdname opt_utility
+#' @details
+#' `dump_opt()` is identical to `[`.
+#' @export
+#' @examples
+#' dump_opt(opt, "a")
+#' dump_opt(opt, "b")
+dump_opt = function(x, nm) {
+	if(length(nm) > 1) {
 		stop("The option name can only be length of 1.\n")
 	}
-	opt[opt_name]
+	x[nm]
 }
 
-# == title
-# Get option value by subset operator
-#
-# == param
-# -x the option object returned by `set_opt` or `setGlobalOptions`.
-# -nm a single option name.
-#
-# == details
-# ``opt[["a"]]`` is same as ``opt("a")`` or ``opt$a``.
-#
-# == author
-# Zuguang Gu <z.gu@dkfz.de>
-#
-# == example
-# opt = set_opt(a = 1)
-# opt[["a"]]
+#' @rdname opt_utility
+#' @details
+#' `[[` (double brackets) returns the value of the option.
+#' @export
+#' @examples
+#' opt[["a"]]
+#' opt[["b"]]
 "[[.GlobalOptionsFun" = function(x, nm) {
 	if(is.numeric(nm)) {
 		stop("The index should only be option name.\n")
@@ -452,24 +441,12 @@ dump_opt = function(opt, opt_name) {
 	x(nm)
 }
 
-# == title
-# Set option value by subset operator
-#
-# == param
-# -x the option object returned by `set_opt` or `setGlobalOptions`.
-# -nm a single option name.
-# -value the value which is assigned to the option.
-#
-# == details
-# ``opt[["a"]] = 1`` is same as ``opt("a" = 1)`` or ``opt$a = 1``.
-#
-# == author
-# Zuguang Gu <z.gu@dkfz.de>
-#
-# == example
-# opt = set_opt(a = 1)
-# opt[["a"]] = 2
-# opt$a
+#' @rdname opt_utility
+#' @param value The value which is assigned to the option.
+#' @export
+#' @examples
+#' opt[["a"]] = 200
+#' opt[["a"]]
 "[[<-.GlobalOptionsFun" = function(x, nm, value) {
 	if(is.numeric(nm)) {
 		stop("The index should only be option names.\n")
@@ -488,57 +465,25 @@ dump_opt = function(opt, opt_name) {
 	return(x)
 }
 
-# == title
-# Option names
-#
-# == param
-# -x the option object returned by `set_opt` or `setGlobalOptions`.
-#
-# == value
-# A vector of option names
-#
-# == example
-# opt = set_opt(
-#     a = 1,
-#     b = "text"
-# )
-# names(opt)
+#' @rdname opt_utility
+#' @export
+#' @examples
+#' names(opt)
 names.GlobalOptionsFun = function(x) {
 	names(x())
 }
 
-# == title
-# The .DollarNames method for the GlobalOptionsFun class
-#
-# == param
-# -x the object returned by `set_opt` or `setGlobalOptions`.
-# -pattern pattern, please ignore it.
-#
-# == details
-# This makes the option object looks like a list that it allows
-# option name completion after ``$``.
-#
-# == author
-# z.gu@dkfz.de
-#
+#' @rdname opt_utility
+#' @param pattern Ignore.
+#' @export
+#' @details
+#' The `.DollarNames` method makes the option object looks like a list that it allows option name completion after `$` (by double clicking the "enter/return" key).
+#' @importFrom utils .DollarNames findMatches
 .DollarNames.GlobalOptionsFun = function(x, pattern = "") {
 	lt = x()
-	names(lt)
+	findMatches(pattern, names(lt))
 }
 
-# == title
-# Produce a function which can get or set global options
-# 
-# == param
-# -... all go to `setGlobalOptions`
-#
-# == details
-# This is just a short name for `setGlobalOptions`.
-#
-# == author
-# z.gu@dkfz.de
-set_opt = function(...) {}
-set_opt = setGlobalOptions
 
 env2txt = function(env) {
 	if(identical(env, emptyenv())) {
@@ -644,46 +589,19 @@ warning = function(msg) {
 	base::warning(paste(strwrap(msg), collapse = "\n"), call. = FALSE)
 }
 
-# == title
-# Get option value by dollar symbol
-#
-# == param
-# -x the object returned by `set_opt` or `setGlobalOptions`.
-# -nm a single option name.
-#
-# == details
-# ``opt$a`` is same as ``opt("a")``.
-#
-# == author
-# Zuguang Gu <z.gu@dkfz.de>
-#
-# == example
-# opt = set_opt(a = 1)
-# opt$a
+#' @rdname opt_utility
+#' @export
+#' @examples
+#' opt$a
 "$.GlobalOptionsFun" = function(x, nm) {
 	x(nm)
 }
 
-# == title
-# Set option value by dollar symbol
-#
-# == param
-# -x the object returned by `set_opt` or `setGlobalOptions`.
-# -nm a single option name.
-# -value the value which is assigned to the option.
-#
-# == details
-# ``opt$a = 1`` is same as ``opt("a" = 1)``.
-#
-# Note you cannot reconfigurate the option by assigning a configuration list.
-#
-# == author
-# Zuguang Gu <z.gu@dkfz.de>
-#
-# == example
-# opt = set_opt(a = 1)
-# opt$a = 2
-# opt$a
+#' @rdname opt_utility
+#' @export
+#' @examples
+#' opt$a = 100
+#' opt$a
 "$<-.GlobalOptionsFun" = function(x, nm, value) {
 	lt = list(value)
 	names(lt) = nm
@@ -693,5 +611,20 @@ warning = function(msg) {
 	rm(".__temp_opt__.", envir = parent.frame())
 
 	return(x)
+}
+
+#' Reset the options to their defaults
+#' @param opt The option object returned by [`set_opt()`] or [`setGlobalOptions()`].
+#' @details
+#' It is identical to `opt(RESET = TRUE)`.
+#' @export
+#' @examples
+#' opt = set_opt(a = 1, b = 2)
+#' opt$a = 100; opt$b = 200
+#' opt
+#' reset_opt(opt)
+#' opt
+reset_opt = function(opt) {
+	opt(RESET = TRUE)
 }
 

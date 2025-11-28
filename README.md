@@ -1,8 +1,6 @@
 # GlobalOptions
 
-[![R-CMD-check](https://github.com/jokergoo/GlobalOptions/workflows/R-CMD-check/badge.svg)](https://github.com/jokergoo/GlobalOptions/actions)
 [![CRAN](http://www.r-pkg.org/badges/version/GlobalOptions)](https://cran.r-project.org/web/packages/GlobalOptions/index.html) 
-[![codecov](https://img.shields.io/codecov/c/github/jokergoo/GlobalOptions.svg)](https://codecov.io/github/jokergoo/GlobalOptions) 
 
 
 This package aims to provide a simple way to handle global configurations. It can:
