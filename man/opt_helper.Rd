@@ -2,23 +2,33 @@
 % Please edit documentation in R/setGlobalOptions.R
 \name{reset_opt}
 \alias{reset_opt}
-\title{Reset the options to their defaults}
+\alias{add_opt}
+\title{Helper functions}
 \usage{
 reset_opt(opt)
+
+add_opt(opt, ...)
 }
 \arguments{
 \item{opt}{The option object returned by \code{\link[=set_opt]{set_opt()}} or \code{\link[=setGlobalOptions]{setGlobalOptions()}}.}
+
+\item{...}{New options.}
 }
 \description{
-Reset the options to their defaults
+Helper functions
 }
 \details{
-It is identical to \code{opt(RESET = TRUE)}.
+\code{reset_opt()} is identical to \code{opt(RESET = TRUE)}.
+
+\code{add_opt()} is identical to \code{opt(..., ADD = TRUE)}.
 }
 \examples{
 opt = set_opt(a = 1, b = 2)
 opt$a = 100; opt$b = 200
 opt
 reset_opt(opt)
+opt
+opt = set_opt(a = 1)
+add_opt(opt, b = 2)
 opt
 }

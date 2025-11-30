@@ -1,7 +1,7 @@
 Changes in version 0.1.4
 
 * use roxygen to document
-* add `reset_opt()`
+* add `reset_opt()`, `add_opt()`
 * improve `.DollarNames.GlobalOptionsFun()`.
 
 ----------------------------------------------------------------------

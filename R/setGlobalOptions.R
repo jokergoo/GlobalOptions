@@ -613,11 +613,12 @@ warning = function(msg) {
 	return(x)
 }
 
-#' Reset the options to their defaults
+#' Helper functions
 #' @param opt The option object returned by [`set_opt()`] or [`setGlobalOptions()`].
 #' @details
-#' It is identical to `opt(RESET = TRUE)`.
+#' `reset_opt()` is identical to `opt(RESET = TRUE)`.
 #' @export
+#' @rdname opt_helper
 #' @examples
 #' opt = set_opt(a = 1, b = 2)
 #' opt$a = 100; opt$b = 200
@@ -628,3 +629,15 @@ reset_opt = function(opt) {
 	opt(RESET = TRUE)
 }
 
+#' @param ... New options.
+#' @details
+#' `add_opt()` is identical to `opt(..., ADD = TRUE)`.
+#' @export
+#' @rdname opt_helper
+#' @examples
+#' opt = set_opt(a = 1)
+#' add_opt(opt, b = 2)
+#' opt
+add_opt = function(opt, ...) {
+	opt(..., ADD = TRUE)
+}
