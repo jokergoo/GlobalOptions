@@ -24,7 +24,6 @@ knitr::opts_chunk$set(
     message = FALSE,
     comment = NA,
     fig.align = "center")
-library(GetoptLong)
 ```
 
 
