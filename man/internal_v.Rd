@@ -3,30 +3,32 @@
 \name{.v}
 \alias{.v}
 \alias{$.InternalOptionValue}
-\title{Get value of other options}
+\title{Get other option values}
 \usage{
 .v(opt_name, name_is_character = NA)
 
 \method{$}{InternalOptionValue}(x, nm)
 }
 \arguments{
-\item{opt_name}{name of the option, can be quoted or not quoted.}
+\item{opt_name}{The option name.}
 
-\item{name_is_character}{whether `opt_name` is a character, only used internally.}
+\item{name_is_character}{Please ignore, only used internally.}
 
-\item{x}{should always be `.v`.}
+\item{x}{should always be written as `.v`.}
 
-\item{nm}{name of the option.}
+\item{nm}{The option name.}
 }
 \description{
-Get value of other options
+Get other option values
 }
 \details{
 When setting one option, the value can be dependent on other option names.
-The current value of other option can be accessed by `v(nm)` or `v$nm`.
+The current value of other option can be accessed by `.v(nm)` or `.v$nm`.
 }
 \examples{
 opt = set_opt(a = 1, b = function() .v$a*2)
 opt$b
 opt(a = 2); opt$b
+opt(a = 4); opt$b
+reset_opt(opt); opt$b
 }

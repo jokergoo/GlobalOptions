@@ -1,20 +1,18 @@
 
-#' Produce a function which can get or set global options
+#' Option Generator
 #'
-#' @param ... specification of options, see the **Details** section.
-#'
+#' @param ... Specification of options, see the **Details** section.
 #' @rdname set_opt
-#' @export
 #' @details
-#' The most simple way is to construct an option function (e.g. [`opt()`]) as:
+#' The simplest way is to construct an option function (e.g. `opt()`) as:
 #'
 #' ```
 #' opt = set_opt(
-#'     "a" = 1,
-#'     "b" = "text"
-#' )
+#'      "a" = 1,
+#'      "b" = "text"
+#'  )
 #' ```
-#' 
+#'
 #' Then users can get or set the options by 
 #'
 #' ```
@@ -34,35 +32,40 @@
 #'
 #' ```
 #' opt(RESET = TRUE)
+#' # or
+#' reset_opt(opt)
 #' ```
 #'
-#' The value for each option can be set as a list which contains more configurations of the option:
+#' The value for each option can be set as a list which contains more complex configurations:
 #'
 #' ```
 #' opt = set_opt(
-#'     "a" = list(.value = 1,
-#'                .length = 1,
-#'                .class = "numeric",
-#'                .validate = function(x) x > 0)
+#'      "a" = list(
+#'          .value = 1,
+#'          .length = 1,
+#'          .class = "numeric",
+#'          .validate = function(x) x > 0
+#'      )
 #' )
 #' ```
 #'
 #' The different fields in the list can be used to filter or validate the option values.
 #'
-#' -`.value` The default value.
-#' -`.length` The valid length of the option value. It can be a vector, the check will be passed if one of the length fits.
-#' -`.class` The valid class of the option value. It can be a vector, the check will be passed if one of the classes fits.
-#' -`.validate` Validation function. The input parameter is the option value and should return a single logical value.
-#' -`.failed_msg` Once validation failed, the error message that is printed.
-#' -`.filter` Filtering function. The input parameter is the option value and it should return a filtered option value.
-#' -`.read.only` Logical. The option value can not be modified if it is set to ``TRUE``.
-#' -`.visible` Logical. Whether the option is visible to users.
-#' -`.private` Logical. The option value can only be modified in the same namespace where the option function is created.
-#' -`.synonymous` a single option name which should have been already defined ahead of current option. The option specified will be shared by current option.
-#' -`.description` a short text for describing the option. The description is only used when printing the object.
+#' - `.value`: The default value.
+#' - `.length`: The valid length of the option value. It can be a vector, the check will be passed if one of the length fits.
+#' - `.class`: The valid class of the option value. It can be a vector, the check will be passed if one of the classes fits.
+#' - `.validate`: Validation function. The input parameter is the option value and should return a single logical value.
+#' - `.failed_msg`: Once validation failed, the error message that is printed.
+#' - `.filter`: Filtering function. The input parameter is the option value and it should return a filtered option value.
+#' - `.read.only`: Logical. The option value can not be modified if it is set to `TRUE`.
+#' - `.visible`: Logical. Whether the option is visible to users.
+#' - `.private`: Logical. The option value can only be modified in the same namespace where the option function is created.
+#' - `.synonymous`: a single option name which should have been already defined ahead of current option. The option specified will be shared by current option.
+#' - `.description`: a short text for describing the option. The description is only used when printing the object.
 #'
 #' For more detailed explanation, please go to the vignette.
 #'
+#' @export
 #' @import methods
 #' @examples
 #' opt = set_opt(
@@ -70,6 +73,7 @@
 #'     b = "text"
 #' )
 #' opt
+#' # for more examples, please go to the vignette
 setGlobalOptions = function(...) {
 
 	# the environment where the function is called
@@ -142,7 +146,7 @@ setGlobalOptions = function(...) {
 			if(is.list(arg) && 
 				length(intersect(names(arg), c(".value", ".class", ".length", ".validate", "failed_msg", ".filter", ".read.only", ".private", ".visible", ".synonymous", ".description"))) > 0 &&
 				length(setdiff(names(arg), c(".value", ".class", ".length", ".validate", "failed_msg", ".filter", ".read.only", ".private", ".visible", ".synonymous", ".description"))) > 0) {
-				warning_wrap(paste("Your definition for '", name, "' is mixed. It should only contain .value, .class, .length, .validate, .failed_msg, .filter, .read.only, .private, .visible, .synonymous, .description. Ignore the setting and use the whole list as the default value.", sep = ""))
+				warning(paste("Your definition for '", name, "' is mixed. It should only contain\n.value, .class, .length, .validate, .failed_msg, .filter, .read.only, .private, .visible, .synonymous, .description. Ignore the setting and use the whole list as the default value.\n", sep = ""))
 			}
 			default_value = arg
 			length = numeric(0)
@@ -326,18 +330,21 @@ setGlobalOptions = function(...) {
 	return(opt_fun)
 }
 
-
 #' @rdname set_opt
 #' @export
+set_opt = function(...) {}
 set_opt = setGlobalOptions
 
 
-#' Print the GlobalOptionsFun object
-#'
-#' @param x the option object returned by [`set_opt()`] or [`setGlobalOptions()`].
-#' @param ... other arguments
-#'
+#' Print options
+#' 
+#' @rdname opt_print
+#' @param x The option object returned by [`set_opt()`] or [`setGlobalOptions()`].
+#' @param ... Other arguments.
 #' @export
+#' @examples
+#' opt = set_opt(a = 1, b = "b")
+#' opt
 print.GlobalOptionsFun = function(x, ...) {
 	
 	lt = x()
@@ -345,7 +352,7 @@ print.GlobalOptionsFun = function(x, ...) {
 	options = options[names(lt)]
 
 	option = names(options)
-	value = sapply(options, function(opt) value2text(opt$real_value, width = 60))
+	value = sapply(options, function(opt) value2text(opt$real_value, width = Inf))
 	description = sapply(options, function(opt) opt$description)
 
 	option_max_width = max(nchar(c("Option", option)))
@@ -382,14 +389,15 @@ print.GlobalOptionsFun = function(x, ...) {
 }
 
 
-#' Get/set a single GlobalOption object
+#' Getter and setter functions
 #' 
-#' @param x the option object returned by [`set_opt()`] or [`setGlobalOptions()`].
-#' @param nm a single name of the option.
-#' 
-#' @export
-#' @rdname utility
+#' @param x The option object returned by [`set_opt()`] or [`setGlobalOptions()`].
+#' @param nm A single option name.
 #'
+#' @details
+#' `[` (single bracket) returns a single option object.
+#' @export
+#' @rdname opt_utility
 #' @examples
 #' opt = set_opt(a = 1, b = "b")
 #' opt["a"]
@@ -402,30 +410,27 @@ print.GlobalOptionsFun = function(x, ...) {
 	options[[nm]]
 }
 
-#' @param opt the option object returned by [`set_opt()`] or [`setGlobalOptions()`].
-#' @param opt_name a single name of the option.
-#' @export
-#' @rdname utility
-#'
+#' @rdname opt_utility
 #' @details
-#' `dump_opt(opt, opt_name)` is identical to `opt[opt_name]`.
-#'
+#' `dump_opt()` is identical to `[`.
+#' @export
 #' @examples
-#' opt = set_opt(a = 1, b = "b")
 #' dump_opt(opt, "a")
 #' dump_opt(opt, "b")
-dump_opt = function(opt, opt_name) {
-	if(length(opt_name) > 1) {
+dump_opt = function(x, nm) {
+	if(length(nm) > 1) {
 		stop("The option name can only be length of 1.\n")
 	}
-	opt[opt_name]
+	x[nm]
 }
 
+#' @rdname opt_utility
+#' @details
+#' `[[` (double brackets) returns the value of the option.
 #' @export
-#' @rdname utility
 #' @examples
-#' opt = set_opt(a = 1)
 #' opt[["a"]]
+#' opt[["b"]]
 "[[.GlobalOptionsFun" = function(x, nm) {
 	if(is.numeric(nm)) {
 		stop("The index should only be option name.\n")
@@ -436,16 +441,12 @@ dump_opt = function(opt, opt_name) {
 	x(nm)
 }
 
+#' @rdname opt_utility
+#' @param value The value which is assigned to the option.
 #' @export
-#' @rdname utility
-#' @param value the value which is assigned to the option.
-#' @details
-#' `opt[["a"]] = 1` is the same as `opt("a" = 1)` or `opt$a = 1`.
-#' 
 #' @examples
-#' opt = set_opt(a = 1)
-#' opt[["a"]] = 2
-#' opt$a
+#' opt[["a"]] = 200
+#' opt[["a"]]
 "[[<-.GlobalOptionsFun" = function(x, nm, value) {
 	if(is.numeric(nm)) {
 		stop("The index should only be option names.\n")
@@ -464,31 +465,25 @@ dump_opt = function(opt, opt_name) {
 	return(x)
 }
 
+#' @rdname opt_utility
 #' @export
-#' @rdname utility
-#'
 #' @examples
-#' opt = set_opt(
-#'     a = 1,
-#'     b = "text"
-#' )
 #' names(opt)
 names.GlobalOptionsFun = function(x) {
 	names(x())
 }
 
+#' @rdname opt_utility
+#' @param pattern Ignore.
 #' @export
-#' @rdname utility
-#' @param pattern pattern, please ignore it.
-#'
 #' @details
-#' The DollarNames method akes the option object looks like a list that it allows
-#' option name completion after `$`.
-#' @importFrom utils .DollarNames
+#' The `.DollarNames` method makes the option object looks like a list that it allows option name completion after `$` (by double clicking the "enter/return" key).
+#' @importFrom utils .DollarNames findMatches
 .DollarNames.GlobalOptionsFun = function(x, pattern = "") {
 	lt = x()
-	names(lt)
+	findMatches(pattern, names(lt))
 }
+
 
 env2txt = function(env) {
 	if(identical(env, emptyenv())) {
@@ -594,18 +589,18 @@ warning = function(msg) {
 	base::warning(paste(strwrap(msg), collapse = "\n"), call. = FALSE)
 }
 
+#' @rdname opt_utility
 #' @export
-#' @rdname utility
+#' @examples
+#' opt$a
 "$.GlobalOptionsFun" = function(x, nm) {
 	x(nm)
 }
 
+#' @rdname opt_utility
 #' @export
-#' @rdname utility
-#'
 #' @examples
-#' opt = set_opt(a = 1)
-#' opt$a = 2
+#' opt$a = 100
 #' opt$a
 "$<-.GlobalOptionsFun" = function(x, nm, value) {
 	lt = list(value)
@@ -618,23 +613,31 @@ warning = function(msg) {
 	return(x)
 }
 
-
-
-warning_wrap = function (...) {
-    x = paste0(...)
-    x = paste(strwrap(x), collapse = "\n")
-    base::warning(x, call. = FALSE)
+#' Helper functions
+#' @param opt The option object returned by [`set_opt()`] or [`setGlobalOptions()`].
+#' @details
+#' `reset_opt()` is identical to `opt(RESET = TRUE)`.
+#' @export
+#' @rdname opt_helper
+#' @examples
+#' opt = set_opt(a = 1, b = 2)
+#' opt$a = 100; opt$b = 200
+#' opt
+#' reset_opt(opt)
+#' opt
+reset_opt = function(opt) {
+	opt(RESET = TRUE)
 }
 
-message_wrap = function (...) {
-    x = paste0(...)
-    x = paste(strwrap(x), collapse = "\n")
-    base::message(x)
+#' @param ... New options.
+#' @details
+#' `add_opt()` is identical to `opt(..., ADD = TRUE)`.
+#' @export
+#' @rdname opt_helper
+#' @examples
+#' opt = set_opt(a = 1)
+#' add_opt(opt, b = 2)
+#' opt
+add_opt = function(opt, ...) {
+	opt(..., ADD = TRUE)
 }
-
-stop_wrap = function (...) {
-    x = paste0(...)
-    x = paste(strwrap(x), collapse = "\n")
-    base::stop(x, call. = FALSE)
-}
-

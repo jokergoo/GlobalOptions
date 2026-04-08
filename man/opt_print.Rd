@@ -2,15 +2,19 @@
 % Please edit documentation in R/setGlobalOptions.R
 \name{print.GlobalOptionsFun}
 \alias{print.GlobalOptionsFun}
-\title{Print the GlobalOptionsFun object}
+\title{Print options}
 \usage{
 \method{print}{GlobalOptionsFun}(x, ...)
 }
 \arguments{
-\item{x}{the option object returned by [`set_opt()`] or [`setGlobalOptions()`].}
+\item{x}{The option object returned by [`set_opt()`] or [`setGlobalOptions()`].}
 
-\item{...}{other arguments}
+\item{...}{Other arguments.}
 }
 \description{
-Print the GlobalOptionsFun object
+Print options
+}
+\examples{
+opt = set_opt(a = 1, b = "b")
+opt
 }

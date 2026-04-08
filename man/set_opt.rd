@@ -3,26 +3,26 @@
 \name{setGlobalOptions}
 \alias{setGlobalOptions}
 \alias{set_opt}
-\title{Produce a function which can get or set global options}
+\title{Option Generator}
 \usage{
 setGlobalOptions(...)
 
 set_opt(...)
 }
 \arguments{
-\item{...}{specification of options, see the **Details** section.}
+\item{...}{Specification of options, see the **Details** section.}
 }
 \description{
-Produce a function which can get or set global options
+Option Generator
 }
 \details{
-The most simple way is to construct an option function (e.g. [`opt()`]) as:
+The simplest way is to construct an option function (e.g. `opt()`) as:
 
 ```
 opt = set_opt(
-    "a" = 1,
-    "b" = "text"
-)
+     "a" = 1,
+     "b" = "text"
+ )
 ```
 
 Then users can get or set the options by 
@@ -44,32 +44,36 @@ Options can be reset to their default values by:
 
 ```
 opt(RESET = TRUE)
+# or
+reset_opt(opt)
 ```
 
-The value for each option can be set as a list which contains more configurations of the option:
+The value for each option can be set as a list which contains more complex configurations:
 
 ```
 opt = set_opt(
-    "a" = list(.value = 1,
-               .length = 1,
-               .class = "numeric",
-               .validate = function(x) x > 0)
+     "a" = list(
+         .value = 1,
+         .length = 1,
+         .class = "numeric",
+         .validate = function(x) x > 0
+     )
 )
 ```
 
 The different fields in the list can be used to filter or validate the option values.
 
--`.value` The default value.
--`.length` The valid length of the option value. It can be a vector, the check will be passed if one of the length fits.
--`.class` The valid class of the option value. It can be a vector, the check will be passed if one of the classes fits.
--`.validate` Validation function. The input parameter is the option value and should return a single logical value.
--`.failed_msg` Once validation failed, the error message that is printed.
--`.filter` Filtering function. The input parameter is the option value and it should return a filtered option value.
--`.read.only` Logical. The option value can not be modified if it is set to ``TRUE``.
--`.visible` Logical. Whether the option is visible to users.
--`.private` Logical. The option value can only be modified in the same namespace where the option function is created.
--`.synonymous` a single option name which should have been already defined ahead of current option. The option specified will be shared by current option.
--`.description` a short text for describing the option. The description is only used when printing the object.
+- `.value`: The default value.
+- `.length`: The valid length of the option value. It can be a vector, the check will be passed if one of the length fits.
+- `.class`: The valid class of the option value. It can be a vector, the check will be passed if one of the classes fits.
+- `.validate`: Validation function. The input parameter is the option value and should return a single logical value.
+- `.failed_msg`: Once validation failed, the error message that is printed.
+- `.filter`: Filtering function. The input parameter is the option value and it should return a filtered option value.
+- `.read.only`: Logical. The option value can not be modified if it is set to `TRUE`.
+- `.visible`: Logical. Whether the option is visible to users.
+- `.private`: Logical. The option value can only be modified in the same namespace where the option function is created.
+- `.synonymous`: a single option name which should have been already defined ahead of current option. The option specified will be shared by current option.
+- `.description`: a short text for describing the option. The description is only used when printing the object.
 
 For more detailed explanation, please go to the vignette.
 }
@@ -79,4 +83,5 @@ opt = set_opt(
     b = "text"
 )
 opt
+# for more examples, please go to the vignette
 }

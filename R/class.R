@@ -249,21 +249,23 @@ value2text = function(v, field, width = 40) {
 }
 
 
-#' Get value of other options
-#'
-#' @param opt_name name of the option, can be quoted or not quoted.
-#' @param name_is_character whether `opt_name` is a character, only used internally.
+#' Get other option values
+#' 
+#' @rdname internal_v
+#' @param opt_name The option name.
+#' @param name_is_character Please ignore, only used internally.
 #'
 #' @details
 #' When setting one option, the value can be dependent on other option names.
-#' The current value of other option can be accessed by `v(nm)` or `v$nm`.
+#' The current value of other option can be accessed by `.v(nm)` or `.v$nm`.
 #'
 #' @export
-#' @rdname internal
 #' @examples
 #' opt = set_opt(a = 1, b = function() .v$a*2)
 #' opt$b
 #' opt(a = 2); opt$b
+#' opt(a = 4); opt$b
+#' reset_opt(opt); opt$b
 .v = function(opt_name, name_is_character = NA) {
 	if(is.na(name_is_character)) {
 		opt_name = substitute(opt_name)
@@ -286,10 +288,11 @@ value2text = function(v, field, width = 40) {
 
 class(.v) = "InternalOptionValue"
 
-#' @rdname internal
+#' @rdname internal_v
+#' 
+#' @param x should always be written as `.v`.
+#' @param nm The option name.
 #' @export
-#' @param x should always be `.v`.
-#' @param nm name of the option.
 "$.InternalOptionValue" = function(x, nm) {
 	x(nm, name_is_character = TRUE)
 }
