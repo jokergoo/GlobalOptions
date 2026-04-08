@@ -24,7 +24,6 @@ knitr::opts_chunk$set(
     message = FALSE,
     comment = NA,
     fig.align = "center")
-library(GetoptLong)
 ```
 
 
@@ -78,6 +77,12 @@ reset the options to the default:
 opt(a = 2, b = "new text")
 opt(RESET = TRUE)
 opt()
+```
+
+Or use the helper function `reset_opt()`:
+
+```r
+reset_opt(opt)
 ```
 
 Simply printing `opt` gives a summary of all options.
@@ -451,6 +456,14 @@ opt(c = list(.value = "c",
     ADD = TRUE)
 opt
 opt$c = 1
+```
+
+Or you can use the helper function `add_opt()`:
+
+```{r}
+opt = set_opt(a = 1)
+add_opt(opt, b = 2)
+opt
 ```
 
 Of course you can put more than one options in `opt()` when adding them.
